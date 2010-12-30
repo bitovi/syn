@@ -1,6 +1,4 @@
-steal.then(function(){
-	
-	
+(function(){
 var extend = function(d, s) { for (var p in s) d[p] = s[p]; return d;},
 	// only uses browser detection for key events
 	browser = {
@@ -812,6 +810,4 @@ if (window.jQuery || (window.FuncUnit && window.FuncUnit.jquery)) {
 }
 
 window.Syn = Syn;
-	
-}).then('mouse','browsers','key','drag/drag');
-
+}())

@@ -103,8 +103,8 @@ test("focus on an element then another in another page", function(){
 		rootJoin = $.proxy(steal.root.join, steal.root);
 	}
 	
-	var page1 = rootJoin("funcunit/synthetic/test/qunit/page1.html"),
-		page2 = rootJoin("funcunit/synthetic/test/qunit/page2.html"),
+	var page1 = rootJoin("funcunit/syn/test/qunit/page1.html"),
+		page2 = rootJoin("funcunit/syn/test/qunit/page2.html"),
 		iframe = document.createElement('iframe'),
 		calls = 0;
 	

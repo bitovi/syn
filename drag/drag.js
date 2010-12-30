@@ -1,4 +1,4 @@
-steal.then(function(){
+(function(){
 	// document body has to exists for this test
 
 	(function(){
@@ -271,5 +271,4 @@ Syn.helpers.extend(Syn.init.prototype,{
 		startDrag(fro, to, options.duration || 500, from, callback);
 	}
 })
-
-})
+}())

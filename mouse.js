@@ -1,5 +1,5 @@
 //handles mosue events
-steal.then(function(){
+(function(){
 
 var h = Syn.helpers;
 
@@ -312,4 +312,4 @@ h.extend(Syn.create,{
 })();
 
 
-})
+})()
