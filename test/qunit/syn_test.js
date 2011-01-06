@@ -1,4 +1,4 @@
-module("funcunit/synthetic")
+module("funcunit/syn")
 
 st = {
 	g: function( id ) {

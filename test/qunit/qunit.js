@@ -3,6 +3,6 @@ steal
  .plugins("jquery")
  .plugins("funcunit/syn")  //load your app
  .plugins('funcunit/qunit')  //load qunit
- .then("synthetic_test", "mouse_test", "key_test"
+ .then("syn_test", "mouse_test", "key_test"
  
  )
