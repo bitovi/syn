@@ -4,12 +4,13 @@ var h = Syn.helpers,
 
 // gets the selection of an input or textarea
 getSelection = function(el){
+	var real;
 	// use selectionStart if we can
 	if (el.selectionStart !== undefined) {
 		// this is for opera, so we don't have to focus to type how we think we would
-		if(document.activeElement 
-		 	&& document.activeElement != el 
-			&& el.selectionStart == el.selectionEnd 
+		if(document.activeElement
+			&& document.activeElement != el
+			&& el.selectionStart == el.selectionEnd
 			&& el.selectionStart == 0){
 			return {start: el.value.length, end: el.value.length};
 		}
@@ -17,15 +18,15 @@ getSelection = function(el){
 	}else{
 		//check if we aren't focused
 		//if(document.activeElement && document.activeElement != el){
-			
-			
+
+
 		//}
 		try {
 			//try 2 different methods that work differently (IE breaks depending on type)
 			if (el.nodeName.toLowerCase() == 'input') {
-				var real = h.getWindow(el).document.selection.createRange(), r = el.createTextRange();
+				real = h.getWindow(el).document.selection.createRange(), r = el.createTextRange();
 				r.setEndPoint("EndToStart", real);
-				
+
 				var start = r.text.length
 				return {
 					start: start,
@@ -33,7 +34,7 @@ getSelection = function(el){
 				}
 			}
 			else {
-				var real = h.getWindow(el).document.selection.createRange(), r = real.duplicate(), r2 = real.duplicate(), r3 = real.duplicate();
+				real = h.getWindow(el).document.selection.createRange(), r = real.duplicate(), r2 = real.duplicate(), r3 = real.duplicate();
 				r2.collapse();
 				r3.collapse(false);
 				r2.moveStart('character', -1)
@@ -58,7 +59,7 @@ getSelection = function(el){
 		}catch(e){
 			return {start: el.value.length, end: el.value.length};
 		}
-	} 
+	}
 },
 // gets all focusable elements
 getFocusable = function(el){
@@ -67,13 +68,13 @@ getFocusable = function(el){
 
 	var els = document.getElementsByTagName('*'),
 		len = els.length;
-		
+
 	for(var i=0;  i< len; i++){
 		Syn.isFocusable(els[i]) && els[i] != document.documentElement && res.push(els[i])
 	}
 	return res;
-	
-	
+
+
 };
 
 /**
@@ -86,12 +87,12 @@ h.extend(Syn,{
 	 * You can add type keys with
 	 * @codestart
 	 * Syn('key','delete','title');
-	 * 
-	 * //or 
-	 * 
+	 *
+	 * //or
+	 *
 	 * Syn('type','One Two Three[left][left][delete]','title')
 	 * @codeend
-	 * 
+	 *
 	 * The following are a list of keys you can type:
 	 * @codestart text
 	 * \b        - backspace
@@ -123,16 +124,16 @@ h.extend(Syn,{
 	keycodes: {
 		//backspace
 		'\b':'8',
-		
+
 		//tab
 		'\t':'9',
-		
+
 		//enter
 		'\r':'13',
-		
+
 		//special
 		'shift':'16','ctrl':'17','alt':'18',
-		
+
 		//weird
 		'pause-break':'19',
 		'caps':'20',
@@ -140,11 +141,11 @@ h.extend(Syn,{
 		'num-lock':'144',
 		'scroll-lock':'145',
 		'print' : '44',
-		
+
 		//navigation
 		'page-up':'33','page-down':'34','end':'35','home':'36',
 		'left':'37','up':'38','right':'39','down':'40','insert':'45','delete':'46',
-		
+
 		//normal characters
 		' ':'32',
 		'0':'48','1':'49','2':'50','3':'51','4':'52','5':'53','6':'54','7':'55','8':'56','9':'57',
@@ -166,24 +167,24 @@ h.extend(Syn,{
 		'\\':'220',
 		']':'221',
 		"'":'222',
-		
+
 		//ignore these, you shouldn't use them
 		'left window key':'91','right window key':'92','select key':'93',
-		
-		
+
+
 		'f1':'112','f2':'113','f3':'114','f4':'115','f5':'116','f6':'117',
 		'f7':'118','f8':'119','f9':'120','f10':'121','f11':'122','f12':'123'
 	},
-	
+
 	// what we can type in
 	typeable : /input|textarea/i,
-	
+
 	// selects text on an element
 	selectText: function( el, start, end ) {
 		if(el.setSelectionRange){
 			if(!end){
-                el.focus();
-                el.setSelectionRange(start, start);
+				el.focus();
+				el.setSelectionRange(start, start);
 			} else {
 				el.selectionStart = start;
 				el.selectionEnd = end;
@@ -194,9 +195,9 @@ h.extend(Syn,{
 			r.moveStart('character', start);
 			end = end || start;
 			r.moveEnd('character', end - el.value.length);
-			
+
 			r.select();
-		} 
+		}
 	},
 	getText: function( el ) {
 		//first check if the el has anything selected ..
@@ -233,7 +234,7 @@ h.extend(Syn.key,{
 		}
 		return S.key.browser.character
 	},
-	
+
 	//returns the special key if special
 	isSpecial: function( keyCode ) {
 		var specials = S.key.kinds.special;
@@ -251,16 +252,16 @@ h.extend(Syn.key,{
 	 */
 	options: function( key, event ) {
 		var keyData = Syn.key.data(key);
-		
+
 		if(!keyData[event]){
 			//we shouldn't be creating this event
 			return null;
 		}
-			
+
 		var	charCode = keyData[event][0],
 			keyCode = keyData[event][1],
 			result = {};
-			
+
 		if(keyCode == 'key'){
 			result.keyCode = Syn.keycodes[key]
 		} else if (keyCode == 'char'){
@@ -268,14 +269,14 @@ h.extend(Syn.key,{
 		}else{
 			result.keyCode = keyCode;
 		}
-		
+
 		if(charCode == 'char'){
 			result.charCode = key.charCodeAt(0)
 		}else if(charCode !== null){
 			result.charCode = charCode;
 		}
-		
-		
+
+
 		return result
 	},
 	//types of event keys
@@ -304,18 +305,18 @@ h.extend(Syn.key,{
 			if(/num\d+/.test(key)){
 				key = key.match(/\d+/)[0]
 			}
-			
+
 			if(force || (!S.support.keyCharacters && Syn.typeable.test(this.nodeName))){
 				var current = this.value,
 					before = current.substr(0,sel.start),
 					after = current.substr(sel.end),
 					character = key;
-				
+
 				this.value = before+character+after;
 				//handle IE inserting \r\n
 				var charLength = character == "\n" && S.support.textareaCarriage ? 2 : character.length;
 				Syn.selectText(this, before.length + charLength)
-			}		
+			}
 		},
 		'c' : function( options, scope, key, force, sel ) {
 			if(Syn.key.ctrlKey){
@@ -379,7 +380,7 @@ h.extend(Syn.key,{
 				var current = this.value,
 					before = current.substr(0,sel.start),
 					after = current.substr(sel.end);
-					
+
 				if(sel.start == sel.end && sel.start > 0){
 					//remove a character
 					this.value = before.substring(0, before.length - 1)+after
@@ -388,9 +389,9 @@ h.extend(Syn.key,{
 					this.value = before+after;
 					Syn.selectText(this, sel.start)
 				}
-				
+
 				//set back the selection
-			}	
+			}
 		},
 		'delete' : function( options, scope, key, force, sel ) {
 			if(!S.support.backspaceWorks && Syn.typeable.test(this.nodeName)){
@@ -401,13 +402,13 @@ h.extend(Syn.key,{
 					this.value = before+after.substring(1)
 				}else{
 					this.value = before+after;
-					
+
 				}
 				Syn.selectText(this, sel.start)
-			}		
+			}
 		},
 		'\r' : function( options, scope, key, force, sel ) {
-			
+
 			var nodeName = this.nodeName.toLowerCase()
 			// submit a form
 			if(!S.support.keypressSubmits && nodeName == 'input'){
@@ -415,7 +416,7 @@ h.extend(Syn.key,{
 				if(form){
 					Syn.trigger("submit", {}, form);
 				}
-					
+
 			}
 			//newline in textarea
 			if(!S.support.keyCharacters && nodeName == 'textarea'){
@@ -426,14 +427,14 @@ h.extend(Syn.key,{
 				Syn.trigger("click", {}, this);
 			}
 		},
-		// 
+		//
 		// Gets all focusable elements.  If the element (this)
 		// doesn't have a tabindex, finds the next element after.
-		// If the element (this) has a tabindex finds the element 
+		// If the element (this) has a tabindex finds the element
 		// with the next higher tabindex OR the element with the same
 		// tabindex after it in the document.
 		// @return the next element
-		// 
+		//
 		'\t' : function( options, scope ) {
 				// focusable elements
 			var focusEls = getFocusable(this),
@@ -446,7 +447,7 @@ h.extend(Syn.key,{
 				// set to true once we found 'this' element
 				found = false,
 				i = 0,
-				el, 
+				el,
 				//the tabindex of the tabable element we are looking at
 				elIndex,
 				firstNotIndexed,
@@ -488,10 +489,10 @@ h.extend(Syn.key,{
 							current = orders[focusEls.length-1][0]
 						}
 					}
-					
+
 				}
 			}
-			
+
 			//restart if we didn't find anything
 			if(!current){
 				current = firstNotIndexed;
@@ -515,11 +516,11 @@ h.extend(Syn.key,{
 				}else{
 					Syn.selectText(this, sel.end+1 > this.value.length ? this.value.length  : sel.end+1)
 				}
-			}	
+			}
 		},
 		'up' : function() {
 			if(/select/i.test(this.nodeName)){
-				
+
 				this.selectedIndex = this.selectedIndex ? this.selectedIndex-1 : 0;
 				//set this to change on blur?
 			}
@@ -558,32 +559,32 @@ h.extend(Syn.create,{
 		options: function( type, options, element ) {
 			//check if options is character or has character
 			options = typeof options != "object" ? {character : options} : options;
-			
+
 			//don't change the orignial
 			options = h.extend({}, options)
 			if(options.character){
 				h.extend(options, S.key.options(options.character, type));
 				delete options.character;
 			}
-			
+
 			options = h.extend({
 				ctrlKey: !!Syn.key.ctrlKey,
 				altKey: !!Syn.key.altKey,
 				shiftKey: !!Syn.key.shiftKey,
 				metaKey: !!Syn.key.metaKey
 			}, options)
-			
+
 			return options;
 		},
 		// creates a key event
-		event : document.createEvent ? 
+		event : document.createEvent ?
 			function(type, options, element){  //Everyone Else
 				var event;
-				
+
 				try {
-		
+
 					event = element.ownerDocument.createEvent("KeyEvents");
-					event.initKeyEvent(type, true, true, window, 
+					event.initKeyEvent(type, true, true, window,
 						options.ctrlKey, options.altKey, options.shiftKey, options.metaKey,
 						options.keyCode, options.charCode );
 				} catch(e) {
@@ -592,7 +593,7 @@ h.extend(Syn.create,{
 				event.synthetic = true;
 				return event;
 
-			} : 
+			} :
 			function(type, options, element){
 				var event = h.createEventObject.apply(this,arguments);
 				h.extend(event, options)
@@ -617,9 +618,9 @@ h.extend(Syn.init.prototype,
 	/**
 	 * @function key
 	 * Types a single key.  The key should be
-	 * a string that matches a 
+	 * a string that matches a
 	 * [Syn.static.keycodes].
-	 * 
+	 *
 	 * The following sends a carridge return
 	 * to the 'name' element.
 	 * @codestart
@@ -634,32 +635,32 @@ h.extend(Syn.init.prototype,
 	 */
 	_key: function( options, element, callback ) {
 		//first check if it is a special up
-		if(/-up$/.test(options) 
+		if(/-up$/.test(options)
 			&& h.inArray(options.replace("-up",""),Syn.key.kinds.special )!= -1){
-			Syn.trigger('keyup',options.replace("-up",""), element )
+			Syn.trigger('keyup',options.replace("-up",""), element );
 			callback(true, element);
-			return;
+			return element;
 		}
-		
-		
+
+
 		var caret = Syn.typeable.test(element.nodeName) && getSelection(element),
 			key = convert[options] || options,
 			// should we run default events
 			runDefaults = Syn.trigger('keydown',key, element ),
-			
+
 			// a function that gets the default behavior for a key
 			getDefault = Syn.key.getDefault,
-			
+
 			// how this browser handles preventing default events
 			prevent = Syn.key.browser.prevent,
-			
+
 			// the result of the default event
 			defaultResult,
-			
+
 			// options for keypress
 			keypressOptions = Syn.key.options(key, 'keypress')
-		
-		
+
+
 		if(runDefaults){
 			//if the browser doesn't create keypresses for this key, run default
 			if(!keypressOptions){
@@ -680,7 +681,7 @@ h.extend(Syn.init.prototype,
 		if(defaultResult && defaultResult.nodeName){
 			element = defaultResult
 		}
-		
+
 		if(defaultResult !== null){
 			setTimeout(function(){
 				Syn.trigger('keyup',Syn.key.options(key, 'keyup'), element )
@@ -689,14 +690,14 @@ h.extend(Syn.init.prototype,
 		}else{
 			callback(runDefaults, element)
 		}
-		
-		
+
+
 		//do mouseup
-		
+
 		return element;
 		// is there a keypress? .. if not , run default
 		// yes -> did we prevent it?, if not run ...
-		
+
 	},
 	/**
 	 * @function type
@@ -704,14 +705,14 @@ h.extend(Syn.init.prototype,
 	 * character is typed, one at a type.
 	 * Multi-character keys like 'left' should be
 	 * enclosed in square brackents.
-	 * 
+	 *
 	 * The following types 'JavaScript MVC' then deletes the space.
 	 * @codestart
 	 * Syn.type('JavaScript MVC[left][left][left]\b','name')
 	 * @codeend
-	 * 
-	 * Type is able to handle (and move with) tabs (\t).  
-	 * The following simulates tabing and entering values in a form and 
+	 *
+	 * Type is able to handle (and move with) tabs (\t).
+	 * The following simulates tabing and entering values in a form and
 	 * eventually submitting the form.
 	 * @codestart
 	 * Syn.type("Justin\tMeyer\t27\tjustinbmeyer@gmail.com\r")
@@ -737,9 +738,9 @@ h.extend(Syn.init.prototype,
 				}
 				self._key(part, el, runNextPart)
 			}
-		
+
 		runNextPart();
-		
+
 	}
 });
 
@@ -751,15 +752,15 @@ h.extend(Syn.init.prototype,
 		return;
 	}
 
-	var div = document.createElement("div"), 
-		checkbox, 
-		submit, 
-		form, 
-		input, 
+	var div = document.createElement("div"),
+		checkbox,
+		submit,
+		form,
+		input,
 		submitted = false,
 		anchor,
 		textarea;
-		
+
 	div.innerHTML = "<form id='outer'>"+
 		"<input name='checkbox' type='checkbox'/>"+
 		"<input name='radio' type='radio' />"+
@@ -768,9 +769,9 @@ h.extend(Syn.init.prototype,
 		"<input name='one'>"+
 		"<input name='two'/>"+
 		"<a href='#abc'></a>"+
-		"<textarea>1\n2</textarea>"
+		"<textarea>1\n2</textarea>"+
 		"</form>";
-		
+
 	document.documentElement.appendChild(div);
 	form = div.firstChild;
 	checkbox = form.childNodes[0];
@@ -778,45 +779,45 @@ h.extend(Syn.init.prototype,
 	anchor = form.getElementsByTagName("a")[0];
 	textarea = form.getElementsByTagName("textarea")[0]
 	form.onsubmit = function(ev){
-		if (ev.preventDefault) 
+		if (ev.preventDefault)
 			ev.preventDefault();
 		S.support.keypressSubmits = true;
 		ev.returnValue = false;
 		return false;
 	}
 	Syn.trigger("keypress", "\r", form.childNodes[3]);
-	
-	
+
+
 	Syn.trigger("keypress", "a", form.childNodes[3]);
 	S.support.keyCharacters = form.childNodes[3].value == "a";
-	
-	
+
+
 	form.childNodes[3].value = "a"
 	Syn.trigger("keypress", "\b", form.childNodes[3]);
 	S.support.backspaceWorks = form.childNodes[3].value == "";
-	
-		
-	
+
+
+
 	form.childNodes[3].onchange = function(){
 		S.support.focusChanges = true;
 	}
 	form.childNodes[3].focus();
 	Syn.trigger("keypress", "a", form.childNodes[3]);
 	form.childNodes[5].focus();
-	
+
 	//test keypress \r on anchor submits
 	S.bind(anchor,"click",function(ev){
-		if (ev.preventDefault) 
+		if (ev.preventDefault)
 			ev.preventDefault();
 		S.support.keypressOnAnchorClicks = true;
 		ev.returnValue = false;
 		return false;
 	})
 	Syn.trigger("keypress", "\r", anchor);
-	
+
 	S.support.textareaCarriage = textarea.value.length == 4
 	document.documentElement.removeChild(div);
-	
+
 	S.support.ready++;
 })();
 }())
