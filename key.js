@@ -17,7 +17,7 @@
 				return {
 					start: el.selectionStart,
 					end: el.selectionEnd
-				}
+				};
 			} else {
 				//check if we aren't focused
 				//if(document.activeElement && document.activeElement != el){
@@ -25,23 +25,27 @@
 				try {
 					//try 2 different methods that work differently (IE breaks depending on type)
 					if ( el.nodeName.toLowerCase() == 'input' ) {
-						real = h.getWindow(el).document.selection.createRange(), r = el.createTextRange();
+						real = h.getWindow(el).document.selection.createRange();
+						r = el.createTextRange();
 						r.setEndPoint("EndToStart", real);
 
-						var start = r.text.length
+						var start = r.text.length;
 						return {
 							start: start,
 							end: start + real.text.length
-						}
+						};
 					}
 					else {
-						real = h.getWindow(el).document.selection.createRange(), r = real.duplicate(), r2 = real.duplicate(), r3 = real.duplicate();
+						real = h.getWindow(el).document.selection.createRange();
+						r = real.duplicate();
+						r2 = real.duplicate();
+						r3 = real.duplicate();
 						r2.collapse();
 						r3.collapse(false);
-						r2.moveStart('character', -1)
-						r3.moveStart('character', -1)
+						r2.moveStart('character', -1);
+						r3.moveStart('character', -1);
 						//select all of our element
-						r.moveToElementText(el)
+						r.moveToElementText(el);
 						//now move our endpoint to the end of our real range
 						r.setEndPoint('EndToEnd', real);
 						var start = r.text.length - real.text.length,
@@ -56,7 +60,7 @@
 						return {
 							start: start,
 							end: end
-						}
+						};
 					}
 				} catch (e) {
 					return {
@@ -75,7 +79,7 @@
 				len = els.length;
 
 			for ( var i = 0; i < len; i++ ) {
-				Syn.isFocusable(els[i]) && els[i] != document.documentElement && res.push(els[i])
+				Syn.isFocusable(els[i]) && els[i] != document.documentElement && res.push(els[i]);
 			}
 			return res;
 
@@ -275,7 +279,7 @@
 			//first check if the el has anything selected ..
 			if ( Syn.typeable.test(el.nodeName) ) {
 				var sel = getSelection(el);
-				return el.value.substring(sel.start, sel.end)
+				return el.value.substring(sel.start, sel.end);
 			}
 			//otherwise get from page
 			var win = Syn.helpers.getWindow(el);
@@ -283,7 +287,7 @@
 				return win.getSelection().toString();
 			}
 			else if ( win.document.getSelection ) {
-				return win.document.getSelection().toString()
+				return win.document.getSelection().toString();
 			}
 			else {
 				return win.document.selection.createRange().text;
@@ -301,10 +305,10 @@
 			}
 			for ( var kind in S.key.kinds ) {
 				if ( h.inArray(key, S.key.kinds[kind]) > -1 ) {
-					return S.key.browser[kind]
+					return S.key.browser[kind];
 				}
 			}
-			return S.key.browser.character
+			return S.key.browser.character;
 		},
 
 		//returns the special key if special
@@ -335,21 +339,21 @@
 				result = {};
 
 			if ( keyCode == 'key' ) {
-				result.keyCode = Syn.keycodes[key]
+				result.keyCode = Syn.keycodes[key];
 			} else if ( keyCode == 'char' ) {
-				result.keyCode = key.charCodeAt(0)
+				result.keyCode = key.charCodeAt(0);
 			} else {
 				result.keyCode = keyCode;
 			}
 
 			if ( charCode == 'char' ) {
-				result.charCode = key.charCodeAt(0)
+				result.charCode = key.charCodeAt(0);
 			} else if ( charCode !== null ) {
 				result.charCode = charCode;
 			}
 
 
-			return result
+			return result;
 		},
 		//types of event keys
 		kinds: {
@@ -369,13 +373,13 @@
 					return Syn.key.defaults[kind];
 				}
 			}
-			return Syn.key.defaults.character
+			return Syn.key.defaults.character;
 		},
 		// default behavior when typing
 		defaults: {
 			'character': function( options, scope, key, force, sel ) {
 				if (/num\d+/.test(key) ) {
-					key = key.match(/\d+/)[0]
+					key = key.match(/\d+/)[0];
 				}
 
 				if ( force || (!S.support.keyCharacters && Syn.typeable.test(this.nodeName)) ) {
@@ -387,12 +391,12 @@
 					this.value = before + character + after;
 					//handle IE inserting \r\n
 					var charLength = character == "\n" && S.support.textareaCarriage ? 2 : character.length;
-					Syn.selectText(this, before.length + charLength)
+					Syn.selectText(this, before.length + charLength);
 				}
 			},
 			'c': function( options, scope, key, force, sel ) {
 				if ( Syn.key.ctrlKey ) {
-					Syn.key.clipboard = Syn.getText(this)
+					Syn.key.clipboard = Syn.getText(this);
 				} else {
 					Syn.key.defaults.character.apply(this, arguments);
 				}
@@ -406,7 +410,7 @@
 			},
 			'a': function( options, scope, key, force, sel ) {
 				if ( Syn.key.ctrlKey ) {
-					Syn.selectText(this, 0, this.value.length)
+					Syn.selectText(this, 0, this.value.length);
 				} else {
 					Syn.key.defaults.character.apply(this, arguments);
 				}
@@ -417,7 +421,7 @@
 						el.scrollTop = 0;
 						return false;
 					}
-				})
+				});
 			},
 			'end': function() {
 				Syn.onParents(this, function( el ) {
@@ -425,26 +429,26 @@
 						el.scrollTop = el.scrollHeight;
 						return false;
 					}
-				})
+				});
 			},
 			'page-down': function() {
 				//find the first parent we can scroll
 				Syn.onParents(this, function( el ) {
 					if ( el.scrollHeight != el.clientHeight ) {
-						var ch = el.clientHeight
+						var ch = el.clientHeight;
 						el.scrollTop += ch;
 						return false;
 					}
-				})
+				});
 			},
 			'page-up': function() {
 				Syn.onParents(this, function( el ) {
 					if ( el.scrollHeight != el.clientHeight ) {
-						var ch = el.clientHeight
+						var ch = el.clientHeight;
 						el.scrollTop -= ch;
 						return false;
 					}
-				})
+				});
 			},
 			'\b': function( options, scope, key, force, sel ) {
 				//this assumes we are deleting from the end
@@ -455,11 +459,11 @@
 
 					if ( sel.start == sel.end && sel.start > 0 ) {
 						//remove a character
-						this.value = before.substring(0, before.length - 1) + after
-						Syn.selectText(this, sel.start - 1)
+						this.value = before.substring(0, before.length - 1) + after;
+						Syn.selectText(this, sel.start - 1);
 					} else {
 						this.value = before + after;
-						Syn.selectText(this, sel.start)
+						Syn.selectText(this, sel.start);
 					}
 
 					//set back the selection
@@ -471,17 +475,17 @@
 						before = current.substr(0, sel.start),
 						after = current.substr(sel.end);
 					if ( sel.start == sel.end && sel.start <= this.value.length - 1 ) {
-						this.value = before + after.substring(1)
+						this.value = before + after.substring(1);
 					} else {
 						this.value = before + after;
 
 					}
-					Syn.selectText(this, sel.start)
+					Syn.selectText(this, sel.start);
 				}
 			},
 			'\r': function( options, scope, key, force, sel ) {
 
-				var nodeName = this.nodeName.toLowerCase()
+				var nodeName = this.nodeName.toLowerCase();
 				// submit a form
 				if (!S.support.keypressSubmits && nodeName == 'input' ) {
 					var form = Syn.closest(this, "form");
@@ -492,7 +496,7 @@
 				}
 				//newline in textarea
 				if (!S.support.keyCharacters && nodeName == 'textarea' ) {
-					Syn.key.defaults.character.call(this, options, scope, "\n", undefined, sel)
+					Syn.key.defaults.character.call(this, options, scope, "\n", undefined, sel);
 				}
 				// 'click' hyperlinks
 				if (!S.support.keypressOnAnchorClicks && nodeName == 'a' ) {
@@ -532,7 +536,7 @@
 						tab1 = Syn.tabIndex(el1) || 0,
 						tab2 = Syn.tabIndex(el2) || 0;
 					if ( tab1 == tab2 ) {
-						return order1[1] - order2[1]
+						return order1[1] - order2[1];
 					} else {
 						if ( tab1 == 0 ) {
 							return 1;
@@ -542,7 +546,7 @@
 							return tab1 - tab2;
 						}
 					}
-				}
+				};
 				orders.sort(sort);
 				//now find current
 				for ( i = 0; i < orders.length; i++ ) {
@@ -551,12 +555,12 @@
 						if (!Syn.key.shiftKey ) {
 							current = orders[i + 1][0];
 							if (!current ) {
-								current = orders[0][0]
+								current = orders[0][0];
 							}
 						} else {
 							current = orders[i - 1][0];
 							if (!current ) {
-								current = orders[focusEls.length - 1][0]
+								current = orders[focusEls.length - 1][0];
 							}
 						}
 
@@ -573,18 +577,18 @@
 			'left': function( options, scope, key, force, sel ) {
 				if ( Syn.typeable.test(this.nodeName) ) {
 					if ( Syn.key.shiftKey ) {
-						Syn.selectText(this, sel.start == 0 ? 0 : sel.start - 1, sel.end)
+						Syn.selectText(this, sel.start == 0 ? 0 : sel.start - 1, sel.end);
 					} else {
-						Syn.selectText(this, sel.start == 0 ? 0 : sel.start - 1)
+						Syn.selectText(this, sel.start == 0 ? 0 : sel.start - 1);
 					}
 				}
 			},
 			'right': function( options, scope, key, force, sel ) {
 				if ( Syn.typeable.test(this.nodeName) ) {
 					if ( Syn.key.shiftKey ) {
-						Syn.selectText(this, sel.start, sel.end + 1 > this.value.length ? this.value.length : sel.end + 1)
+						Syn.selectText(this, sel.start, sel.end + 1 > this.value.length ? this.value.length : sel.end + 1);
 					} else {
-						Syn.selectText(this, sel.end + 1 > this.value.length ? this.value.length : sel.end + 1)
+						Syn.selectText(this, sel.end + 1 > this.value.length ? this.value.length : sel.end + 1);
 					}
 				}
 			},
@@ -597,7 +601,7 @@
 			},
 			'down': function() {
 				if (/select/i.test(this.nodeName) ) {
-					Syn.changeOnBlur(this, "selectedIndex", this.selectedIndex)
+					Syn.changeOnBlur(this, "selectedIndex", this.selectedIndex);
 					this.selectedIndex = this.selectedIndex + 1;
 					//set this to change on blur?
 				}
@@ -633,7 +637,7 @@
 				} : options;
 
 				//don't change the orignial
-				options = h.extend({}, options)
+				options = h.extend({}, options);
 				if ( options.character ) {
 					h.extend(options, S.key.options(options.character, type));
 					delete options.character;
@@ -644,7 +648,7 @@
 					altKey: !! Syn.key.altKey,
 					shiftKey: !! Syn.key.shiftKey,
 					metaKey: !! Syn.key.metaKey
-				}, options)
+				}, options);
 
 				return options;
 			},
@@ -658,14 +662,14 @@
 					event = element.ownerDocument.createEvent("KeyEvents");
 					event.initKeyEvent(type, true, true, window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.keyCode, options.charCode);
 				} catch (e) {
-					event = h.createBasicStandardEvent(type, options)
+					event = h.createBasicStandardEvent(type, options);
 				}
 				event.synthetic = true;
 				return event;
 
 			} : function( type, options, element ) {
 				var event = h.createEventObject.apply(this, arguments);
-				h.extend(event, options)
+				h.extend(event, options);
 
 				return event;
 			}
@@ -677,7 +681,7 @@
 		"backspace": "\b",
 		"tab": "\t",
 		"space": " "
-	}
+	};
 
 	/**
 	 * @add Syn prototype
@@ -725,42 +729,42 @@
 				defaultResult,
 
 				// options for keypress
-				keypressOptions = Syn.key.options(key, 'keypress')
+				keypressOptions = Syn.key.options(key, 'keypress');
 
 
-				if ( runDefaults ) {
-					//if the browser doesn't create keypresses for this key, run default
-					if (!keypressOptions ) {
-						defaultResult = getDefault(key).call(element, keypressOptions, h.getWindow(element), key, undefined, caret)
-					} else {
-						//do keypress
-						runDefaults = Syn.trigger('keypress', keypressOptions, element)
-						if ( runDefaults ) {
-							defaultResult = getDefault(key).call(element, keypressOptions, h.getWindow(element), key, undefined, caret)
-						}
-					}
+			if ( runDefaults ) {
+				//if the browser doesn't create keypresses for this key, run default
+				if (!keypressOptions ) {
+					defaultResult = getDefault(key).call(element, keypressOptions, h.getWindow(element), key, undefined, caret);
 				} else {
-					//canceled ... possibly don't run keypress
-					if ( keypressOptions && h.inArray('keypress', prevent.keydown) == -1 ) {
-						Syn.trigger('keypress', keypressOptions, element)
+					//do keypress
+					runDefaults = Syn.trigger('keypress', keypressOptions, element);
+					if ( runDefaults ) {
+						defaultResult = getDefault(key).call(element, keypressOptions, h.getWindow(element), key, undefined, caret);
 					}
 				}
-				if ( defaultResult && defaultResult.nodeName ) {
-					element = defaultResult
+			} else {
+				//canceled ... possibly don't run keypress
+				if ( keypressOptions && h.inArray('keypress', prevent.keydown) == -1 ) {
+					Syn.trigger('keypress', keypressOptions, element);
 				}
+			}
+			if ( defaultResult && defaultResult.nodeName ) {
+				element = defaultResult;
+			}
 
-				if ( defaultResult !== null ) {
-					setTimeout(function() {
-						Syn.trigger('keyup', Syn.key.options(key, 'keyup'), element)
-						callback(runDefaults, element)
-					}, 1)
-				} else {
-					callback(runDefaults, element)
-				}
+			if ( defaultResult !== null ) {
+				setTimeout(function() {
+					Syn.trigger('keyup', Syn.key.options(key, 'keyup'), element);
+					callback(runDefaults, element);
+				}, 1);
+			} else {
+				callback(runDefaults, element);
+			}
 
 
-				//do mouseup
-				return element;
+			//do mouseup
+			return element;
 			// is there a keypress? .. if not , run default
 			// yes -> did we prevent it?, if not run ...
 		},
@@ -799,12 +803,12 @@
 					}
 					el = el || element;
 					if ( part.length > 1 ) {
-						part = part.substr(1, part.length - 2)
+						part = part.substr(1, part.length - 2);
 					}
-					self._key(part, el, runNextPart)
-				}
+					self._key(part, el, runNextPart);
+				};
 
-				runNextPart();
+			runNextPart();
 
 		}
 	});
@@ -813,7 +817,7 @@
 	//do support code
 	(function() {
 		if (!document.body ) {
-			setTimeout(arguments.callee, 1)
+			setTimeout(arguments.callee, 1);
 			return;
 		}
 
@@ -828,13 +832,13 @@
 		checkbox = form.childNodes[0];
 		submit = form.childNodes[2];
 		anchor = form.getElementsByTagName("a")[0];
-		textarea = form.getElementsByTagName("textarea")[0]
+		textarea = form.getElementsByTagName("textarea")[0];
 		form.onsubmit = function( ev ) {
 			if ( ev.preventDefault ) ev.preventDefault();
 			S.support.keypressSubmits = true;
 			ev.returnValue = false;
 			return false;
-		}
+		};
 		Syn.trigger("keypress", "\r", form.childNodes[3]);
 
 
@@ -842,7 +846,7 @@
 		S.support.keyCharacters = form.childNodes[3].value == "a";
 
 
-		form.childNodes[3].value = "a"
+		form.childNodes[3].value = "a";
 		Syn.trigger("keypress", "\b", form.childNodes[3]);
 		S.support.backspaceWorks = form.childNodes[3].value == "";
 
@@ -850,7 +854,7 @@
 
 		form.childNodes[3].onchange = function() {
 			S.support.focusChanges = true;
-		}
+		};
 		form.childNodes[3].focus();
 		Syn.trigger("keypress", "a", form.childNodes[3]);
 		form.childNodes[5].focus();
@@ -861,12 +865,12 @@
 			S.support.keypressOnAnchorClicks = true;
 			ev.returnValue = false;
 			return false;
-		})
+		});
 		Syn.trigger("keypress", "\r", anchor);
 
-		S.support.textareaCarriage = textarea.value.length == 4
+		S.support.textareaCarriage = textarea.value.length == 4;
 		document.documentElement.removeChild(div);
 
 		S.support.ready++;
 	})();
-}())
+}());

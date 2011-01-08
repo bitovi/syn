@@ -3,7 +3,7 @@
  * 
  * http://docs.jquery.com/QUnit
  *
- * Copyright (c) 2009 John Resig, J�rn Zaefferer
+ * Copyright (c) 2009 John Resig, Jörn Zaefferer
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
  */
@@ -126,7 +126,7 @@
 					var li = document.createElement("li");
 					li.appendChild(b);
 					li.id = "current-test-output";
-					tests.appendChild(li)
+					tests.appendChild(li);
 				}
 
 				try {
@@ -170,6 +170,7 @@
 			}, true);
 
 			synchronize(function() {
+				var i;
 				try {
 					QUnit.reset();
 				} catch (e) {
@@ -191,7 +192,7 @@
 					var ol = document.createElement("ol");
 					ol.style.display = "none";
 
-					for ( var i = 0; i < config.assertions.length; i++ ) {
+					for ( i = 0; i < config.assertions.length; i++ ) {
 						var assertion = config.assertions[i];
 
 						var li = document.createElement("li");
@@ -636,7 +637,7 @@
 	function synchronize(callback, save) {
 		config.queue.push(callback);
 		if ( save ) {
-			config.cachelist.push(callback)
+			config.cachelist.push(callback);
 		}
 		if ( config.autorun && !config.blocking ) {
 			process();
@@ -956,11 +957,11 @@
 	QUnit.jsDump = (function() {
 		function quote(str) {
 			return '"' + str.toString().replace(/"/g, '\\"') + '"';
-		};
+		}
 
 		function literal(o) {
 			return o + '';
-		};
+		}
 
 		function join(pre, arr, post) {
 			var s = jsDump.separator(),
@@ -969,7 +970,7 @@
 			if ( arr.join ) arr = arr.join(',' + s + inner);
 			if (!arr ) return pre + post;
 			return [pre, inner + arr, base + post].join(s);
-		};
+		}
 
 		function array(arr) {
 			var i = arr.length,
@@ -979,7 +980,7 @@
 			ret[i] = this.parse(arr[i]);
 			this.down();
 			return join('[', ret, ']');
-		};
+		}
 
 		var reName = /^function (\w+)/;
 

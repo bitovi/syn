@@ -393,7 +393,7 @@ Syn.mouse.browsers = {
 			}
 		}
 	}
-}
+};
 
 //set browser
 Syn.key.browser = (function() {
@@ -402,7 +402,7 @@ Syn.key.browser = (function() {
 	}
 	for ( var browser in Syn.browser ) {
 		if ( Syn.browser[browser] && Syn.key.browsers[browser] ) {
-			return Syn.key.browsers[browser]
+			return Syn.key.browsers[browser];
 		}
 	}
 	return Syn.key.browsers.gecko;
@@ -414,7 +414,7 @@ Syn.mouse.browser = (function() {
 	}
 	for ( var browser in Syn.browser ) {
 		if ( Syn.browser[browser] && Syn.mouse.browsers[browser] ) {
-			return Syn.mouse.browsers[browser]
+			return Syn.mouse.browsers[browser];
 		}
 	}
 	return Syn.mouse.browsers.gecko;
