@@ -1,6 +1,8 @@
 (function() {
 	var extend = function( d, s ) {
-		for ( var p in s ) d[p] = s[p];
+		for ( var p in s ) {
+			d[p] = s[p];
+		}
 		return d;
 	},
 		// only uses browser detection for key events

@@ -125,24 +125,24 @@
 			$("#uitabs, #uitabs2").mxui_ui_tabs();
 			
 			
-			$(window).bind('load', function(){
+			$(window).bind('load', function() {
 				$("select")[0].selectedIndex = 0;
 
 				$("#numeric").mxui_key_validator({test: /^[-+]?[0-9]*\.?[0-9]*$/}).val("")
-			})
-			$("#submitform").submit(function(ev){
+			});
+			$("#submitform").submit(function(ev) {
 				ev.preventDefault();
-				$("#indicator").css("backgroundColor","#00ff00")
-				setTimeout(function(){
-					$("#indicator").css("backgroundColor","")
-				},300)
+				$("#indicator").css("backgroundColor", "#00ff00");
+				setTimeout(function() {
+					$("#indicator").css("backgroundColor", "")
+				}, 300)
 
-			}).change(function(ev){
-				$("#changeIndicator").css("backgroundColor","#00ff00")
-				setTimeout(function(){
-					$("#changeIndicator").css("backgroundColor","")
-				},300)
-			})
+			}).change(function(ev) {
+				$("#changeIndicator").css("backgroundColor", "#00ff00");
+				setTimeout(function() {
+					$("#changeIndicator").css("backgroundColor", "")
+				}, 300)
+			});
 			//this is to handle all click events in the form
 			
 		</script>

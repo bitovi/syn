@@ -834,7 +834,9 @@
 		anchor = form.getElementsByTagName("a")[0];
 		textarea = form.getElementsByTagName("textarea")[0];
 		form.onsubmit = function( ev ) {
-			if ( ev.preventDefault ) ev.preventDefault();
+			if ( ev.preventDefault ) {
+				ev.preventDefault();
+			}
 			S.support.keypressSubmits = true;
 			ev.returnValue = false;
 			return false;
@@ -861,7 +863,9 @@
 
 		//test keypress \r on anchor submits
 		S.bind(anchor, "click", function( ev ) {
-			if ( ev.preventDefault ) ev.preventDefault();
+			if ( ev.preventDefault ) {
+				ev.preventDefault();
+			}
 			S.support.keypressOnAnchorClicks = true;
 			ev.returnValue = false;
 			return false;

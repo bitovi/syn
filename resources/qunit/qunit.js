@@ -899,7 +899,9 @@
 					for ( i in a ) { // be strict: don't ensures hasOwnProperty and go deep
 						loop = false;
 						for ( j = 0; j < parents.length; j++ ) {
-							if ( parents[j] === a[i] ) loop = true; //don't go down the same path twice
+							if ( parents[j] === a[i] ) {
+								loop = true;
+							} //don't go down the same path twice
 						}
 						aProperties.push(i); // collect a's properties
 						if (!loop && !innerEquiv(a[i], b[i]) ) {
@@ -967,8 +969,12 @@
 			var s = jsDump.separator(),
 				base = jsDump.indent(),
 				inner = jsDump.indent(1);
-			if ( arr.join ) arr = arr.join(',' + s + inner);
-			if (!arr ) return pre + post;
+			if ( arr.join ) {
+				arr = arr.join(',' + s + inner);
+			}
+			if (!arr ) {
+				return pre + post;
+			}
 			return [pre, inner + arr, base + post].join(s);
 		}
 
@@ -976,8 +982,9 @@
 			var i = arr.length,
 				ret = Array(i);
 			this.up();
-			while ( i-- )
-			ret[i] = this.parse(arr[i]);
+			while ( i-- ) {
+				ret[i] = this.parse(arr[i]);
+			}
 			this.down();
 			return join('[', ret, ']');
 		}
@@ -1020,9 +1027,13 @@
 				return this.multiline ? this.HTML ? '<br />' : '\n' : this.HTML ? '&nbsp;' : ' ';
 			},
 			indent: function( extra ) { // extra can be a number, shortcut for increasing-calling-decreasing
-				if (!this.multiline ) return '';
+				if (!this.multiline ) {
+					return '';
+				}
 				var chr = this.indentChar;
-				if ( this.HTML ) chr = chr.replace(/\t/g, '   ').replace(/ /g, '&nbsp;');
+				if ( this.HTML ) {
+					chr = chr.replace(/\t/g, '   ').replace(/ /g, '&nbsp;');
+				}
 				return Array(this._depth_ + (extra || 0)).join(chr);
 			},
 			up: function( a ) {
@@ -1052,7 +1063,9 @@
 				'function': function( fn ) {
 					var ret = 'function',
 						name = 'name' in fn ? fn.name : (reName.exec(fn) || [])[1]; //functions never have name in IE
-					if ( name ) ret += ' ' + name;
+					if ( name ) {
+						ret += ' ' + name;
+					}
 					ret += '(';
 
 					ret = [ret, this.parse(fn, 'functionArgs'), '){'].join('');
@@ -1064,8 +1077,9 @@
 				object: function( map ) {
 					var ret = [];
 					this.up();
-					for ( var key in map )
-					ret.push(this.parse(key, 'key') + ': ' + this.parse(map[key]));
+					for ( var key in map ) {
+						ret.push(this.parse(key, 'key') + ': ' + this.parse(map[key]));
+					}
 					this.down();
 					return join('{', ret, '}');
 				},
@@ -1078,17 +1092,22 @@
 
 					for ( var a in this.DOMAttrs ) {
 						var val = node[this.DOMAttrs[a]];
-						if ( val ) ret += ' ' + a + '=' + this.parse(val, 'attribute');
+						if ( val ) {
+							ret += ' ' + a + '=' + this.parse(val, 'attribute');
+						}
 					}
 					return ret + close + open + '/' + tag + close;
 				},
 				functionArgs: function( fn ) { //function calls it internally, it's the arguments part of the function
 					var l = fn.length;
-					if (!l ) return '';
+					if (!l ) {
+						return '';
+					}
 
 					var args = Array(l);
-					while ( l-- )
-					args[l] = String.fromCharCode(97 + l); //97 is 'a'
+					while ( l-- ) {
+						args[l] = String.fromCharCode(97 + l);
+					} //97 is 'a'
 					return ' ' + args.join(', ') + ' ';
 				},
 				key: quote,

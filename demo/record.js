@@ -4,22 +4,22 @@ $(function(){
 	Syn.autoDelay = true;
 	REPLAY = false;
 	ADD = true;
-	Recorder ={
-		cb: function( i ) {
-			return function(){
-				$("#code div:nth("+(i)+")").css("color","black").css("font-weight","")
-				$("#code div:nth("+(i+1)+")").css("color","orange").css("font-weight","bold")
-				if(i == commands.length - 1){
+	Recorder = {
+		cb: function(i) {
+			return function() {
+				$("#code div:nth(" + (i) + ")").css("color", "black").css("font-weight", "");
+				$("#code div:nth(" + (i + 1) + ")").css("color", "orange").css("font-weight", "bold");
+				if (i == commands.length - 1) {
 					Recorder.done();
 				}
 			}
-			
+
 		},
 		done: function() {
 			ADD = true;
-			$("#code div").css("color","black")
+			$("#code div").css("color", "black")
 		}
-	}
+	};
 	var commands =[],
 		downKeys = [],
 		keytarget = null,
@@ -40,14 +40,14 @@ $(function(){
 					(!prev || prev.selector !== command.selector) && args.push("$('"+command.selector+"')");
 					func && args.push("Recorder.cb("+i+")");
 					
-					text.push(func ? "":"<div>",
-					  i > 0 ? "   ." : "Syn.",
-					  command.type,
-					  "(",
-					  args.join(", "),
-					  ")\n",
-					  func ? "":"</div>"
-					)
+					text.push(func ? "" : "<div>",
+							i > 0 ? "   ." : "Syn.",
+							command.type,
+							"(",
+							args.join(", "),
+							")\n",
+							func ? "" : "</div>"
+							);
 					prev = command;
 				}
 				return text.join("")
@@ -93,7 +93,7 @@ $(function(){
 					"\r" : "\\r",
 					"\t" :"\\t",
 					"\b" : "\\b"
-				}
+				};
 				if(convert[character]){
 					character = convert[character]
 				}else if(character == "[" || character.length > 1){
@@ -147,7 +147,7 @@ $(function(){
 				if(target.className){
 					selector += "."+target.className.split(" ")[0]
 				}
-				var others = jQuery(selector, Syn.helpers.getWindow(target).document)
+				var others = jQuery(selector, Syn.helpers.getWindow(target).document);
 				if(others.length > 1){
 					return selector+":eq("+others.index(target)+")";
 				}else{
@@ -162,8 +162,8 @@ $(function(){
 		justKey = false,
 		mousedownH = function(ev){
 			mousedown = ev.target;
-			mousemove = 0
-			lastX = ev.pageX
+			mousemove = 0;
+			lastX = ev.pageX;
 			lastY = ev.pageY;
 		},
 		mouseupH = function(ev){
@@ -193,51 +193,50 @@ $(function(){
 			}
 		};
 
-	$("<iframe src='demo.html'></iframe>").load(function(){
+	$("<iframe src='demo.html'></iframe>").load(function() {
 		//cant uses handled b/c it doesn't bubble
 		var iframe = $('iframe');
 		//iframe.mxui_filler({parent: $("#fill")});
 		var frameWindow = iframe[0].contentWindow;
-	
+
 		var oldHandle = frameWindow.jQuery.event.handle;
-		
-		frameWindow.jQuery.event.handle = function(ev){
-			if(! ev[ frameWindow.jQuery.expando ]){
+
+		frameWindow.jQuery.event.handle = function(ev) {
+			if (! ev[ frameWindow.jQuery.expando ]) {
 				//add
 				//if(code[ev.type]){
 				//	code[ev.type].call(ev.target||ev.srcElement, ev)
 				//}
 			}
-			oldHandle.apply(this,arguments);
-		}
+			oldHandle.apply(this, arguments);
+		};
 		keytarget = null;
 		$(frameWindow.document).keydown(h.keydown).keyup(h.keyup)
-			.mousedown(mousedownH).mousemove(mousemoveH).mouseup(mouseupH)
-			.change(changeH)
-			.click(function(ev){
-				//if(ev.target.nodeName.toLowerCase() == 'option'){
-				//	h.addCode("click",undefined,ev.target)
-				//}
-			})
-		
-		
+				.mousedown(mousedownH).mousemove(mousemoveH).mouseup(mouseupH)
+				.change(changeH)
+				.click(function(ev) {
+			//if(ev.target.nodeName.toLowerCase() == 'option'){
+			//	h.addCode("click",undefined,ev.target)
+			//}
+		});
 
-		if(REPLAY){
+
+		if (REPLAY) {
 			REPLAY = false;
-			setTimeout(function(){
-				var text = h.commandsText(true)
+			setTimeout(function() {
+				var text = h.commandsText(true);
 				ADD = false;
-				$("#code div:first").css("color","red")
-				eval("with(frameWindow){"+ text +"}" );
-			},500)
-			
+				$("#code div:first").css("color", "red");
+				eval("with(frameWindow){" + text + "}");
+			}, 500)
+
 		}
-		
-	}).appendTo($("#app"))
+
+	}).appendTo($("#app"));
 	
-	$(function(){
+	$(function() {
 		$("#code, #clearme").val("");
-	})
+	});
 	$('#app').mxui_filler({parent: document.body});
 
 	$("#run").click(function(){

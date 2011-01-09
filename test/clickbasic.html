@@ -34,13 +34,13 @@ window.onload = function() {
 	
 	
 	var addListener = function(el, type, event){
-	    if (el.addEventListener) el.addEventListener(type, event, false);
-	    else el.attachEvent('on' + type, event);
+	    if (el.addEventListener) {el.addEventListener(type, event, false);}
+	    else {el.attachEvent('on' + type, event);}
 	};
 	
 	
 	addListener(el, 'click', function(){
-	    alert('weird')
+	    alert('weird');
 		el.innerHTML += ' fn';
 	});
 	
