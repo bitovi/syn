@@ -8,7 +8,7 @@
 			// use selectionStart if we can
 			if ( el.selectionStart !== undefined ) {
 				// this is for opera, so we don't have to focus to type how we think we would
-				if ( document.activeElement && document.activeElement != el && el.selectionStart == el.selectionEnd && el.selectionStart == 0 ) {
+				if ( document.activeElement && document.activeElement != el && el.selectionStart == el.selectionEnd && el.selectionStart === 0 ) {
 					return {
 						start: el.value.length,
 						end: el.value.length
@@ -50,10 +50,10 @@
 						r.setEndPoint('EndToEnd', real);
 						var start = r.text.length - real.text.length,
 							end = r.text.length;
-						if ( start != 0 && r2.text == "" ) {
+						if ( start !== 0 && r2.text === "" ) {
 							start += 2;
 						}
-						if ( end != 0 && r3.text == "" ) {
+						if ( end !== 0 && r3.text === "" ) {
 							end += 2;
 						}
 						//if we aren't at the start, but previous is empty, we are at start of newline
@@ -538,9 +538,9 @@
 					if ( tab1 == tab2 ) {
 						return order1[1] - order2[1];
 					} else {
-						if ( tab1 == 0 ) {
+						if ( tab1 === 0 ) {
 							return 1;
-						} else if ( tab2 == 0 ) {
+						} else if ( tab2 === 0 ) {
 							return -1;
 						} else {
 							return tab1 - tab2;
@@ -577,9 +577,9 @@
 			'left': function( options, scope, key, force, sel ) {
 				if ( Syn.typeable.test(this.nodeName) ) {
 					if ( Syn.key.shiftKey ) {
-						Syn.selectText(this, sel.start == 0 ? 0 : sel.start - 1, sel.end);
+						Syn.selectText(this, sel.start === 0 ? 0 : sel.start - 1, sel.end);
 					} else {
-						Syn.selectText(this, sel.start == 0 ? 0 : sel.start - 1);
+						Syn.selectText(this, sel.start === 0 ? 0 : sel.start - 1);
 					}
 				}
 			},
@@ -850,7 +850,7 @@
 
 		form.childNodes[3].value = "a";
 		Syn.trigger("keypress", "\b", form.childNodes[3]);
-		S.support.backspaceWorks = form.childNodes[3].value == "";
+		S.support.backspaceWorks = form.childNodes[3].value === "";
 
 
 

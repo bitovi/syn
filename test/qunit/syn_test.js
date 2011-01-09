@@ -104,7 +104,7 @@ test("focus on an element then another in another page", function() {
 		calls = 0;
 
 	st.bind(iframe, "load", function() {
-		if ( calls == 0 ) {
+		if ( calls === 0 ) {
 			Syn.click(iframe.contentWindow.document.getElementById("first"), {}, function() {
 				iframe.contentWindow.location = page2;
 			});

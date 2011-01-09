@@ -84,7 +84,7 @@
 					//get what fraction we are at
 					var now = new Date(),
 							scrollOffset = Syn.helpers.scrollOffset(win),
-							fraction = (calls == 0 ? 0 : now - startTime) / duration,
+							fraction = (calls === 0 ? 0 : now - startTime) / duration,
 							options = {
 								clientX: distX * fraction + start.clientX,
 								clientY: distY * fraction + start.clientY

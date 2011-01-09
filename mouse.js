@@ -110,7 +110,7 @@
 					altKey: !! Syn.key.altKey,
 					shiftKey: !! Syn.key.shiftKey,
 					metaKey: !! Syn.key.metaKey,
-					button: left && left.button != null ? left.button : right && right.button || (type == 'contextmenu' ? 2 : 0),
+					button: left && left.button !== null ? left.button : right && right.button || (type == 'contextmenu' ? 2 : 0),
 					relatedTarget: document.documentElement
 				}, options);
 			},
