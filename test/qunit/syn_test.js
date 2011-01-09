@@ -31,7 +31,9 @@ st = {
 (function() {
 	var name;
 	for ( name in Syn.support ) {
-		st.log(name + ": " + Syn.support[name]);
+		if ( Syn.support.hasOwnProperty(name) ) {
+			st.log(name + ": " + Syn.support[name]);
+		}
 	}
 })();
 

@@ -663,7 +663,9 @@
 
 		if ( config.noglobals ) {
 			for ( var key in window ) {
-				config.pollution.push(key);
+				if ( window.hasOwnProperty(key) ) {
+					config.pollution.push(key);
+				}
 			}
 		}
 	}
@@ -714,7 +716,9 @@
 
 	function extend(a, b) {
 		for ( var prop in b ) {
-			a[prop] = b[prop];
+			if ( b.hasOwnProperty(prop) ) {
+				a[prop] = b[prop];
+			}
 		}
 
 		return a;
@@ -897,16 +901,18 @@
 					parents.push(a);
 
 					for ( i in a ) { // be strict: don't ensures hasOwnProperty and go deep
-						loop = false;
-						for ( j = 0; j < parents.length; j++ ) {
-							if ( parents[j] === a[i] ) {
-								loop = true;
-							} //don't go down the same path twice
-						}
-						aProperties.push(i); // collect a's properties
-						if (!loop && !innerEquiv(a[i], b[i]) ) {
-							eq = false;
-							break;
+						if ( a.hasOwnProperty(i) ) {
+							loop = false;
+							for ( j = 0; j < parents.length; j++ ) {
+								if ( parents[j] === a[i] ) {
+									loop = true;
+								} //don't go down the same path twice
+							}
+							aProperties.push(i); // collect a's properties
+							if (!loop && !innerEquiv(a[i], b[i]) ) {
+								eq = false;
+								break;
+							}
 						}
 					}
 
@@ -914,7 +920,9 @@
 					parents.pop();
 
 					for ( i in b ) {
-						bProperties.push(i); // collect b's properties
+						if ( b.hasOwnProperty(i) ) {
+							bProperties.push(i);
+						} // collect b's properties
 					}
 
 					// Ensures identical properties name
@@ -1078,7 +1086,9 @@
 					var ret = [];
 					this.up();
 					for ( var key in map ) {
-						ret.push(this.parse(key, 'key') + ': ' + this.parse(map[key]));
+						if ( map.hasOwnProperty(key) ) {
+							ret.push(this.parse(key, 'key') + ': ' + this.parse(map[key]));
+						}
 					}
 					this.down();
 					return join('{', ret, '}');
@@ -1091,9 +1101,11 @@
 						ret = open + tag;
 
 					for ( var a in this.DOMAttrs ) {
-						var val = node[this.DOMAttrs[a]];
-						if ( val ) {
-							ret += ' ' + a + '=' + this.parse(val, 'attribute');
+						if ( this.DOMAttrs.hasOwnProperty(a) ) {
+							var val = node[this.DOMAttrs[a]];
+							if ( val ) {
+								ret += ' ' + a + '=' + this.parse(val, 'attribute');
+							}
 						}
 					}
 					return ret + close + open + '/' + tag + close;
