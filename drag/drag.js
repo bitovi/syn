@@ -139,22 +139,22 @@
 					var cent = center(from),
 							parts = option.match(relative);
 					option = {
-						pageX: cent.pageX + parseInt(parts[1]),
-						pageY: cent.pageY + parseInt(parts[2])
+						pageX: cent.pageX + parseInt(parts[1], 10),
+						pageY: cent.pageY + parseInt(parts[2], 10)
 					};
 				}
 				if (typeof option == 'string' && page.test(option)) {
 					var parts = option.match(page);
 					option = {
-						pageX: parseInt(parts[1]),
-						pageY: parseInt(parts[2])
+						pageX: parseInt(parts[1], 10),
+						pageY: parseInt(parts[2], 10)
 					};
 				}
 				if (typeof option == 'string' && client.test(option)) {
 					var parts = option.match(client);
 					option = {
-						clientX: parseInt(parts[1]),
-						clientY: parseInt(parts[2])
+						clientX: parseInt(parts[1], 10),
+						clientY: parseInt(parts[2], 10)
 					};
 				}
 				if (typeof option == 'string') {

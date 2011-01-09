@@ -349,7 +349,7 @@
 		 */
 		tabIndex: function( elem ) {
 			var attributeNode = elem.getAttributeNode("tabIndex");
-			return attributeNode && attributeNode.specified && (parseInt(elem.getAttribute('tabIndex')) || 0);
+			return attributeNode && attributeNode.specified && (parseInt(elem.getAttribute('tabIndex'), 10) || 0);
 		},
 		bind: bind,
 		unbind: unbind,
