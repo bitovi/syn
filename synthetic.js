@@ -426,7 +426,7 @@
 			//automatically prevents the default behavior for this event
 			//this is to protect agianst nasty browser freezing bug in safari
 			if ( autoPrevent ) {
-				bind(element, type, function preventhelper( ev ) {
+				bind(element, type, function preventhelper(ev) {
 					ev.preventDefault();
 					unbind(this, type, preventhelper);
 				});
