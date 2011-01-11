@@ -23,7 +23,7 @@
 					all: 0,
 					bad: 0
 				},
-				started: +new Date,
+				started: +new Date(),
 				updateRate: 1000,
 				blocking: false,
 				autostart: true,
@@ -170,7 +170,7 @@
 			}, true);
 
 			synchronize(function () {
-				var i;
+				var i, li;
 				try {
 					QUnit.reset();
 				} catch (e) {
@@ -195,7 +195,7 @@
 					for (i = 0; i < config.assertions.length; i++) {
 						var assertion = config.assertions[i];
 
-						var li = document.createElement("li");
+						li = document.createElement("li");
 						li.className = assertion.result ? "pass" : "fail";
 						li.appendChild(document.createTextNode(assertion.message || "(no message)"));
 						ol.appendChild(li);
@@ -237,7 +237,7 @@
 						}
 					});
 
-					var li = id("current-test-output");
+					li = id("current-test-output");
 					li.id = "";
 					li.className = bad ? "fail" : "pass";
 					li.removeChild(li.firstChild);
@@ -254,7 +254,7 @@
 					}
 
 				} else {
-					for (var i = 0; i < config.assertions.length; i++) {
+					for (i = 0; i < config.assertions.length; i++) {
 						if (!config.assertions[i].result) {
 							bad++;
 							config.stats.bad++;
@@ -463,7 +463,7 @@
 		config.filters = GETParams;
 
 		// Figure out if we're running the tests from a server or not
-		QUnit.isLocal = !! (location.protocol === 'file:');
+		QUnit.isLocal = (location.protocol !== 'file:');
 	})();
 
 	// Expose the API as global variables, unless an 'exports'
@@ -579,7 +579,7 @@
 
 		var banner = id("qunit-banner"),
 			tests = id("qunit-tests"),
-			html = ['Tests completed in ', +new Date - config.started, ' milliseconds.<br/>', '<span class="passed">', config.stats.all - config.stats.bad, '</span> tests of <span class="total">', config.stats.all, '</span> passed, <span class="failed">', config.stats.bad, '</span> failed.'].join('');
+			html = ['Tests completed in ', +new Date() - config.started, ' milliseconds.<br/>', '<span class="passed">', config.stats.all - config.stats.bad, '</span> tests of <span class="total">', config.stats.all, '</span> passed, <span class="failed">', config.stats.bad, '</span> failed.'].join('');
 
 		if (banner) {
 			banner.className = (config.stats.bad ? "qunit-fail" : "qunit-pass");
@@ -858,7 +858,7 @@
 					var len;
 
 					// b could be an object literal here
-					if (!(hoozit(b) === "array")) {
+					if (hoozit(b) !== "array") {
 						return false;
 					}
 

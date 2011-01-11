@@ -1,3 +1,4 @@
+/*global module: false, st: true, test: false, stop: false, equals: false, start: false, asyncTest: false, ok:false */
 module("funcunit/syn");
 
 st = {
@@ -35,14 +36,14 @@ st = {
 			st.log(name + ": " + Syn.support[name]);
 		}
 	}
-})();
+}());
 
 test("Selecting a select element", function () {
 	st.g("qunit-test-area").innerHTML = "<form id='outer'><select name='select'><option value='1' id='one'>one</option><option value='2' id='two'>two</option></select></form>";
 
 	var change = 0,
 		changef = function () {
-			change++;
+			change += 1;
 		};
 
 	st.g("outer").select.selectedIndex = 0;
