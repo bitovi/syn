@@ -7,10 +7,201 @@
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
  */
-
+/*global config:false, exports:true ok: false, start: false, reset: false, require: false */
 (function (window) {
+	var QUnit;
 
-	var QUnit = {
+	function id(name) {
+		return !!(typeof document !== "undefined" && document && document.getElementById) && document.getElementById(name);
+	}
+
+
+	function validTest(name) {
+		var i = config.filters.length,
+			run = false;
+
+		if (!i) {
+			return true;
+		}
+
+		while (i--) {
+			var filter = config.filters[i],
+				not = filter.charAt(0) == '!';
+
+			if (not) {
+				filter = filter.slice(1);
+			}
+
+			if (name.indexOf(filter) !== -1) {
+				return !not;
+			}
+
+			if (not) {
+				run = true;
+			}
+		}
+
+		return run;
+	}
+
+	function push(result, actual, expected, message) {
+		message = message || (result ? "okay" : "failed");
+		QUnit.ok(result, message + ", expected: " + QUnit.jsDump.parse(expected) + " result: " + QUnit.jsDump.parse(actual));
+	}
+
+
+	function process() {
+		var start = (new Date()).getTime();
+
+		while (config.queue.length && !config.blocking) {
+			if (config.updateRate <= 0 || (((new Date()).getTime() - start) < config.updateRate)) {
+				config.queue.shift()();
+
+			} else {
+				setTimeout(process, 13);
+				break;
+			}
+		}
+	}
+
+	function saveGlobal() {
+		config.pollution = [];
+
+		if (config.noglobals) {
+			for (var key in window) {
+				if (window.hasOwnProperty(key)) {
+					config.pollution.push(key);
+				}
+			}
+		}
+	}
+
+	function diff(a, b) {
+		var result = a.slice();
+		for (var i = 0; i < result.length; i++) {
+			for (var j = 0; j < b.length; j++) {
+				if (result[i] === b[j]) {
+					result.splice(i, 1);
+					i--;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	function checkPollution(name) {
+		var old = config.pollution;
+		saveGlobal();
+
+		var newGlobals = diff(old, config.pollution);
+		if (newGlobals.length > 0) {
+			ok(false, "Introduced global variable(s): " + newGlobals.join(", "));
+			config.expected++;
+		}
+
+		var deletedGlobals = diff(config.pollution, old);
+		if (deletedGlobals.length > 0) {
+			ok(false, "Deleted global variable(s): " + deletedGlobals.join(", "));
+			config.expected++;
+		}
+	}
+
+	// returns a new Array with the elements that are in a but not in b
+
+
+	function fail(message, exception, callback) {
+		if (typeof console !== "undefined" && console.error && console.warn) {
+			console.error(message);
+			console.error(exception);
+			console.warn(callback.toString());
+
+		} else if (window.opera && opera.postError) {
+			opera.postError(message, exception, callback.toString);
+		}
+	}
+
+	function extend(a, b) {
+		for (var prop in b) {
+			if (b.hasOwnProperty(prop)) {
+				a[prop] = b[prop];
+			}
+		}
+
+		return a;
+	}
+
+	function addEvent(elem, type, fn) {
+		if (elem.addEventListener) {
+			elem.addEventListener(type, fn, false);
+		} else if (elem.attachEvent) {
+			elem.attachEvent("on" + type, fn);
+		} else {
+			fn();
+		}
+	}
+
+	function synchronize(callback, save) {
+		config.queue.push(callback);
+		if (save) {
+			config.cachelist.push(callback);
+		}
+		if (config.autorun && !config.blocking) {
+			process();
+		}
+	}
+
+	function done() {
+		if (config.doneTimer && window.clearTimeout) {
+			window.clearTimeout(config.doneTimer);
+			config.doneTimer = null;
+		}
+
+		if (config.queue.length) {
+			config.doneTimer = window.setTimeout(function () {
+				if (!config.queue.length) {
+					done();
+				} else {
+					synchronize(done);
+				}
+			}, 13);
+
+			return;
+		}
+
+		config.autorun = true;
+
+		// Log the last module results
+		if (config.currentModule) {
+			QUnit.moduleDone(config.currentModule, config.moduleStats.bad, config.moduleStats.all);
+		}
+
+		var banner = id("qunit-banner"),
+			tests = id("qunit-tests"),
+			html = ['Tests completed in ', +new Date() - config.started, ' milliseconds.<br/>', '<span class="passed">', config.stats.all - config.stats.bad, '</span> tests of <span class="total">', config.stats.all, '</span> passed, <span class="failed">', config.stats.bad, '</span> failed.'].join('');
+
+		if (banner) {
+			banner.className = (config.stats.bad ? "qunit-fail" : "qunit-pass");
+		}
+
+		if (tests) {
+			var result = id("qunit-testresult");
+
+			if (!result) {
+				result = document.createElement("p");
+				result.id = "qunit-testresult";
+				result.className = "result";
+				tests.parentNode.insertBefore(result, tests.nextSibling);
+			}
+
+			result.innerHTML = html;
+		}
+
+		QUnit.done(config.stats.bad, config.stats.all);
+	}
+
+
+	QUnit = {
 
 		// Initialize the configuration options
 		init: function () {
@@ -552,192 +743,6 @@
 		}
 	});
 
-	function done() {
-		if (config.doneTimer && window.clearTimeout) {
-			window.clearTimeout(config.doneTimer);
-			config.doneTimer = null;
-		}
-
-		if (config.queue.length) {
-			config.doneTimer = window.setTimeout(function () {
-				if (!config.queue.length) {
-					done();
-				} else {
-					synchronize(done);
-				}
-			}, 13);
-
-			return;
-		}
-
-		config.autorun = true;
-
-		// Log the last module results
-		if (config.currentModule) {
-			QUnit.moduleDone(config.currentModule, config.moduleStats.bad, config.moduleStats.all);
-		}
-
-		var banner = id("qunit-banner"),
-			tests = id("qunit-tests"),
-			html = ['Tests completed in ', +new Date() - config.started, ' milliseconds.<br/>', '<span class="passed">', config.stats.all - config.stats.bad, '</span> tests of <span class="total">', config.stats.all, '</span> passed, <span class="failed">', config.stats.bad, '</span> failed.'].join('');
-
-		if (banner) {
-			banner.className = (config.stats.bad ? "qunit-fail" : "qunit-pass");
-		}
-
-		if (tests) {
-			var result = id("qunit-testresult");
-
-			if (!result) {
-				result = document.createElement("p");
-				result.id = "qunit-testresult";
-				result.className = "result";
-				tests.parentNode.insertBefore(result, tests.nextSibling);
-			}
-
-			result.innerHTML = html;
-		}
-
-		QUnit.done(config.stats.bad, config.stats.all);
-	}
-
-	function validTest(name) {
-		var i = config.filters.length,
-			run = false;
-
-		if (!i) {
-			return true;
-		}
-
-		while (i--) {
-			var filter = config.filters[i],
-				not = filter.charAt(0) == '!';
-
-			if (not) {
-				filter = filter.slice(1);
-			}
-
-			if (name.indexOf(filter) !== -1) {
-				return !not;
-			}
-
-			if (not) {
-				run = true;
-			}
-		}
-
-		return run;
-	}
-
-	function push(result, actual, expected, message) {
-		message = message || (result ? "okay" : "failed");
-		QUnit.ok(result, message + ", expected: " + QUnit.jsDump.parse(expected) + " result: " + QUnit.jsDump.parse(actual));
-	}
-
-	function synchronize(callback, save) {
-		config.queue.push(callback);
-		if (save) {
-			config.cachelist.push(callback);
-		}
-		if (config.autorun && !config.blocking) {
-			process();
-		}
-	}
-
-	function process() {
-		var start = (new Date()).getTime();
-
-		while (config.queue.length && !config.blocking) {
-			if (config.updateRate <= 0 || (((new Date()).getTime() - start) < config.updateRate)) {
-				config.queue.shift()();
-
-			} else {
-				setTimeout(process, 13);
-				break;
-			}
-		}
-	}
-
-	function saveGlobal() {
-		config.pollution = [];
-
-		if (config.noglobals) {
-			for (var key in window) {
-				if (window.hasOwnProperty(key)) {
-					config.pollution.push(key);
-				}
-			}
-		}
-	}
-
-	function checkPollution(name) {
-		var old = config.pollution;
-		saveGlobal();
-
-		var newGlobals = diff(old, config.pollution);
-		if (newGlobals.length > 0) {
-			ok(false, "Introduced global variable(s): " + newGlobals.join(", "));
-			config.expected++;
-		}
-
-		var deletedGlobals = diff(config.pollution, old);
-		if (deletedGlobals.length > 0) {
-			ok(false, "Deleted global variable(s): " + deletedGlobals.join(", "));
-			config.expected++;
-		}
-	}
-
-	// returns a new Array with the elements that are in a but not in b
-
-	function diff(a, b) {
-		var result = a.slice();
-		for (var i = 0; i < result.length; i++) {
-			for (var j = 0; j < b.length; j++) {
-				if (result[i] === b[j]) {
-					result.splice(i, 1);
-					i--;
-					break;
-				}
-			}
-		}
-		return result;
-	}
-
-	function fail(message, exception, callback) {
-		if (typeof console !== "undefined" && console.error && console.warn) {
-			console.error(message);
-			console.error(exception);
-			console.warn(callback.toString());
-
-		} else if (window.opera && opera.postError) {
-			opera.postError(message, exception, callback.toString);
-		}
-	}
-
-	function extend(a, b) {
-		for (var prop in b) {
-			if (b.hasOwnProperty(prop)) {
-				a[prop] = b[prop];
-			}
-		}
-
-		return a;
-	}
-
-	function addEvent(elem, type, fn) {
-		if (elem.addEventListener) {
-			elem.addEventListener(type, fn, false);
-		} else if (elem.attachEvent) {
-			elem.attachEvent("on" + type, fn);
-		} else {
-			fn();
-		}
-	}
-
-	function id(name) {
-		return !!(typeof document !== "undefined" && document && document.getElementById) && document.getElementById(name);
-	}
-
 	// Test for equality any JavaScript type.
 	// Discussions and reference: http://philrathe.com/articles/equiv
 	// Test suites: http://philrathe.com/tests/equiv
@@ -965,6 +970,8 @@
 	 * @link {http://flesler.blogspot.com/2008/05/jsdump-pretty-dump-of-any-javascript.html}
 	 */
 	QUnit.jsDump = (function () {
+		var reName, jsDump;
+
 		function quote(str) {
 			return '"' + str.toString().replace(/"/g, '\\"') + '"';
 		}
@@ -997,9 +1004,9 @@
 			return join('[', ret, ']');
 		}
 
-		var reName = /^function (\w+)/;
+		reName = /^function (\w+)/;
 
-		var jsDump = {
+		jsDump = {
 			parse: function (obj, type) { //type is used mostly internally, you can fix a (custom)type in advance
 				var parser = this.parsers[type || this.typeOf(obj)];
 				type = typeof parser;
