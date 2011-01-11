@@ -1,14 +1,14 @@
-(function() {
+(function () {
 	var h = Syn.helpers,
 		S = Syn,
 
 		// gets the selection of an input or textarea
-		getSelection = function( el ) {
+		getSelection = function (el) {
 			var real;
 			// use selectionStart if we can
-			if ( el.selectionStart !== undefined ) {
+			if (el.selectionStart !== undefined) {
 				// this is for opera, so we don't have to focus to type how we think we would
-				if ( document.activeElement && document.activeElement != el && el.selectionStart == el.selectionEnd && el.selectionStart === 0 ) {
+				if (document.activeElement && document.activeElement != el && el.selectionStart == el.selectionEnd && el.selectionStart === 0) {
 					return {
 						start: el.value.length,
 						end: el.value.length
@@ -24,7 +24,7 @@
 				//}
 				try {
 					//try 2 different methods that work differently (IE breaks depending on type)
-					if ( el.nodeName.toLowerCase() == 'input' ) {
+					if (el.nodeName.toLowerCase() == 'input') {
 						real = h.getWindow(el).document.selection.createRange();
 						r = el.createTextRange();
 						r.setEndPoint("EndToStart", real);
@@ -50,10 +50,10 @@
 						r.setEndPoint('EndToEnd', real);
 						var start = r.text.length - real.text.length,
 							end = r.text.length;
-						if ( start !== 0 && r2.text === "" ) {
+						if (start !== 0 && r2.text === "") {
 							start += 2;
 						}
-						if ( end !== 0 && r3.text === "" ) {
+						if (end !== 0 && r3.text === "") {
 							end += 2;
 						}
 						//if we aren't at the start, but previous is empty, we are at start of newline
@@ -71,14 +71,14 @@
 			}
 		},
 		// gets all focusable elements
-		getFocusable = function( el ) {
+		getFocusable = function (el) {
 			var document = h.getWindow(el).document,
 				res = [];
 
 			var els = document.getElementsByTagName('*'),
 				len = els.length;
 
-			for ( var i = 0; i < len; i++ ) {
+			for (var i = 0; i < len; i++) {
 				Syn.isFocusable(els[i]) && els[i] != document.documentElement && res.push(els[i]);
 			}
 			return res;
@@ -256,16 +256,16 @@
 		typeable: /input|textarea/i,
 
 		// selects text on an element
-		selectText: function( el, start, end ) {
-			if ( el.setSelectionRange ) {
-				if (!end ) {
+		selectText: function (el, start, end) {
+			if (el.setSelectionRange) {
+				if (!end) {
 					el.focus();
 					el.setSelectionRange(start, start);
 				} else {
 					el.selectionStart = start;
 					el.selectionEnd = end;
 				}
-			} else if ( el.createTextRange ) {
+			} else if (el.createTextRange) {
 				//el.focus();
 				var r = el.createTextRange();
 				r.moveStart('character', start);
@@ -275,18 +275,18 @@
 				r.select();
 			}
 		},
-		getText: function( el ) {
+		getText: function (el) {
 			//first check if the el has anything selected ..
-			if ( Syn.typeable.test(el.nodeName) ) {
+			if (Syn.typeable.test(el.nodeName)) {
 				var sel = getSelection(el);
 				return el.value.substring(sel.start, sel.end);
 			}
 			//otherwise get from page
 			var win = Syn.helpers.getWindow(el);
-			if ( win.getSelection ) {
+			if (win.getSelection) {
 				return win.getSelection().toString();
 			}
-			else if ( win.document.getSelection ) {
+			else if (win.document.getSelection) {
 				return win.document.getSelection().toString();
 			}
 			else {
@@ -298,13 +298,13 @@
 
 	h.extend(Syn.key, {
 		// retrieves a description of what events for this character should look like
-		data: function( key ) {
+		data: function (key) {
 			//check if it is described directly
-			if ( S.key.browser[key] ) {
+			if (S.key.browser[key]) {
 				return S.key.browser[key];
 			}
-			for ( var kind in S.key.kinds ) {
-				if ( h.inArray(key, S.key.kinds[kind]) > -1 ) {
+			for (var kind in S.key.kinds) {
+				if (h.inArray(key, S.key.kinds[kind]) > -1) {
 					return S.key.browser[kind];
 				}
 			}
@@ -312,10 +312,10 @@
 		},
 
 		//returns the special key if special
-		isSpecial: function( keyCode ) {
+		isSpecial: function (keyCode) {
 			var specials = S.key.kinds.special;
-			for ( var i = 0; i < specials.length; i++ ) {
-				if ( Syn.keycodes[specials[i]] == keyCode ) {
+			for (var i = 0; i < specials.length; i++) {
+				if (Syn.keycodes[specials[i]] == keyCode) {
 					return specials[i];
 				}
 			}
@@ -326,10 +326,10 @@
 		 * @param {Object} key
 		 * @param {Object} event
 		 */
-		options: function( key, event ) {
+		options: function (key, event) {
 			var keyData = Syn.key.data(key);
 
-			if (!keyData[event] ) {
+			if (!keyData[event]) {
 				//we shouldn't be creating this event
 				return null;
 			}
@@ -338,17 +338,17 @@
 				keyCode = keyData[event][1],
 				result = {};
 
-			if ( keyCode == 'key' ) {
+			if (keyCode == 'key') {
 				result.keyCode = Syn.keycodes[key];
-			} else if ( keyCode == 'char' ) {
+			} else if (keyCode == 'char') {
 				result.keyCode = key.charCodeAt(0);
 			} else {
 				result.keyCode = keyCode;
 			}
 
-			if ( charCode == 'char' ) {
+			if (charCode == 'char') {
 				result.charCode = key.charCodeAt(0);
-			} else if ( charCode !== null ) {
+			} else if (charCode !== null) {
 				result.charCode = charCode;
 			}
 
@@ -363,13 +363,13 @@
 			'function': ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12']
 		},
 		//returns the default function
-		getDefault: function( key ) {
+		getDefault: function (key) {
 			//check if it is described directly
-			if ( Syn.key.defaults[key] ) {
+			if (Syn.key.defaults[key]) {
 				return Syn.key.defaults[key];
 			}
-			for ( var kind in Syn.key.kinds ) {
-				if ( h.inArray(key, Syn.key.kinds[kind]) > -1 && Syn.key.defaults[kind] ) {
+			for (var kind in Syn.key.kinds) {
+				if (h.inArray(key, Syn.key.kinds[kind]) > -1 && Syn.key.defaults[kind]) {
 					return Syn.key.defaults[kind];
 				}
 			}
@@ -377,12 +377,12 @@
 		},
 		// default behavior when typing
 		defaults: {
-			'character': function( options, scope, key, force, sel ) {
-				if (/num\d+/.test(key) ) {
+			'character': function (options, scope, key, force, sel) {
+				if (/num\d+/.test(key)) {
 					key = key.match(/\d+/)[0];
 				}
 
-				if ( force || (!S.support.keyCharacters && Syn.typeable.test(this.nodeName)) ) {
+				if (force || (!S.support.keyCharacters && Syn.typeable.test(this.nodeName))) {
 					var current = this.value,
 						before = current.substr(0, sel.start),
 						after = current.substr(sel.end),
@@ -394,70 +394,70 @@
 					Syn.selectText(this, before.length + charLength);
 				}
 			},
-			'c': function( options, scope, key, force, sel ) {
-				if ( Syn.key.ctrlKey ) {
+			'c': function (options, scope, key, force, sel) {
+				if (Syn.key.ctrlKey) {
 					Syn.key.clipboard = Syn.getText(this);
 				} else {
 					Syn.key.defaults.character.apply(this, arguments);
 				}
 			},
-			'v': function( options, scope, key, force, sel ) {
-				if ( Syn.key.ctrlKey ) {
+			'v': function (options, scope, key, force, sel) {
+				if (Syn.key.ctrlKey) {
 					Syn.key.defaults.character.call(this, options, scope, Syn.key.clipboard, true, sel);
 				} else {
 					Syn.key.defaults.character.apply(this, arguments);
 				}
 			},
-			'a': function( options, scope, key, force, sel ) {
-				if ( Syn.key.ctrlKey ) {
+			'a': function (options, scope, key, force, sel) {
+				if (Syn.key.ctrlKey) {
 					Syn.selectText(this, 0, this.value.length);
 				} else {
 					Syn.key.defaults.character.apply(this, arguments);
 				}
 			},
-			'home': function() {
-				Syn.onParents(this, function( el ) {
-					if ( el.scrollHeight != el.clientHeight ) {
+			'home': function () {
+				Syn.onParents(this, function (el) {
+					if (el.scrollHeight != el.clientHeight) {
 						el.scrollTop = 0;
 						return false;
 					}
 				});
 			},
-			'end': function() {
-				Syn.onParents(this, function( el ) {
-					if ( el.scrollHeight != el.clientHeight ) {
+			'end': function () {
+				Syn.onParents(this, function (el) {
+					if (el.scrollHeight != el.clientHeight) {
 						el.scrollTop = el.scrollHeight;
 						return false;
 					}
 				});
 			},
-			'page-down': function() {
+			'page-down': function () {
 				//find the first parent we can scroll
-				Syn.onParents(this, function( el ) {
-					if ( el.scrollHeight != el.clientHeight ) {
+				Syn.onParents(this, function (el) {
+					if (el.scrollHeight != el.clientHeight) {
 						var ch = el.clientHeight;
 						el.scrollTop += ch;
 						return false;
 					}
 				});
 			},
-			'page-up': function() {
-				Syn.onParents(this, function( el ) {
-					if ( el.scrollHeight != el.clientHeight ) {
+			'page-up': function () {
+				Syn.onParents(this, function (el) {
+					if (el.scrollHeight != el.clientHeight) {
 						var ch = el.clientHeight;
 						el.scrollTop -= ch;
 						return false;
 					}
 				});
 			},
-			'\b': function( options, scope, key, force, sel ) {
+			'\b': function (options, scope, key, force, sel) {
 				//this assumes we are deleting from the end
-				if (!S.support.backspaceWorks && Syn.typeable.test(this.nodeName) ) {
+				if (!S.support.backspaceWorks && Syn.typeable.test(this.nodeName)) {
 					var current = this.value,
 						before = current.substr(0, sel.start),
 						after = current.substr(sel.end);
 
-					if ( sel.start == sel.end && sel.start > 0 ) {
+					if (sel.start == sel.end && sel.start > 0) {
 						//remove a character
 						this.value = before.substring(0, before.length - 1) + after;
 						Syn.selectText(this, sel.start - 1);
@@ -469,12 +469,12 @@
 					//set back the selection
 				}
 			},
-			'delete': function( options, scope, key, force, sel ) {
-				if (!S.support.backspaceWorks && Syn.typeable.test(this.nodeName) ) {
+			'delete': function (options, scope, key, force, sel) {
+				if (!S.support.backspaceWorks && Syn.typeable.test(this.nodeName)) {
 					var current = this.value,
 						before = current.substr(0, sel.start),
 						after = current.substr(sel.end);
-					if ( sel.start == sel.end && sel.start <= this.value.length - 1 ) {
+					if (sel.start == sel.end && sel.start <= this.value.length - 1) {
 						this.value = before + after.substring(1);
 					} else {
 						this.value = before + after;
@@ -483,23 +483,23 @@
 					Syn.selectText(this, sel.start);
 				}
 			},
-			'\r': function( options, scope, key, force, sel ) {
+			'\r': function (options, scope, key, force, sel) {
 
 				var nodeName = this.nodeName.toLowerCase();
 				// submit a form
-				if (!S.support.keypressSubmits && nodeName == 'input' ) {
+				if (!S.support.keypressSubmits && nodeName == 'input') {
 					var form = Syn.closest(this, "form");
-					if ( form ) {
+					if (form) {
 						Syn.trigger("submit", {}, form);
 					}
 
 				}
 				//newline in textarea
-				if (!S.support.keyCharacters && nodeName == 'textarea' ) {
+				if (!S.support.keyCharacters && nodeName == 'textarea') {
 					Syn.key.defaults.character.call(this, options, scope, "\n", undefined, sel);
 				}
 				// 'click' hyperlinks
-				if (!S.support.keypressOnAnchorClicks && nodeName == 'a' ) {
+				if (!S.support.keypressOnAnchorClicks && nodeName == 'a') {
 					Syn.trigger("click", {}, this);
 				}
 			},
@@ -511,7 +511,7 @@
 			// tabindex after it in the document.
 			// @return the next element
 			//
-			'\t': function( options, scope ) {
+			'\t': function (options, scope) {
 				// focusable elements
 				var focusEls = getFocusable(this),
 					// the current element's tabindex
@@ -527,20 +527,20 @@
 					//the tabindex of the tabable element we are looking at
 					elIndex, firstNotIndexed, prev;
 				orders = [];
-				for (; i < focusEls.length; i++ ) {
+				for (; i < focusEls.length; i++) {
 					orders.push([focusEls[i], i]);
 				}
-				var sort = function( order1, order2 ) {
+				var sort = function (order1, order2) {
 					var el1 = order1[0],
 						el2 = order2[0],
 						tab1 = Syn.tabIndex(el1) || 0,
 						tab2 = Syn.tabIndex(el2) || 0;
-					if ( tab1 == tab2 ) {
+					if (tab1 == tab2) {
 						return order1[1] - order2[1];
 					} else {
-						if ( tab1 === 0 ) {
+						if (tab1 === 0) {
 							return 1;
-						} else if ( tab2 === 0 ) {
+						} else if (tab2 === 0) {
 							return -1;
 						} else {
 							return tab1 - tab2;
@@ -549,17 +549,17 @@
 				};
 				orders.sort(sort);
 				//now find current
-				for ( i = 0; i < orders.length; i++ ) {
+				for (i = 0; i < orders.length; i++) {
 					el = orders[i][0];
-					if ( this == el ) {
-						if (!Syn.key.shiftKey ) {
+					if (this == el) {
+						if (!Syn.key.shiftKey) {
 							current = orders[i + 1][0];
-							if (!current ) {
+							if (!current) {
 								current = orders[0][0];
 							}
 						} else {
 							current = orders[i - 1][0];
-							if (!current ) {
+							if (!current) {
 								current = orders[focusEls.length - 1][0];
 							}
 						}
@@ -568,45 +568,45 @@
 				}
 
 				//restart if we didn't find anything
-				if (!current ) {
+				if (!current) {
 					current = firstNotIndexed;
 				}
 				current && current.focus();
 				return current;
 			},
-			'left': function( options, scope, key, force, sel ) {
-				if ( Syn.typeable.test(this.nodeName) ) {
-					if ( Syn.key.shiftKey ) {
+			'left': function (options, scope, key, force, sel) {
+				if (Syn.typeable.test(this.nodeName)) {
+					if (Syn.key.shiftKey) {
 						Syn.selectText(this, sel.start === 0 ? 0 : sel.start - 1, sel.end);
 					} else {
 						Syn.selectText(this, sel.start === 0 ? 0 : sel.start - 1);
 					}
 				}
 			},
-			'right': function( options, scope, key, force, sel ) {
-				if ( Syn.typeable.test(this.nodeName) ) {
-					if ( Syn.key.shiftKey ) {
+			'right': function (options, scope, key, force, sel) {
+				if (Syn.typeable.test(this.nodeName)) {
+					if (Syn.key.shiftKey) {
 						Syn.selectText(this, sel.start, sel.end + 1 > this.value.length ? this.value.length : sel.end + 1);
 					} else {
 						Syn.selectText(this, sel.end + 1 > this.value.length ? this.value.length : sel.end + 1);
 					}
 				}
 			},
-			'up': function() {
-				if (/select/i.test(this.nodeName) ) {
+			'up': function () {
+				if (/select/i.test(this.nodeName)) {
 
 					this.selectedIndex = this.selectedIndex ? this.selectedIndex - 1 : 0;
 					//set this to change on blur?
 				}
 			},
-			'down': function() {
-				if (/select/i.test(this.nodeName) ) {
+			'down': function () {
+				if (/select/i.test(this.nodeName)) {
 					Syn.changeOnBlur(this, "selectedIndex", this.selectedIndex);
 					this.selectedIndex = this.selectedIndex + 1;
 					//set this to change on blur?
 				}
 			},
-			'shift': function() {
+			'shift': function () {
 				return null;
 			}
 		}
@@ -615,22 +615,22 @@
 
 	h.extend(Syn.create, {
 		keydown: {
-			setup: function( type, options, element ) {
-				if ( h.inArray(options, Syn.key.kinds.special) != -1 ) {
+			setup: function (type, options, element) {
+				if (h.inArray(options, Syn.key.kinds.special) != -1) {
 					Syn.key[options + "Key"] = element;
 				}
 			}
 		},
 		keyup: {
-			setup: function( type, options, element ) {
-				if ( h.inArray(options, Syn.key.kinds.special) != -1 ) {
+			setup: function (type, options, element) {
+				if (h.inArray(options, Syn.key.kinds.special) != -1) {
 					Syn.key[options + "Key"] = null;
 				}
 			}
 		},
 		key: {
 			// return the options for a key event
-			options: function( type, options, element ) {
+			options: function (type, options, element) {
 				//check if options is character or has character
 				options = typeof options != "object" ? {
 					character: options
@@ -638,7 +638,7 @@
 
 				//don't change the orignial
 				options = h.extend({}, options);
-				if ( options.character ) {
+				if (options.character) {
 					h.extend(options, S.key.options(options.character, type));
 					delete options.character;
 				}
@@ -654,7 +654,7 @@
 			},
 			// creates a key event
 			event: document.createEvent ?
-			function( type, options, element ) { //Everyone Else
+			function (type, options, element) { //Everyone Else
 				var event;
 
 				try {
@@ -667,7 +667,7 @@
 				event.synthetic = true;
 				return event;
 
-			} : function( type, options, element ) {
+			} : function (type, options, element) {
 				var event = h.createEventObject.apply(this, arguments);
 				h.extend(event, options);
 
@@ -705,9 +705,9 @@
 		 * @param {Function} [callback]
 		 * @return {HTMLElement} the element currently focused.
 		 */
-		_key: function( options, element, callback ) {
+		_key: function (options, element, callback) {
 			//first check if it is a special up
-			if (/-up$/.test(options) && h.inArray(options.replace("-up", ""), Syn.key.kinds.special) != -1 ) {
+			if (/-up$/.test(options) && h.inArray(options.replace("-up", ""), Syn.key.kinds.special) != -1) {
 				Syn.trigger('keyup', options.replace("-up", ""), element);
 				callback(true, element);
 				return element;
@@ -732,29 +732,29 @@
 				keypressOptions = Syn.key.options(key, 'keypress');
 
 
-			if ( runDefaults ) {
+			if (runDefaults) {
 				//if the browser doesn't create keypresses for this key, run default
-				if (!keypressOptions ) {
+				if (!keypressOptions) {
 					defaultResult = getDefault(key).call(element, keypressOptions, h.getWindow(element), key, undefined, caret);
 				} else {
 					//do keypress
 					runDefaults = Syn.trigger('keypress', keypressOptions, element);
-					if ( runDefaults ) {
+					if (runDefaults) {
 						defaultResult = getDefault(key).call(element, keypressOptions, h.getWindow(element), key, undefined, caret);
 					}
 				}
 			} else {
 				//canceled ... possibly don't run keypress
-				if ( keypressOptions && h.inArray('keypress', prevent.keydown) == -1 ) {
+				if (keypressOptions && h.inArray('keypress', prevent.keydown) == -1) {
 					Syn.trigger('keypress', keypressOptions, element);
 				}
 			}
-			if ( defaultResult && defaultResult.nodeName ) {
+			if (defaultResult && defaultResult.nodeName) {
 				element = defaultResult;
 			}
 
-			if ( defaultResult !== null ) {
-				setTimeout(function() {
+			if (defaultResult !== null) {
+				setTimeout(function () {
 					Syn.trigger('keyup', Syn.key.options(key, 'keyup'), element);
 					callback(runDefaults, element);
 				}, 1);
@@ -790,19 +790,19 @@
 		 * @param {HTMLElement} [element] an element or an id of an element
 		 * @param {Function} [callback] a function to callback
 		 */
-		_type: function( options, element, callback ) {
+		_type: function (options, element, callback) {
 			//break it up into parts ...
 			//go through each type and run
 			var parts = options.match(/(\[[^\]]+\])|([^\[])/g),
 				self = this,
-				runNextPart = function( runDefaults, el ) {
+				runNextPart = function (runDefaults, el) {
 					var part = parts.shift();
-					if (!part ) {
+					if (!part) {
 						callback(runDefaults, el);
 						return;
 					}
 					el = el || element;
-					if ( part.length > 1 ) {
+					if (part.length > 1) {
 						part = part.substr(1, part.length - 2);
 					}
 					self._key(part, el, runNextPart);
@@ -816,7 +816,7 @@
 
 	//do support code
 	(function supportcode() {
-		if (!document.body ) {
+		if (!document.body) {
 			setTimeout(supportcode, 1);
 			return;
 		}
@@ -833,8 +833,8 @@
 		submit = form.childNodes[2];
 		anchor = form.getElementsByTagName("a")[0];
 		textarea = form.getElementsByTagName("textarea")[0];
-		form.onsubmit = function( ev ) {
-			if ( ev.preventDefault ) {
+		form.onsubmit = function (ev) {
+			if (ev.preventDefault) {
 				ev.preventDefault();
 			}
 			S.support.keypressSubmits = true;
@@ -854,7 +854,7 @@
 
 
 
-		form.childNodes[3].onchange = function() {
+		form.childNodes[3].onchange = function () {
 			S.support.focusChanges = true;
 		};
 		form.childNodes[3].focus();
@@ -862,8 +862,8 @@
 		form.childNodes[5].focus();
 
 		//test keypress \r on anchor submits
-		S.bind(anchor, "click", function( ev ) {
-			if ( ev.preventDefault ) {
+		S.bind(anchor, "click", function (ev) {
+			if (ev.preventDefault) {
 				ev.preventDefault();
 			}
 			S.support.keypressOnAnchorClicks = true;

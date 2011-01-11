@@ -1,13 +1,13 @@
 //handles mosue events
-(function() {
+(function () {
 	var h = Syn.helpers;
 
 	Syn.mouse = {};
 	h.extend(Syn.defaults, {
-		mousedown: function( options ) {
+		mousedown: function (options) {
 			Syn.trigger("focus", {}, this);
 		},
-		click: function() {
+		click: function () {
 			// prevents the access denied issue in IE if the click causes the element to be destroyed
 			var element = this;
 			try {
@@ -25,13 +25,13 @@
 			}
 
 			//run href javascript
-			if (!Syn.support.linkHrefJS && /^\s*javascript:/.test(element.href) ) {
+			if (!Syn.support.linkHrefJS && /^\s*javascript:/.test(element.href)) {
 				//eval js
 				var code = element.href.replace(/^\s*javascript:/, "");
 
 				//try{
-				if ( code != "//" && code.indexOf("void(0)") == -1 ) {
-					if ( window.selenium ) {
+				if (code != "//" && code.indexOf("void(0)") == -1) {
+					if (window.selenium) {
 						eval("with(selenium.browserbot.getCurrentWindow()){" + code + "}");
 					} else {
 						eval("with(scope){" + code + "}");
@@ -40,46 +40,46 @@
 			}
 
 			//submit a form
-			if (!(Syn.support.clickSubmits) && (nodeName == "input" && element.type == "submit") || nodeName == 'button' ) {
+			if (!(Syn.support.clickSubmits) && (nodeName == "input" && element.type == "submit") || nodeName == 'button') {
 
 				var form = Syn.closest(element, "form");
-				if ( form ) {
+				if (form) {
 					Syn.trigger("submit", {}, form);
 				}
 
 			}
 			//follow a link, probably needs to check if in an a.
-			if ( nodeName == "a" && element.href && !/^\s*javascript:/.test(element.href) ) {
+			if (nodeName == "a" && element.href && !/^\s*javascript:/.test(element.href)) {
 
 				scope.location.href = element.href;
 
 			}
 
 			//change a checkbox
-			if ( nodeName == "input" && element.type == "checkbox" ) {
+			if (nodeName == "input" && element.type == "checkbox") {
 
 				//if(!Syn.support.clickChecks && !Syn.support.changeChecks){
 				//	element.checked = !element.checked;
 				//}
-				if (!Syn.support.clickChanges ) {
+				if (!Syn.support.clickChanges) {
 					Syn.trigger("change", {}, element);
 				}
 			}
 
 			//change a radio button
-			if ( nodeName == "input" && element.type == "radio" ) { // need to uncheck others if not checked
+			if (nodeName == "input" && element.type == "radio") { // need to uncheck others if not checked
 /*if(!Syn.support.clickChecks && !Syn.support.changeChecks){
 				 //do the checks manually
 				 if(!element.checked){ //do nothing, no change
 				 element.checked = true;
 				 }
 				 }*/
-				if ( radioChanged && !Syn.support.radioClickChanges ) {
+				if (radioChanged && !Syn.support.radioClickChanges) {
 					Syn.trigger("change", {}, element);
 				}
 			}
 			// change options
-			if ( nodeName == "option" && Syn.data(element, "createChange") ) {
+			if (nodeName == "option" && Syn.data(element, "createChange")) {
 				Syn.trigger("change", {}, element.parentNode); //does not bubble
 				Syn.data(element, "createChange", false);
 			}
@@ -90,7 +90,7 @@
 	//add create and setup behavior for mosue events
 	h.extend(Syn.create, {
 		mouse: {
-			options: function( type, options, element ) {
+			options: function (type, options, element) {
 				var doc = document.documentElement,
 					body = document.body,
 					center = [options.pageX || 0, options.pageY || 0],
@@ -115,7 +115,7 @@
 				}, options);
 			},
 			event: document.createEvent ?
-			function( type, defaults, element ) { //Everyone Else
+			function (type, defaults, element) { //Everyone Else
 				var event;
 
 				try {
@@ -129,20 +129,20 @@
 			} : h.createEventObject
 		},
 		click: {
-			setup: function( type, options, element ) {
+			setup: function (type, options, element) {
 				var nodeName = element.nodeName.toLowerCase(),
 					type;
 
 				//we need to manually 'check' in browser that can't check
 				//so checked has the right value
-				if (!Syn.support.clickChecks && !Syn.support.changeChecks && nodeName === "input" ) {
+				if (!Syn.support.clickChecks && !Syn.support.changeChecks && nodeName === "input") {
 					type = element.type.toLowerCase(); //pretty sure lowercase isn't needed
-					if ( type === 'checkbox' ) {
+					if (type === 'checkbox') {
 						element.checked = !element.checked;
 					}
-					if ( type === "radio" ) {
+					if (type === "radio") {
 						//do the checks manually
-						if (!element.checked ) { //do nothing, no change
+						if (!element.checked) { //do nothing, no change
 							try {
 								Syn.data(element, "radioChanged", true);
 							} catch (e) {}
@@ -152,7 +152,7 @@
 				}
 
 				if (
-				nodeName == "a" && element.href && !/^\s*javascript:/.test(element.href) ) {
+				nodeName == "a" && element.href && !/^\s*javascript:/.test(element.href)) {
 
 					//save href
 					Syn.data(element, "href", element.href);
@@ -164,19 +164,19 @@
 					//and run the default behavior ourselves. Boo!
 				}
 				//if select or option, save old value and mark to change
-				if (/option/i.test(element.nodeName) ) {
+				if (/option/i.test(element.nodeName)) {
 					var child = element.parentNode.firstChild,
 						i = -1;
-					while ( child ) {
-						if ( child.nodeType == 1 ) {
+					while (child) {
+						if (child.nodeType == 1) {
 							i++;
-							if ( child == element ) {
+							if (child == element) {
 								break;
 							}
 						}
 						child = child.nextSibling;
 					}
-					if ( i !== element.parentNode.selectedIndex ) {
+					if (i !== element.parentNode.selectedIndex) {
 						//shouldn't this wait on triggering
 						//change?
 						element.parentNode.selectedIndex = i;
@@ -187,10 +187,10 @@
 			}
 		},
 		mousedown: {
-			setup: function( type, options, element ) {
+			setup: function (type, options, element) {
 				var nn = element.nodeName.toLowerCase();
 				//we have to auto prevent default to prevent freezing error in safari
-				if ( Syn.browser.safari && (nn == "select" || nn == "option") ) {
+				if (Syn.browser.safari && (nn == "select" || nn == "option")) {
 					options._autoPrevent = true;
 				}
 			}
@@ -198,12 +198,12 @@
 	});
 	//do support code
 	(function supportcode() {
-		if (!document.body ) {
+		if (!document.body) {
 			setTimeout(supportcode, 1);
 			return;
 		}
 		var oldSynth = window.__synthTest;
-		window.__synthTest = function() {
+		window.__synthTest = function () {
 			Syn.support.linkHrefJS = true;
 		};
 		var div = document.createElement("div"),
@@ -217,7 +217,7 @@
 		select = form.getElementsByTagName('select')[0];
 
 		checkbox.checked = false;
-		checkbox.onchange = function() {
+		checkbox.onchange = function () {
 			Syn.support.clickChanges = true;
 		};
 
@@ -230,19 +230,19 @@
 
 		Syn.support.changeChecks = checkbox.checked;
 
-		form.onsubmit = function( ev ) {
-			if ( ev.preventDefault ) {
+		form.onsubmit = function (ev) {
+			if (ev.preventDefault) {
 				ev.preventDefault();
 			}
 			Syn.support.clickSubmits = true;
 			return false;
 		};
 		Syn.trigger("click", {}, submit);
-		form.childNodes[1].onchange = function() {
+		form.childNodes[1].onchange = function () {
 			Syn.support.radioClickChanges = true;
 		};
 		Syn.trigger("click", {}, form.childNodes[1]);
-		Syn.bind(div, 'click', function() {
+		Syn.bind(div, 'click', function () {
 			Syn.support.optionClickBubbles = true;
 			Syn.unbind(div, 'click', supportcode);
 		});
@@ -251,7 +251,7 @@
 
 		//test if mousedown followed by mouseup causes click (opera), make sure there are no clicks after this
 		var clicksCount = 0;
-		div.onclick = function() {
+		div.onclick = function () {
 			Syn.support.mouseDownUpClicks = true;
 			//we should use this to check for opera potentially, but would
 			//be difficult to remove element correctly

@@ -1,7 +1,7 @@
-(function() {
+(function () {
 	// document body has to exists for this test
 	(function draginit() {
-		if (!document.body ) {
+		if (!document.body) {
 			setTimeout(draginit, 1);
 			return;
 		}
@@ -17,11 +17,11 @@
 			zIndex: 19999
 		});
 		document.body.scrollTop = 11;
-		if (!document.elementFromPoint ) {
+		if (!document.elementFromPoint) {
 			return;
 		}
 		var el = document.elementFromPoint(3, 1);
-		if ( el == div ) {
+		if (el == div) {
 			Syn.support.elementFromClient = true;
 		}
 		else {
@@ -33,34 +33,34 @@
 
 
 	//gets an element from a point
-	var elementFromPoint = function( point, element ) {
+	var elementFromPoint = function (point, element) {
 		var clientX = point.clientX,
 			clientY = point.clientY,
 			win = Syn.helpers.getWindow(element),
 			el;
 
-		if ( Syn.support.elementFromPage ) {
+		if (Syn.support.elementFromPage) {
 			var off = Syn.helpers.scrollOffset(win);
 			clientX = clientX + off.left; //convert to pageX
 			clientY = clientY + off.top; //convert to pageY
 		}
 		el = win.document.elementFromPoint ? win.document.elementFromPoint(clientX, clientY) : element;
-		if ( el === win.document.documentElement && (point.clientY < 0 || point.clientX < 0) ) {
+		if (el === win.document.documentElement && (point.clientY < 0 || point.clientX < 0)) {
 			return element;
 		} else {
 			return el;
 		}
 	},
 		//creates an event at a certain point
-		createEventAtPoint = function( event, point, element ) {
+		createEventAtPoint = function (event, point, element) {
 			var el = elementFromPoint(point, element);
 			Syn.trigger(event, point, el || element);
 			return el;
 		},
 		// creates a mousemove event, but first triggering mouseout / mouseover if appropriate
-		mouseMove = function( point, element, last ) {
+		mouseMove = function (point, element, last) {
 			var el = elementFromPoint(point, element);
-			if ( last != el && el && last ) {
+			if (last != el && el && last) {
 				var options = Syn.helpers.extend({}, point);
 				options.relatedTarget = el;
 				Syn.trigger("mouseout", options, last);
@@ -72,7 +72,7 @@
 			return el;
 		},
 		// start and end are in clientX, clientY
-		startMove = function( start, end, duration, element, callback ) {
+		startMove = function (start, end, duration, element, callback) {
 			var startTime = new Date(),
 				distX = end.clientX - start.clientX,
 				distY = end.clientY - start.clientY,
@@ -80,7 +80,7 @@
 				current = elementFromPoint(start, element),
 				cursor = win.document.createElement('div'),
 				calls = 0;
-			move = function() {
+			move = function () {
 				//get what fraction we are at
 				var now = new Date(),
 					scrollOffset = Syn.helpers.scrollOffset(win),
@@ -90,7 +90,7 @@
 						clientY: distY * fraction + start.clientY
 					};
 				calls++;
-				if ( fraction < 1 ) {
+				if (fraction < 1) {
 					Syn.helpers.extend(cursor.style, {
 						left: (options.clientX + scrollOffset.left + 2) + "px",
 						top: (options.clientY + scrollOffset.top + 2) + "px"
@@ -115,14 +115,14 @@
 			win.document.body.appendChild(cursor);
 			move();
 		},
-		startDrag = function( start, end, duration, element, callback ) {
+		startDrag = function (start, end, duration, element, callback) {
 			createEventAtPoint("mousedown", start, element);
-			startMove(start, end, duration, element, function() {
+			startMove(start, end, duration, element, function () {
 				createEventAtPoint("mouseup", end, element);
 				callback();
 			});
 		},
-		center = function( el ) {
+		center = function (el) {
 			var j = Syn.jquery()(el),
 				o = j.offset();
 			return {
@@ -130,12 +130,12 @@
 				pageY: o.top + (j.height() / 2)
 			};
 		},
-		convertOption = function( option, win, from ) {
+		convertOption = function (option, win, from) {
 			var page = /(\d+)[x ](\d+)/,
 				client = /(\d+)X(\d+)/,
 				relative = /([+-]\d+)[xX ]([+-]\d+)/;
 			//check relative "+22x-44"
-			if ( typeof option == 'string' && relative.test(option) && from ) {
+			if (typeof option == 'string' && relative.test(option) && from) {
 				var cent = center(from),
 					parts = option.match(relative);
 				option = {
@@ -143,27 +143,27 @@
 					pageY: cent.pageY + parseInt(parts[2], 10)
 				};
 			}
-			if ( typeof option == 'string' && page.test(option) ) {
+			if (typeof option == 'string' && page.test(option)) {
 				var parts = option.match(page);
 				option = {
 					pageX: parseInt(parts[1], 10),
 					pageY: parseInt(parts[2], 10)
 				};
 			}
-			if ( typeof option == 'string' && client.test(option) ) {
+			if (typeof option == 'string' && client.test(option)) {
 				var parts = option.match(client);
 				option = {
 					clientX: parseInt(parts[1], 10),
 					clientY: parseInt(parts[2], 10)
 				};
 			}
-			if ( typeof option == 'string' ) {
+			if (typeof option == 'string') {
 				option = Syn.jquery()(option, win.document)[0];
 			}
-			if ( option.nodeName ) {
+			if (option.nodeName) {
 				option = center(option);
 			}
-			if ( option.pageX ) {
+			if (option.pageX) {
 				var off = Syn.helpers.scrollOffset(win);
 				option = {
 					clientX: option.pageX - off.left,
@@ -247,7 +247,7 @@
 		 * @param {HTMLElement} from
 		 * @param {Function} callback
 		 */
-		_move: function( options, from, callback ) {
+		_move: function (options, from, callback) {
 			//need to convert if elements
 			var win = Syn.helpers.getWindow(from),
 				fro = convertOption(options.from || from, win),
@@ -264,7 +264,7 @@
 		 * @param {Object} from
 		 * @param {Object} callback
 		 */
-		_drag: function( options, from, callback ) {
+		_drag: function (options, from, callback) {
 			//need to convert if elements
 			var win = Syn.helpers.getWindow(from),
 				fro = convertOption(options.from || from, win, from),

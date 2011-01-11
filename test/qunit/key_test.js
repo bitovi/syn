@@ -1,9 +1,9 @@
 module("funcunit/synthetic/key", {
-	setup: function() {
+	setup: function () {
 		st.g("qunit-test-area").innerHTML = "<form id='outer'>" + "<div id='inner'>" + "<input type='input' id='key' value=''/>" + "<a href='#abc' id='focusLink'>click me</a>" + "<textarea id='synTextArea'></textarea>" + "</div></form>";
 	}
 });
-test("Key Characters", function() {
+test("Key Characters", function () {
 	st.g("key").value = "";
 	Syn.key("a", "key");
 	equals(st.g("key").value, "a", "a written");
@@ -17,9 +17,9 @@ test("Key Characters", function() {
 	equals(st.g("key").value, "1", "1 written");
 });
 
-test("Key Event Order", 1, function() {
+test("Key Event Order", 1, function () {
 	var order = [],
-		recorder = function( ev ) {
+		recorder = function (ev) {
 			order.push(ev.type);
 		};
 
@@ -27,60 +27,60 @@ test("Key Event Order", 1, function() {
 	st.binder("key", "keypress", recorder);
 	st.binder("key", "keyup", recorder);
 	stop();
-	Syn.key("B", "key", function() {
+	Syn.key("B", "key", function () {
 		same(order, ["keydown", "keypress", "keyup"], "Key order is correct");
 		start();
 	});
 
 });
 
-test("Key \\r Submits Forms", 1, function() {
+test("Key \\r Submits Forms", 1, function () {
 	var submit = 0;
-	st.binder("outer", "submit", function( ev ) {
+	st.binder("outer", "submit", function (ev) {
 		submit++;
-		if ( ev.preventDefault ) {
+		if (ev.preventDefault) {
 			ev.preventDefault();
 		}
 		ev.returnValue = false;
 		return false;
 	});
 	stop();
-	Syn.key("\r", "key", function() {
+	Syn.key("\r", "key", function () {
 		equals(submit, 1, "submit on keypress");
 		start();
 	});
 });
 
-test("Key \\r Clicks Links", 1, function() {
+test("Key \\r Clicks Links", 1, function () {
 	var clicked = 0;
-	st.binder("focusLink", "click", function( ev ) {
+	st.binder("focusLink", "click", function (ev) {
 		clicked++;
-		if ( ev.preventDefault ) {
+		if (ev.preventDefault) {
 			ev.preventDefault();
 		}
 		ev.returnValue = false;
 		return false;
 	});
 	stop();
-	Syn.key("\r", "focusLink", function() {
+	Syn.key("\r", "focusLink", function () {
 		equals(clicked, 1, "clicked");
 		start();
 	});
 });
 
-test("Key \\r Adds Newline in Textarea", function() {
+test("Key \\r Adds Newline in Textarea", function () {
 	st.g('synTextArea').value = "";
 	stop();
-	Syn.type("ab\rcd", "synTextArea", function() {
+	Syn.type("ab\rcd", "synTextArea", function () {
 		equals(st.g('synTextArea').value.replace("\r", ""), "ab\ncd", "typed new line correctly");
 		start();
 	});
 });
 
-test("Key \\b", function() {
+test("Key \\b", function () {
 	st.g("key").value = "";
 	stop();
-	Syn.type("abc", "key", function() {
+	Syn.type("abc", "key", function () {
 		equals(st.g("key").value, "abc", "abc written");
 		Syn.key("\b", "key");
 		equals(st.g("key").value, "ab", "ab written (key deleted)");
@@ -89,21 +89,21 @@ test("Key \\b", function() {
 });
 
 //tests when the key is inserted
-test("Key Character Order", function() {
+test("Key Character Order", function () {
 
 	var upVal, pressVal, downVal;
-	st.binder("key", "keyup", function() {
+	st.binder("key", "keyup", function () {
 		upVal = st.g("key").value;
 	});
-	st.binder("key", "keypress", function() {
+	st.binder("key", "keypress", function () {
 		pressVal = st.g("key").value;
 
 	});
-	st.binder("key", "keydown", function() {
+	st.binder("key", "keydown", function () {
 		downVal = st.g("key").value;
 	});
 	stop();
-	Syn.key("J", "key", function() {
+	Syn.key("J", "key", function () {
 		equals(upVal, "J", "Up Typing works");
 		equals(pressVal, "", "Press Typing works");
 		equals(downVal, "", "Down Typing works");
@@ -111,7 +111,7 @@ test("Key Character Order", function() {
 	});
 });
 
-asyncTest("page down, page up, home, end", function() {
+asyncTest("page down, page up, home, end", function () {
 	st.g("qunit-test-area").innerHTML = "<div id='scrolldiv' style='width:100px;height:200px;overflow-y:scroll;' tabindex='0'>" + "<div id='innerdiv' style='height:1000px;'><a href='javascript://'>Scroll on me</a></div></div>";
 
 	//reset the scroll top
@@ -120,37 +120,37 @@ asyncTest("page down, page up, home, end", function() {
 	//list of keys to press and what to test after the scroll event
 	var keyTest, order, i, runNext;
 	keyTest = {
-		"page-down": function() {
+		"page-down": function () {
 			ok(st.g("scrolldiv").scrollTop > 10, "Moved down");
 		},
-		"page-up": function() {
+		"page-up": function () {
 			ok(st.g("scrolldiv").scrollTop === 0, "Moved back up (page-up)");
 		},
-		"end": function() {
+		"end": function () {
 			var sd = st.g("scrolldiv");
 			ok(sd.scrollTop == sd.scrollHeight - sd.clientHeight, "Moved to the end");
 		},
-		"home": function() {
+		"home": function () {
 			ok(st.g("scrolldiv").scrollTop === 0, "Moved back up (home)");
 		}
 	};
 	order = [];
 	i = 0;
-	runNext = function() {
+	runNext = function () {
 		var name = order[i];
-		if (!name ) {
+		if (!name) {
 			start();
 			return;
 		}
 		Syn.key(name, "scrolldiv");
 	};
-	for ( var name in keyTest ) {
-		if ( keyTest.hasOwnProperty(name) ) {
+	for (var name in keyTest) {
+		if (keyTest.hasOwnProperty(name)) {
 			order.push(name);
 		}
 	}
 
-	st.bind(st.g("scrolldiv"), "scroll", function( ev ) {
+	st.bind(st.g("scrolldiv"), "scroll", function (ev) {
 		keyTest[order[i]]();
 		i++;
 		setTimeout(runNext, 1);
@@ -160,17 +160,17 @@ asyncTest("page down, page up, home, end", function() {
 	st.g("scrolldiv").focus();
 	runNext();
 });
-test("range tests", function() {
-	var selectText = function( el, start, end ) {
-		if ( el.setSelectionRange ) {
-			if (!end ) {
+test("range tests", function () {
+	var selectText = function (el, start, end) {
+		if (el.setSelectionRange) {
+			if (!end) {
 				el.focus();
 				el.setSelectionRange(start, start);
 			} else {
 				el.selectionStart = start;
 				el.selectionEnd = end;
 			}
-		} else if ( el.createTextRange ) {
+		} else if (el.createTextRange) {
 			//el.focus();
 			var r = el.createTextRange();
 			r.moveStart('character', start);
@@ -257,18 +257,18 @@ test("range tests", function() {
 	//st.g("qunit-test-area").innerHTML = "";
 });
 
-test("Type with tabs", function() {
+test("Type with tabs", function () {
 	st.g("qunit-test-area").innerHTML = "<input id='third'/>" + "<a tabindex='1' id='first' href='javascript://'>First</a>" + "<input tabindex='2' id='second'/>" + "<input id='fourth'/>";
 	st.g('first').focus();
 
 	var clicked = 0;
-	st.binder('first', 'click', function() {
+	st.binder('first', 'click', function () {
 		clicked++;
 	});
 	stop();
 	//give ie a second to focus
-	setTimeout(function() {
-		Syn.type('\r\tSecond\tThird\tFourth', 'first', function() {
+	setTimeout(function () {
+		Syn.type('\r\tSecond\tThird\tFourth', 'first', function () {
 			equals(clicked, 1, "clickd first");
 			equals(st.g('second').value, "Second", "moved to second");
 			equals(st.g('third').value, "Third", "moved to Third");
@@ -278,18 +278,18 @@ test("Type with tabs", function() {
 	}, 1);
 });
 
-test("Type with shift tabs", function() {
+test("Type with shift tabs", function () {
 	st.g("qunit-test-area").innerHTML = "<input id='third'/>" + "<a tabindex='1' id='first' href='javascript://'>First</a>" + "<input tabindex='2' id='second'/>" + "<input id='fourth'/>";
 	st.g('first').focus();
 
 	var clicked = 0;
-	st.binder('first', 'click', function() {
+	st.binder('first', 'click', function () {
 		clicked++;
 	});
 	stop();
 	//give ie a second to focus
-	setTimeout(function() {
-		Syn.type('[shift]4\t3\t2\t\r[shift-up]', 'fourth', function() {
+	setTimeout(function () {
+		Syn.type('[shift]4\t3\t2\t\r[shift-up]', 'fourth', function () {
 			equals(clicked, 1, "clickd first");
 			equals(st.g('second').value, "2", "moved to second");
 			equals(st.g('third').value, "3", "moved to Third");
@@ -300,60 +300,60 @@ test("Type with shift tabs", function() {
 });
 
 
-test("Type left and right", function() {
+test("Type left and right", function () {
 	stop();
-	Syn.type("012345678[left][left][left]\b", 'key', function() {
+	Syn.type("012345678[left][left][left]\b", 'key', function () {
 		equals(st.g('key').value, "01234678", "left works");
 
 
-		Syn.type("[right][right]a", 'key', function() {
+		Syn.type("[right][right]a", 'key', function () {
 			equals(st.g('key').value, "0123467a8", "right works");
 			start();
 		});
 	});
 });
 
-test("Type left and delete", function() {
+test("Type left and delete", function () {
 	stop();
-	Syn.type("123[left][delete]", 'key', function() {
+	Syn.type("123[left][delete]", 'key', function () {
 		equals(st.g('key').value, "12", "left delete works");
 		start();
 	});
 
 });
-test("Typing Shift", function() {
+test("Typing Shift", function () {
 	stop();
 
 	var shift = false;
-	st.binder('key', 'keypress', function( ev ) {
+	st.binder('key', 'keypress', function (ev) {
 		shift = ev.shiftKey;
 	});
-	Syn.type("[shift]A[shift-up]", 'key', function() {
+	Syn.type("[shift]A[shift-up]", 'key', function () {
 		ok(shift, "Shift key on");
 		start();
 	});
 });
-test("Typing Shift then clicking", function() {
+test("Typing Shift then clicking", function () {
 	stop();
 
 	var shift = false;
-	st.binder('inner', 'click', function( ev ) {
+	st.binder('inner', 'click', function (ev) {
 		shift = ev.shiftKey;
 	});
-	Syn.type("[shift]A", 'key').click({}, 'inner').type("[shift-up]", 'key', function() {
+	Syn.type("[shift]A", 'key').click({}, 'inner').type("[shift-up]", 'key', function () {
 		ok(shift, "Shift key on click");
 		start();
 	});
 });
 
-test("Typing Shift Left and Right", function() {
+test("Typing Shift Left and Right", function () {
 	stop();
 
-	Syn.type("012345678[shift][left][left][left][shift-up]\b[left]\b", 'key', function() {
+	Syn.type("012345678[shift][left][left][left][shift-up]\b[left]\b", 'key', function () {
 		equals(st.g('key').value, "01235", "shift left works");
 
 
-		Syn.type("[left][left][shift][right][right]\b[shift-up]", 'key', function() {
+		Syn.type("[left][left][shift][right][right]\b[shift-up]", 'key', function () {
 
 			equals(st.g('key').value, "015", "shift right works");
 			start();

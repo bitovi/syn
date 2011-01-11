@@ -396,24 +396,24 @@ Syn.mouse.browsers = {
 };
 
 //set browser
-Syn.key.browser = (function() {
-	if ( Syn.key.browsers[window.navigator.userAgent] ) {
+Syn.key.browser = (function () {
+	if (Syn.key.browsers[window.navigator.userAgent]) {
 		return Syn.key.browsers[window.navigator.userAgent];
 	}
-	for ( var browser in Syn.browser ) {
-		if ( Syn.browser[browser] && Syn.key.browsers[browser] ) {
+	for (var browser in Syn.browser) {
+		if (Syn.browser[browser] && Syn.key.browsers[browser]) {
 			return Syn.key.browsers[browser];
 		}
 	}
 	return Syn.key.browsers.gecko;
 })();
 
-Syn.mouse.browser = (function() {
-	if ( Syn.mouse.browsers[window.navigator.userAgent] ) {
+Syn.mouse.browser = (function () {
+	if (Syn.mouse.browsers[window.navigator.userAgent]) {
 		return Syn.mouse.browsers[window.navigator.userAgent];
 	}
-	for ( var browser in Syn.browser ) {
-		if ( Syn.browser[browser] && Syn.mouse.browsers[browser] ) {
+	for (var browser in Syn.browser) {
+		if (Syn.browser[browser] && Syn.mouse.browsers[browser]) {
 			return Syn.mouse.browsers[browser];
 		}
 	}

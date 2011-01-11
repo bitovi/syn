@@ -1,17 +1,17 @@
 module("funcunit/synthetic/mouse", {
-	setup: function() {
+	setup: function () {
 		st.g("qunit-test-area").innerHTML = "<form id='outer'><div id='inner'>" + "<input type='checkbox' id='checkbox'/>" + "<input type='radio' name='radio' value='radio1' id='radio1'/>" + "<input type='radio' name='radio' value='radio2' id='radio2'/>" + "<a href='javascript:doSomething()' id='jsHref'>click me</a>" + "<input type='submit' id='submit'/></div></form>";
 
 	}
 });
 
-test("Syn basics", function() {
+test("Syn basics", function () {
 
 	ok(Syn, "Syn exists");
 
 	st.g("qunit-test-area").innerHTML = "<div id='outer'><div id='inner'></div></div>";
 	var mouseover = 0,
-		mouseoverf = function() {
+		mouseoverf = function () {
 			mouseover++;
 		};
 	st.bind(st.g("outer"), "mouseover", mouseoverf);
@@ -26,11 +26,11 @@ test("Syn basics", function() {
 
 });
 
-test("Click Forms", function() {
+test("Click Forms", function () {
 	var submit = 0,
-		submitf = function( ev ) {
+		submitf = function (ev) {
 			submit++;
-			if ( ev.preventDefault ) {
+			if (ev.preventDefault) {
 				ev.preventDefault();
 			}
 			ev.returnValue = false;
@@ -45,9 +45,9 @@ test("Click Forms", function() {
 
 	//make sure clicking the div does not submit the form
 	var click = 0,
-		clickf = function( ev ) {
+		clickf = function (ev) {
 			click++;
-			if ( ev.preventDefault ) {
+			if (ev.preventDefault) {
 				ev.preventDefault();
 			}
 			return false;
@@ -62,10 +62,10 @@ test("Click Forms", function() {
 	st.unbinder("outer", "submit", submitf);
 	st.unbinder("inner", "click", clickf);
 });
-test("Click Checkboxes", function() {
+test("Click Checkboxes", function () {
 	var checkbox = 0;
 
-	st.binder("checkbox", "change", function( ev ) {
+	st.binder("checkbox", "change", function (ev) {
 		checkbox++;
 	});
 
@@ -80,29 +80,29 @@ test("Click Checkboxes", function() {
 	ok(!st.g("checkbox").checked, "click checks off");
 });
 
-test("Checkbox is checked on click", function() {
+test("Checkbox is checked on click", function () {
 	var checkbox = 0;
 
 	st.g("checkbox").checked = false;
 
-	st.binder("checkbox", "click", function( ev ) {
+	st.binder("checkbox", "click", function (ev) {
 		ok(st.g("checkbox").checked, "check is on during click");
 	});
 
 	Syn.trigger("click", {}, st.g("checkbox"));
 });
 
-test("Click Radio Buttons", function() {
+test("Click Radio Buttons", function () {
 
 	var radio1 = 0,
 		radio2 = 0;
 
 	st.g("radio1").checked = false;
 	//make sure changes are called
-	st.bind(st.g("radio1"), "change", function( ev ) {
+	st.bind(st.g("radio1"), "change", function (ev) {
 		radio1++;
 	});
-	st.bind(st.g("radio2"), "change", function( ev ) {
+	st.bind(st.g("radio2"), "change", function (ev) {
 		radio2++;
 	});
 
@@ -121,41 +121,41 @@ test("Click Radio Buttons", function() {
 
 });
 
-test("Click! Event Order", 4, function() {
+test("Click! Event Order", 4, function () {
 	var order = 0;
 	st.g("qunit-test-area").innerHTML = "<input id='focusme'/>";
 
 
-	st.binder("focusme", "mousedown", function() {
+	st.binder("focusme", "mousedown", function () {
 		equals(++order, 1, "mousedown");
 	});
 
-	st.binder("focusme", "focus", function() {
+	st.binder("focusme", "focus", function () {
 		equals(++order, 2, "focus");
 	});
 
-	st.binder("focusme", "mouseup", function() {
+	st.binder("focusme", "mouseup", function () {
 		equals(++order, 3, "mouseup");
 	});
-	st.binder("focusme", "click", function( ev ) {
+	st.binder("focusme", "click", function (ev) {
 		equals(++order, 4, "click");
-		if ( ev.preventDefault ) {
+		if (ev.preventDefault) {
 			ev.preventDefault();
 		}
 		ev.returnValue = false;
 	});
 
 	stop();
-	Syn.click({}, "focusme", function() {
+	Syn.click({}, "focusme", function () {
 		start();
 	});
 
 });
 
-test("Click Anchor Runs HREF JavaScript", function() {
+test("Click Anchor Runs HREF JavaScript", function () {
 	var didSomething = false,
 		doSomething = window.doSomething;
-	window.doSomething = function() {
+	window.doSomething = function () {
 		didSomething = true;
 	};
 
@@ -163,17 +163,17 @@ test("Click Anchor Runs HREF JavaScript", function() {
 	ok(didSomething, "link href JS run");
 	window.doSomething = doSomething;
 });
-test("Click! Anchor Focuses", 2, function() {
+test("Click! Anchor Focuses", 2, function () {
 	st.g("qunit-test-area").innerHTML = "<a href='#abc' id='focusme'>I am visible</a>";
 
-	st.binder("focusme", "focus", function( ev ) {
+	st.binder("focusme", "focus", function (ev) {
 		ok(true, "focused");
 	});
 
-	st.binder("focusme", "click", function( ev ) {
+	st.binder("focusme", "click", function (ev) {
 		ok(true, "clicked");
 		st.g("qunit-test-area").innerHTML = "";
-		if ( ev.preventDefault ) {
+		if (ev.preventDefault) {
 			ev.preventDefault();
 		}
 		ev.returnValue = false;
@@ -181,26 +181,26 @@ test("Click! Anchor Focuses", 2, function() {
 	});
 	stop();
 	//need to give browsers a second to show element
-	Syn.click({}, "focusme", function() {
+	Syn.click({}, "focusme", function () {
 		start();
 	});
 });
 
-test("Click away causes Blur Change", function() {
+test("Click away causes Blur Change", function () {
 	st.g("qunit-test-area").innerHTML = "<input id='one'/><input id='two'/>";
 
 	var change = 0,
 		blur = 0;
 
-	st.binder("one", "blur", function() {
+	st.binder("one", "blur", function () {
 		blur++;
 	});
-	st.binder("one", "change", function() {
+	st.binder("one", "change", function () {
 		change++;
 	});
 
 	stop();
-	Syn.click({}, "one").key("a").click({}, "two", function() {
+	Syn.click({}, "one").key("a").click({}, "two", function () {
 		start();
 		equals(change, 1, "Change called once");
 		equals(blur, 1, "Blur called once");
@@ -208,30 +208,30 @@ test("Click away causes Blur Change", function() {
 
 });
 
-test("Click HTML causes blur  change", function() {
+test("Click HTML causes blur  change", function () {
 	st.g("qunit-test-area").innerHTML = "<input id='one'/><input id='two'/>";
 
 	var change = 0;
-	st.binder("one", "change", function() {
+	st.binder("one", "change", function () {
 		change++;
 	});
 
 	stop();
-	Syn.click({}, "one").key("a").click({}, document.documentElement, function() {
+	Syn.click({}, "one").key("a").click({}, document.documentElement, function () {
 		start();
 		equals(change, 1, "Change called once");
 	});
 });
-test("Right Click", function() {
+test("Right Click", function () {
 	st.g("qunit-test-area").innerHTML = "<div id='one'>right click me</div>";
 	stop();
 	var context = 0;
-	st.binder("one", "contextmenu", function() {
+	st.binder("one", "contextmenu", function () {
 		context++;
 	});
 
-	Syn.rightClick({}, "one", function() {
-		if ( Syn.mouse.browser.contextmenu ) {
+	Syn.rightClick({}, "one", function () {
+		if (Syn.mouse.browser.contextmenu) {
 			equals(1, context, "context was called");
 		} else {
 			ok(true, "context shouldn't be called in this browser");
@@ -240,18 +240,18 @@ test("Right Click", function() {
 	});
 });
 
-test("Double Click", function() {
+test("Double Click", function () {
 	st.g("qunit-test-area").innerHTML = "<div id='dblclickme'>double click me</div>";
 	stop();
 	var eventSequence = [];
-	st.binder("dblclickme", "dblclick", function() {
+	st.binder("dblclickme", "dblclick", function () {
 		eventSequence.push('dblclick');
 	});
-	st.binder("dblclickme", "click", function() {
+	st.binder("dblclickme", "click", function () {
 		eventSequence.push('click');
 	});
 
-	Syn.dblclick({}, "dblclickme", function() {
+	Syn.dblclick({}, "dblclickme", function () {
 		equals(eventSequence.join(', '), 'click, click, dblclick', 'expected event sequence for doubleclick');
 		start();
 	});
