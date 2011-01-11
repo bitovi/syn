@@ -1,8 +1,8 @@
 (function() {
 	// document body has to exists for this test
-	(function() {
+	(function draginit() {
 		if (!document.body) {
-			setTimeout(arguments.callee, 1);
+			setTimeout(draginit, 1);
 			return;
 		}
 		var div = document.createElement('div');
@@ -96,7 +96,7 @@
 							top: (options.clientY + scrollOffset.top + 2) + "px"
 						});
 						current = mouseMove(options, element, current);
-						setTimeout(arguments.callee, 15);
+						setTimeout(move, 15);
 					}
 					else {
 						current = mouseMove(end, element, current);

@@ -237,7 +237,7 @@
 		 * and the next event will happen on that element.
 		 */
 		defaults: {
-			focus: function() {
+			focus: function focus() {
 				if (!Syn.support.focusChanges ) {
 					var element = this,
 						nodeName = element.nodeName.toLowerCase();
@@ -251,7 +251,7 @@
 
 								Syn.trigger("change", {}, element);
 							}
-							unbind(element, "blur", arguments.callee);
+							unbind(element, "blur", focus);
 						});
 
 					}
@@ -268,11 +268,11 @@
 		},
 		changeOnBlur: function( element, prop, value ) {
 
-			bind(element, "blur", function() {
+			bind(element, "blur", function blurhelper() {
 				if ( value != element[prop] ) {
 					Syn.trigger("change", {}, element);
 				}
-				unbind(element, "blur", arguments.callee);
+				unbind(element, "blur", blurhelper);
 			});
 
 		},
@@ -426,9 +426,9 @@
 			//automatically prevents the default behavior for this event
 			//this is to protect agianst nasty browser freezing bug in safari
 			if ( autoPrevent ) {
-				bind(element, type, function( ev ) {
+				bind(element, type, function preventhelper( ev ) {
 					ev.preventDefault();
-					unbind(this, type, arguments.callee);
+					unbind(this, type, preventhelper);
 				});
 			}
 

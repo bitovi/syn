@@ -815,9 +815,9 @@
 
 
 	//do support code
-	(function() {
+	(function supportcode() {
 		if (!document.body ) {
-			setTimeout(arguments.callee, 1);
+			setTimeout(supportcode, 1);
 			return;
 		}
 

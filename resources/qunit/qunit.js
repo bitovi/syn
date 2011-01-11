@@ -931,7 +931,7 @@
 			};
 		}();
 
-		innerEquiv = function() { // can take multiple arguments
+		innerEquiv = function innerEquiv() { // can take multiple arguments
 			var args = Array.prototype.slice.apply(arguments);
 			if ( args.length < 2 ) {
 				return true; // end transition
@@ -947,7 +947,7 @@
 				}
 
 				// apply transition with (1..n) arguments
-			})(args[0], args[1]) && arguments.callee.apply(this, args.splice(1, args.length - 1));
+			})(args[0], args[1]) && innerEquiv.apply(this, args.splice(1, args.length - 1));
 		};
 
 		return innerEquiv;

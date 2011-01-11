@@ -197,9 +197,9 @@
 		}
 	});
 	//do support code
-	(function() {
+	(function supportcode() {
 		if (!document.body ) {
-			setTimeout(arguments.callee, 1);
+			setTimeout(supportcode, 1);
 			return;
 		}
 		var oldSynth = window.__synthTest;
@@ -244,7 +244,7 @@
 		Syn.trigger("click", {}, form.childNodes[1]);
 		Syn.bind(div, 'click', function() {
 			Syn.support.optionClickBubbles = true;
-			Syn.unbind(div, 'click', arguments.callee);
+			Syn.unbind(div, 'click', supportcode);
 		});
 		Syn.trigger("click", {}, select.firstChild);
 		Syn.support.changeBubbles = Syn.eventSupported('change');
