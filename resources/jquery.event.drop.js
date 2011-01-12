@@ -1,3 +1,7 @@
+/*jslint bitwise: false */
+//unlike in C or Java, binary operations are SLOW in Javascript (float number system). Avoide!
+/*global HTMLElement: false, Range:false */
+
 (function ($) {
 	var withinBox = function (x, y, left, top, width, height) {
 		return (y >= top && y < top + height && x >= left && x < left + width);
@@ -42,7 +46,7 @@
 	 * @param {Object} cache
 	 */
 	$.fn.withinBox = function (left, top, width, height, cache) {
-		var ret = [];
+		var res, ret = [];
 		this.each(function () {
 			var q = jQuery(this);
 
@@ -62,9 +66,9 @@
 			}
 		});
 		return this.pushStack(jQuery.unique(ret), "withinBox", jQuery.makeArray(arguments).join(","));
-	}
+	};
 
-})(jQuery);
+}(jQuery));
 (function ($) {
 	/**
 	 * @function compare
@@ -115,7 +119,7 @@
 		if (this[0].sourceIndex) {
 			number += (this[0].sourceIndex < b.sourceIndex && 4);
 			number += (this[0].sourceIndex > b.sourceIndex && 2);
-			number += (this[0].ownerDocument !== b.ownerDocument || (this[0] != docEl && this[0].sourceIndex <= 0) || (b != docEl && b.sourceIndex <= 0)) && 1
+			number += (this[0].ownerDocument !== b.ownerDocument || (this[0] != docEl && this[0].sourceIndex <= 0) || (b != docEl && b.sourceIndex <= 0)) && 1;
 		} else {
 			var range = document.createRange(),
 				sourceRange = document.createRange(),
@@ -127,56 +131,54 @@
 		}
 
 		return number;
-	}
+	};
 
-})(jQuery);
+}(jQuery));
 (function ($) {
 	var event = $.event,
-		callHanders = function () {
-
-		};
-	//somehow need to keep track of elements with selectors on them.  When element is removed, somehow we need to know that
-	//
-	/**
-	 * @add jQuery.event.special
-	 */
-	var eventNames = [
-	/**
-	 * @attribute dropover
-	 * Called when a drag is first moved over this drop element.
-	 * <p>Drop events are covered in more detail in [jQuery.Drop].</p>
-	 */
-	"dropover",
-	/**
-	 * @attribute dropon
-	 * Called when a drag is dropped on a drop element.
-	 * <p>Drop events are covered in more detail in [jQuery.Drop].</p>
-	 */
-	"dropon",
-	/**
-	 * @attribute dropout
-	 * Called when a drag is moved out of this drop.
-	 * <p>Drop events are covered in more detail in [jQuery.Drop].</p>
-	 */
-	"dropout",
-	/**
-	 * @attribute dropinit
-	 * Called when a drag motion starts and the drop elements are initialized.
-	 * <p>Drop events are covered in more detail in [jQuery.Drop].</p>
-	 */
-	"dropinit",
-	/**
-	 * @attribute dropmove
-	 * Called repeatedly when a drag is moved over a drop.
-	 * <p>Drop events are covered in more detail in [jQuery.Drop].</p>
-	 */
-	"dropmove",
-	/**
-	 * @attribute dropend
-	 * Called when the drag is done for this drop.
-	 * <p>Drop events are covered in more detail in [jQuery.Drop].</p>
-	 */
-	"dropend"];
+		//		callHanders = function () {}; //misspelled and not used.
+		//somehow need to keep track of elements with selectors on them.  When element is removed, somehow we need to know that
+		//
+		/**
+		 * @add jQuery.event.special
+		 */
+		eventNames = [
+		/**
+		 * @attribute dropover
+		 * Called when a drag is first moved over this drop element.
+		 * <p>Drop events are covered in more detail in [jQuery.Drop].</p>
+		 */
+		"dropover",
+		/**
+		 * @attribute dropon
+		 * Called when a drag is dropped on a drop element.
+		 * <p>Drop events are covered in more detail in [jQuery.Drop].</p>
+		 */
+		"dropon",
+		/**
+		 * @attribute dropout
+		 * Called when a drag is moved out of this drop.
+		 * <p>Drop events are covered in more detail in [jQuery.Drop].</p>
+		 */
+		"dropout",
+		/**
+		 * @attribute dropinit
+		 * Called when a drag motion starts and the drop elements are initialized.
+		 * <p>Drop events are covered in more detail in [jQuery.Drop].</p>
+		 */
+		"dropinit",
+		/**
+		 * @attribute dropmove
+		 * Called repeatedly when a drag is moved over a drop.
+		 * <p>Drop events are covered in more detail in [jQuery.Drop].</p>
+		 */
+		"dropmove",
+		/**
+		 * @attribute dropend
+		 * Called when the drag is done for this drop.
+		 * <p>Drop events are covered in more detail in [jQuery.Drop].</p>
+		 */
+		"dropend"];
 
 
 	/**
@@ -223,7 +225,7 @@
 				var el = $(this),
 					current = (el.data("dropEventCount") || 0);
 				el.data("dropEventCount", current + 1);
-				if (current == 0) {
+				if (current === 0) {
 					$.Drop.addElement(this);
 				}
 			},
@@ -235,7 +237,7 @@
 					$.Drop.removeElement(this);
 				}
 			}
-		}
+		};
 	});
 	$.extend($.Drop, {
 		lowerName: "drop",
@@ -292,7 +294,7 @@
 		 */
 		deactivate: function (responder, mover, event) {
 			mover.out(event, responder);
-			responder.callHandlers(this.lowerName + 'out', responder.element[0], event, mover)
+			responder.callHandlers(this.lowerName + 'out', responder.element[0], event, mover);
 		},
 		/**
 		 * @hide
@@ -307,23 +309,25 @@
 			responder.callHandlers(this.lowerName + 'over', responder.element[0], event, mover);
 		},
 		move: function (responder, mover, event) {
-			responder.callHandlers(this.lowerName + 'move', responder.element[0], event, mover)
+			responder.callHandlers(this.lowerName + 'move', responder.element[0], event, mover);
 		},
 		/**
 		 * Gets all elements that are droppable, adds them
 		 */
 		compile: function (event, drag) {
-			var el, drops, selector, sels;
+			var i, el, drops, selector, sels;
 			this.last_active = [];
-			for (var i = 0; i < this._elements.length; i++) { //for each element
+			for (i = 0; i < this._elements.length; i++) { //for each element
 				el = this._elements[i];
-				var drops = $.event.findBySelector(el, eventNames);
+				drops = $.event.findBySelector(el, eventNames);
 
 				for (selector in drops) { //find the selectors
-					sels = selector ? jQuery(selector, el) : [el];
-					for (var e = 0; e < sels.length; e++) { //for each found element, create a drop point
-						jQuery.removeData(sels[e], "offset");
-						this.add(sels[e], new this(drops[selector]), event, drag);
+					if (drops.hasOwnProperty(selector)) {
+						sels = selector ? jQuery(selector, el) : [el];
+						for (var e = 0; e < sels.length; e++) { //for each found element, create a drop point
+							jQuery.removeData(sels[e], "offset");
+							this.add(sels[e], new this(drops[selector]), event, drag);
+						}
 					}
 				}
 			}
@@ -338,14 +342,16 @@
 			}
 		},
 		show: function (point, moveable, event) {
-			var element = moveable.element;
 			if (!this._responders.length) {
 				return;
 			}
 
-			var respondable, affected = [],
+			var i,
+			//element = moveable.element,
+			//respondable,
+			affected = [],
 				propagate = true,
-				i, j, la, toBeActivated, aff, oldLastActive = this.last_active;
+				j, la, toBeActivated, aff, oldLastActive = this.last_active;
 
 			for (var d = 0; d < this._responders.length; d++) {
 
@@ -380,7 +386,7 @@
 					return;
 				}
 			}
-			for (var i = 0; i < toBeActivated.length; i++) {
+			for (i = 0; i < toBeActivated.length; i++) {
 				this.activate(toBeActivated[i], moveable, event);
 				if (!propagate) {
 					return;
@@ -396,7 +402,9 @@
 			}
 		},
 		end: function (event, moveable) {
-			var responder, la;
+			var
+			//responder,
+			la;
 			for (var r = 0; r < this._responders.length; r++) {
 				this._responders[r].callHandlers(this.lowerName + 'end', null, event, moveable);
 			}
@@ -426,7 +434,7 @@
 		callHandlers: function (method, el, ev, drag) {
 			var length = this[method] ? this[method].length : 0;
 			for (var i = 0; i < length; i++) {
-				this[method][i].call(el || this.element[0], ev, this, drag)
+				this[method][i].call(el || this.element[0], ev, this, drag);
 			}
 		},
 		/**
@@ -436,7 +444,7 @@
 		 * @codeend
 		 */
 		cache: function (value) {
-			this._cache = value != null ? value : true;
+			this._cache = value !== null ? value : true;
 		},
 		/**
 		 * Prevents this drop from being dropped on.
@@ -444,5 +452,5 @@
 		cancel: function () {
 			this._canceled = true;
 		}
-	})
-})(jQuery);
+	});
+}(jQuery));

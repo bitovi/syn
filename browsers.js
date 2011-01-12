@@ -406,7 +406,7 @@ Syn.key.browser = (function () {
 		}
 	}
 	return Syn.key.browsers.gecko;
-})();
+}());
 
 Syn.mouse.browser = (function () {
 	if (Syn.mouse.browsers[window.navigator.userAgent]) {
@@ -418,4 +418,4 @@ Syn.mouse.browser = (function () {
 		}
 	}
 	return Syn.mouse.browsers.gecko;
-})();
+}());

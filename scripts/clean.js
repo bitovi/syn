@@ -5,6 +5,7 @@ clean script to (check sanity and) normalize
 	syn/drag
  */
 (function () {
+	"use strict";
 	var settings = {
 		indent_size: 1,
 		indent_char: '\t',
@@ -22,6 +23,8 @@ clean script to (check sanity and) normalize
 	};
 	load("steal/rhino/steal.js");
 	steal.plugins('steal/clean', function () {
+		steal.clean('funcunit/syn/browsers.js', settings);
+		//steal.clean('funcunit/syn/demo/record.js', settings); //avoid overly complex expressions
 		steal.clean('funcunit/syn/scripts/clean.js', settings);
 		steal.clean('funcunit/syn/build.js', settings);
 		steal.clean('funcunit/syn/qunit.html', settings);

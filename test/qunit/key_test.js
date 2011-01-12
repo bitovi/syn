@@ -1,3 +1,5 @@
+/*global asyncTest: false, equals: false, Implied: false, module: false, ok: false,
+ same: false, st: false, start: false, stop: false, test: false */
 module("funcunit/synthetic/key", {
 	setup: function () {
 		st.g("qunit-test-area").innerHTML = "<form id='outer'>" + "<div id='inner'>" + "<input type='input' id='key' value=''/>" + "<a href='#abc' id='focusLink'>click me</a>" + "<textarea id='synTextArea'></textarea>" + "</div></form>";

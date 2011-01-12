@@ -1,9 +1,9 @@
 (function ($) {
 	var getSetZero = function (v) {
-		return v !== undefined ? (this.array[0] = v) : this.array[0]
+		return v !== undefined ? (this.array[0] = v) : this.array[0];
 	},
 		getSetOne = function (v) {
-			return v !== undefined ? (this.array[1] = v) : this.array[1]
+			return v !== undefined ? (this.array[1] = v) : this.array[1];
 		};
 	/**
 	 * @class jQuery.Vector
@@ -114,13 +114,14 @@
 		 * @param {Object} array
 		 */
 		update: function (array) {
+			var i;
 			if (this.array) {
-				for (var i = 0; i < this.array.length; i++) {
+				for (i = 0; i < this.array.length; i++) {
 					delete this.array[i];
 				}
 			}
 			this.array = array;
-			for (var i = 0; i < array.length; i++) {
+			for (i = 0; i < array.length; i++) {
 				this[i] = this.array[i];
 			}
 			return this;
@@ -139,7 +140,7 @@
 
 	$.fn.offsetv = function () {
 		if (this[0] == window) {
-			return new $.Vector(window.pageXOffset ? window.pageXOffset : document.documentElement.scrollLeft, window.pageYOffset ? window.pageYOffset : document.documentElement.scrollTop)
+			return new $.Vector(window.pageXOffset ? window.pageXOffset : document.documentElement.scrollLeft, window.pageYOffset ? window.pageYOffset : document.documentElement.scrollTop);
 		} else {
 			var offset = this.offset();
 			return new $.Vector(offset.left, offset.top);
@@ -153,12 +154,12 @@
 		else {
 			return new $.Vector(this[which + "Width"](), this[which + "Height"]());
 		}
-	}
+	};
 
 
 
 
-})(jQuery);
+}(jQuery));
 (function () {
 
 	var event = jQuery.event,
@@ -216,7 +217,7 @@
 			// basically re-create handler's logic
 			findHelper(events, types, function (type, handler) {
 				handlers.push(handler);
-			})
+			});
 		}
 		return handlers;
 	};
@@ -321,8 +322,8 @@
 				teardown: function () {}
 			};
 		});
-	}
-})(jQuery);
+	};
+}(jQuery));
 (function ($) {
 	//modify live
 	//steal the live handler ....
@@ -333,9 +334,8 @@
 			return method.apply(object, args2);
 		};
 	},
-		event = $.event,
-		handle = event.handle;
-
+		event = $.event; //,
+	//handle = event.handle; //unused
 	/**
 	 * @class jQuery.Drag
 	 * @parent specialevents
@@ -413,7 +413,7 @@
 		 * @hide
 		 */
 		mousedown: function (ev, element) {
-			var isLeftButton = ev.button == 0 || ev.button == 1;
+			var isLeftButton = ev.button === 0 || ev.button == 1;
 			if (!isLeftButton || this.current) {
 				return;
 			} //only allows 1 drag at a time, but in future could allow more
@@ -441,7 +441,7 @@
 				destroyed: function () {
 					self.current = null;
 				}
-			}, ev)
+			}, ev);
 		}
 	});
 
@@ -530,7 +530,7 @@
 
 			//Check what they have set and respond accordingly
 			//  if they canceled
-			if (this._cancelled == true) {
+			if (this._cancelled === true) {
 				return;
 			}
 			//if they set something else as the element
@@ -561,9 +561,9 @@
 		callEvents: function (type, element, event, drop) {
 			var cbs = this.callbacks[this.constructor.lowerName + type];
 			for (var i = 0; i < cbs.length; i++) {
-				cbs[i].call(element, event, this, drop)
+				cbs[i].call(element, event, this, drop);
 			}
-			return cbs.length
+			return cbs.length;
 		},
 		/**
 		 * Returns the position of the movingElement by taking its top and left.
@@ -571,7 +571,7 @@
 		 * @return {Vector}
 		 */
 		currentDelta: function () {
-			return new $.Vector(parseInt(this.movingElement.css('left')) || 0, parseInt(this.movingElement.css('top')) || 0);
+			return new $.Vector(parseInt(this.movingElement.css('left'), 10) || 0, parseInt(this.movingElement.css('top'), 10) || 0);
 		},
 		//draws the position of the dragmove object
 		draw: function (pointer, event) {
@@ -618,20 +618,20 @@
 			//dragged_element vector can probably be cached.
 			var style = this.movingElement[0].style;
 			if (!this._cancelled && !this._horizontal) {
-				style.top = this.required_css_position.top() + "px"
+				style.top = this.required_css_position.top() + "px";
 			}
 			if (!this._cancelled && !this._vertical) {
-				style.left = this.required_css_position.left() + "px"
+				style.left = this.required_css_position.left() + "px";
 			}
 		},
 		move: function (event) {
-			this.callEvents('move', this.element, event)
+			this.callEvents('move', this.element, event);
 		},
 		over: function (event, drop) {
-			this.callEvents('over', this.element, event, drop)
+			this.callEvents('over', this.element, event, drop);
 		},
 		out: function (event, drop) {
-			this.callEvents('out', this.element, event, drop)
+			this.callEvents('out', this.element, event, drop);
 		},
 		/**
 		 * Called on drag up
@@ -654,8 +654,8 @@
 					top: this.startPosition.top() + "px",
 					left: this.startPosition.left() + "px"
 				}, function () {
-					self.cleanup.apply(self, arguments)
-				})
+					self.cleanup.apply(self, arguments);
+				});
 			}
 			else {
 				this.cleanup();
@@ -728,7 +728,7 @@
 				position: 'absolute'
 			}).show();
 
-			this.mouseElementPosition = new $.Vector(this._offsetX, this._offsetY)
+			this.mouseElementPosition = new $.Vector(this._offsetX, this._offsetY);
 		},
 		/**
 		 * Makes the movingElement go back to its original position after drop.
@@ -740,7 +740,7 @@
 		 * @param {Boolean} [val] optional, set to false if you don't want to revert.
 		 */
 		revert: function (val) {
-			this._revert = val == null ? true : val;
+			this._revert = val === null ? true : val;
 		},
 		/**
 		 * Isolates the drag to vertical movement.
@@ -813,9 +813,7 @@
 	 * <p>Drag events are covered in more detail in [jQuery.Drag].</p>
 	 */
 	'dragend'], "mousedown", function (e) {
-		$.Drag.mousedown.call($.Drag, e, this)
+		$.Drag.mousedown.call($.Drag, e, this);
+	});
 
-	})
-
-
-})(jQuery);
+}(jQuery));

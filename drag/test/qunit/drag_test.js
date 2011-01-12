@@ -1,10 +1,10 @@
+/*global module:false, start:false , equals: false, test: false, stop: false, ok: false */
 module("funcunit/synthetic/drag");
 
-
 test("dragging off the page", function () {
-	var drags = ({}),
-		drops = ({});
-
+	var
+	//drags = ({}),
+	drops = ({});
 
 	var div = $("<div>" + "<div id='drag'></div>" + "<div id='drop'></div>" + "</div>");
 
@@ -43,14 +43,15 @@ test("dragging off the page", function () {
 		ok(drops.dropover, "dropover fired correctly");
 		$("#qunit-test-area").innerHTML = "";
 		start();
-	})
+	});
 });
 
 test("move", function () {
 
-	var drags = {},
-		drops = {};
-	var div = $("<div id='wrap'>" + "<div id='left'></div>" + "<div id='right'></div>" + "</div>");
+	var
+	//drags = {},
+	//drops = {},
+	div = $("<div id='wrap'>" + "<div id='left'></div>" + "<div id='right'></div>" + "</div>");
 
 	div.appendTo($("#qunit-test-area"));
 	var basicCss = {
@@ -85,15 +86,15 @@ test("move", function () {
 
 	var move = function (ev) {
 		if (ev.clientX < clientX) {
-			ok(false, "mouse isn't moving right")
+			ok(false, "mouse isn't moving right");
 		}
 		clientX = ev.clientX;
 		if (ev.clientY < clientY) {
-			ok(false, "mouse isn't moving right")
+			ok(false, "mouse isn't moving right");
 		}
 		clientY = ev.clientY;
 		if (!targets.length || targets[targets.length - 1] !== ev.target) {
-			targets.push(ev.target)
+			targets.push(ev.target);
 		}
 	};
 	$(document.documentElement).bind('mousemove', move);
@@ -115,12 +116,12 @@ test("move", function () {
 		equals(clientY, 50);
 		$(document.documentElement).unbind('mousemove', move);
 		for (var i = 0; i < els.length; i++) {
-			ok(els[i] == targets[i], "target is right")
+			ok(els[i] == targets[i], "target is right");
 		}
 
 		$("#qunit-test-area").html("");
 		start();
-	})
+	});
 
 });
 
@@ -217,8 +218,8 @@ test("dragging an element with duration", function () {
 				ok(drops.dropout, "dropout fired correctly");
 				$("#qunit-test-area").innerHTML = "";
 				start();
-			})
+			});
 
 		});
-	})
+	});
 });
