@@ -1,3 +1,4 @@
+/*global equals: false, ok: false, st: false, start: false, stop: false, Syn: false, test: false, module: false */
 module("funcunit/synthetic/mouse", {
 	setup: function () {
 		st.g("qunit-test-area").innerHTML = "<form id='outer'><div id='inner'>" + "<input type='checkbox' id='checkbox'/>" + "<input type='radio' name='radio' value='radio1' id='radio1'/>" + "<input type='radio' name='radio' value='radio2' id='radio2'/>" + "<a href='javascript:doSomething()' id='jsHref'>click me</a>" + "<input type='submit' id='submit'/></div></form>";
@@ -81,8 +82,7 @@ test("Click Checkboxes", function () {
 });
 
 test("Checkbox is checked on click", function () {
-	var checkbox = 0;
-
+	//var checkbox = 0;
 	st.g("checkbox").checked = false;
 
 	st.binder("checkbox", "click", function (ev) {

@@ -10,11 +10,11 @@ clean script to (check sanity and) normalize
 		indent_char: '\t',
 		space_after_anon_function: true,
 		space_statement_expression: false,
-		jslint: false,
-		//		jslint : true,
+		jslint: true,
 		ignore: /steal\/*|jquery\/jquery\.js|funcunit\/syn\/resources\/jquery\.js/,
 		predefined: {
 			steal: true,
+			Syn: true,
 			jQuery: true,
 			$: true,
 			window: true

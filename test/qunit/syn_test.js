@@ -70,7 +70,9 @@ asyncTest("scrollTop triggers scroll events", function () {
 	stop();
 	setTimeout(function () {
 		var sc = st.g("scroller");
-		sc && (sc.scrollTop = 10);
+		if ( !! sc) {
+			sc.scrollTop = 10;
+		}
 
 	}, 13);
 });

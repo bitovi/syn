@@ -29,7 +29,7 @@
 		}
 		document.body.removeChild(div);
 		document.body.scrollTop = 0;
-	})();
+	}());
 
 
 	//gets an element from a point
@@ -79,31 +79,31 @@
 				win = Syn.helpers.getWindow(element),
 				current = elementFromPoint(start, element),
 				cursor = win.document.createElement('div'),
-				calls = 0;
-			move = function () {
-				//get what fraction we are at
-				var now = new Date(),
-					scrollOffset = Syn.helpers.scrollOffset(win),
-					fraction = (calls === 0 ? 0 : now - startTime) / duration,
-					options = {
-						clientX: distX * fraction + start.clientX,
-						clientY: distY * fraction + start.clientY
-					};
-				calls++;
-				if (fraction < 1) {
-					Syn.helpers.extend(cursor.style, {
-						left: (options.clientX + scrollOffset.left + 2) + "px",
-						top: (options.clientY + scrollOffset.top + 2) + "px"
-					});
-					current = mouseMove(options, element, current);
-					setTimeout(move, 15);
-				}
-				else {
-					current = mouseMove(end, element, current);
-					win.document.body.removeChild(cursor);
-					callback();
-				}
-			};
+				calls = 0,
+				move = function () {
+					//get what fraction we are at
+					var now = new Date(),
+						scrollOffset = Syn.helpers.scrollOffset(win),
+						fraction = (calls === 0 ? 0 : now - startTime) / duration,
+						options = {
+							clientX: distX * fraction + start.clientX,
+							clientY: distY * fraction + start.clientY
+						};
+					calls++;
+					if (fraction < 1) {
+						Syn.helpers.extend(cursor.style, {
+							left: (options.clientX + scrollOffset.left + 2) + "px",
+							top: (options.clientY + scrollOffset.top + 2) + "px"
+						});
+						current = mouseMove(options, element, current);
+						setTimeout(move, 15);
+					}
+					else {
+						current = mouseMove(end, element, current);
+						win.document.body.removeChild(cursor);
+						callback();
+					}
+				};
 			Syn.helpers.extend(cursor.style, {
 				height: "5px",
 				width: "5px",
@@ -131,27 +131,27 @@
 			};
 		},
 		convertOption = function (option, win, from) {
-			var page = /(\d+)[x ](\d+)/,
+			var parts, cent, page = /(\d+)[x ](\d+)/,
 				client = /(\d+)X(\d+)/,
-				relative = /([+-]\d+)[xX ]([+-]\d+)/;
+				relative = /([+\-]\d+)[xX ]([+\-]\d+)/;
 			//check relative "+22x-44"
 			if (typeof option == 'string' && relative.test(option) && from) {
-				var cent = center(from),
-					parts = option.match(relative);
+				cent = center(from);
+				parts = option.match(relative);
 				option = {
 					pageX: cent.pageX + parseInt(parts[1], 10),
 					pageY: cent.pageY + parseInt(parts[2], 10)
 				};
 			}
 			if (typeof option == 'string' && page.test(option)) {
-				var parts = option.match(page);
+				parts = option.match(page);
 				option = {
 					pageX: parseInt(parts[1], 10),
 					pageY: parseInt(parts[2], 10)
 				};
 			}
 			if (typeof option == 'string' && client.test(option)) {
-				var parts = option.match(client);
+				parts = option.match(client);
 				option = {
 					clientX: parseInt(parts[1], 10),
 					clientY: parseInt(parts[2], 10)

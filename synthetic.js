@@ -1,7 +1,14 @@
+//@steal-clean
+// JSLint does not tolerate the guard style: MayBeNotDefined && MayBeNotDefined.myFunction();
+// Better use: if('object' === typeof(MayBeNotDefined)) {MayBeNotDefined.myFunction();}
+
 (function () {
 	var extend = function (d, s) {
-		for (var p in s) {
-			d[p] = s[p];
+		var p;
+		for (p in s) {
+			if (s.hasOwnProperty(p)) {
+				d[p] = s[p];
+			}
 		}
 		return d;
 	},
@@ -392,10 +399,10 @@
 				};
 
 			},
-			addOffset: function (options, el) {
-				var jq = Syn.jquery(el);
+			addOffset: function (options, elin) {
+				var el, off, jq = Syn.jquery(elin);
 				if (typeof options == 'object' && options.clientX === undefined && options.clientY === undefined && options.pageX === undefined && options.pageY === undefined && jq) {
-					var el = jq(el);
+					el = jq(elin);
 					off = el.offset();
 					options.pageX = off.left + el.width() / 2;
 					options.pageY = off.top + el.height() / 2;
@@ -590,7 +597,7 @@
 		}
 
 	});
-	var h = Syn.helpers;
+	//	var h = Syn.helpers; //unused
 	/**
 	 * @Prototype
 	 */

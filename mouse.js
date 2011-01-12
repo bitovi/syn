@@ -1,3 +1,8 @@
+/*jslint evil: true */
+//Todo: eval is evil!
+
+//@steal-clean //JSLint does not like href='javascript://'
+
 //handles mosue events
 (function () {
 	var h = Syn.helpers;
@@ -9,9 +14,9 @@
 		},
 		click: function () {
 			// prevents the access denied issue in IE if the click causes the element to be destroyed
-			var element = this;
+			var i, element = this;
 			try {
-				element.nodeType;
+				i = element.nodeType;
 			} catch (e) {
 				return;
 			}
@@ -129,7 +134,7 @@
 			} : h.createEventObject
 		},
 		click: {
-			setup: function (type, options, element) {
+			setup: function (typein, options, element) {
 				var nodeName = element.nodeName.toLowerCase(),
 					type;
 
@@ -207,7 +212,9 @@
 			Syn.support.linkHrefJS = true;
 		};
 		var div = document.createElement("div"),
-			checkbox, submit, form, input, select;
+			checkbox, submit, form,
+			//input, //unused
+			select;
 
 		div.innerHTML = "<form id='outer'>" + "<input name='checkbox' type='checkbox'/>" + "<input name='radio' type='radio' />" + "<input type='submit' name='submitter'/>" + "<input type='input' name='inputter'/>" + "<input name='one'>" + "<input name='two'/>" + "<a href='javascript:__synthTest()' id='synlink'></a>" + "<select><option></option></select>" + "</form>";
 		document.documentElement.appendChild(div);
@@ -250,7 +257,7 @@
 		Syn.support.changeBubbles = Syn.eventSupported('change');
 
 		//test if mousedown followed by mouseup causes click (opera), make sure there are no clicks after this
-		var clicksCount = 0;
+		//var clicksCount = 0;
 		div.onclick = function () {
 			Syn.support.mouseDownUpClicks = true;
 			//we should use this to check for opera potentially, but would
@@ -269,5 +276,5 @@
 		//check stuff
 		window.__synthTest = oldSynth;
 		Syn.support.ready++;
-	})();
-})();
+	}());
+}());

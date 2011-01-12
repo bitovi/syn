@@ -1,10 +1,15 @@
+//@steal-clean
+// JSLint does not tolerate the guard style: MayBeNotDefined && MayBeNotDefined.myFunction();
+// Better use: if('object' === typeof(MayBeNotDefined)) {MayBeNotDefined.myFunction();}
+
 (function () {
 	var h = Syn.helpers,
 		S = Syn,
+		r, r2, r3,
 
 		// gets the selection of an input or textarea
 		getSelection = function (el) {
-			var real;
+			var real, start, end;
 			// use selectionStart if we can
 			if (el.selectionStart !== undefined) {
 				// this is for opera, so we don't have to focus to type how we think we would
@@ -29,7 +34,7 @@
 						r = el.createTextRange();
 						r.setEndPoint("EndToStart", real);
 
-						var start = r.text.length;
+						start = r.text.length;
 						return {
 							start: start,
 							end: start + real.text.length
@@ -48,8 +53,8 @@
 						r.moveToElementText(el);
 						//now move our endpoint to the end of our real range
 						r.setEndPoint('EndToEnd', real);
-						var start = r.text.length - real.text.length,
-							end = r.text.length;
+						start = r.text.length - real.text.length;
+						end = r.text.length;
 						if (start !== 0 && r2.text === "") {
 							start += 2;
 						}
@@ -223,9 +228,9 @@
 			';': '186',
 			'=': '187',
 			',': '188',
-			'-': '189',
-			'.': '190',
-			'/': '191',
+			//			'-': '189',
+			//			'.': '190',
+			//			'/': '191',
 			'`': '192',
 			'[': '219',
 			'\\': '220',
@@ -519,14 +524,16 @@
 					// will be set to our guess for the next element
 					current = null,
 					// the next index we care about
-					currentIndex = 1000000000,
+					//currentIndex = 1000000000,
 					// set to true once we found 'this' element
-					found = false,
+					//found = false,
 					i = 0,
 					el,
 					//the tabindex of the tabable element we are looking at
-					elIndex, firstNotIndexed, prev;
-				orders = [];
+					//elIndex,
+					firstNotIndexed,
+					//prev;
+					orders = [];
 				for (; i < focusEls.length; i++) {
 					orders.push([focusEls[i], i]);
 				}
@@ -822,10 +829,12 @@
 		}
 
 		var div = document.createElement("div"),
-			checkbox, submit, form, input, submitted = false,
+			checkbox, submit, form,
+			//input,
+			//submitted = false,
 			anchor, textarea;
 
-		div.innerHTML = "<form id='outer'>" + "<input name='checkbox' type='checkbox'/>" + "<input name='radio' type='radio' />" + "<input type='submit' name='submitter'/>" + "<input type='input' name='inputter'/>" + "<input name='one'>" + "<input name='two'/>" + "<a href='#abc'></a>" + "<textarea>1\n2</textarea>" + "</form>";
+		div.innerHTML = "<form id='outer'>" + "<input name='checkbox' type='checkbox'/>" + "<input name='radio' type='radio' />" + "<input type='submit' name='submitter'/>" + "<input type='input' name='inputter'/>" + "<input name='one'>" + "<input name='two'/>" + '<a href="#abc"></a>' + "<textarea>1\n2</textarea>" + "</form>";
 
 		document.documentElement.appendChild(div);
 		form = div.firstChild;

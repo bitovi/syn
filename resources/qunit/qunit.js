@@ -7,6 +7,7 @@
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
  */
+/*jslint browser: true, devel: true, es5: true, eqeqeq: false */
 /*global config:false, exports:true ok: false, start: false, reset: false, require: false */
 (function (window) {
 	var QUnit;
@@ -18,15 +19,16 @@
 
 	function validTest(name) {
 		var i = config.filters.length,
-			run = false;
+			run = false,
+			not, filter;
 
 		if (!i) {
 			return true;
 		}
 
 		while (i--) {
-			var filter = config.filters[i],
-				not = filter.charAt(0) == '!';
+			filter = config.filters[i];
+			not = filter.charAt(0) == '!';
 
 			if (not) {
 				filter = filter.slice(1);
@@ -77,9 +79,9 @@
 	}
 
 	function diff(a, b) {
-		var result = a.slice();
-		for (var i = 0; i < result.length; i++) {
-			for (var j = 0; j < b.length; j++) {
+		var i, j, result = a.slice();
+		for (i = 0; i < result.length; i++) {
+			for (j = 0; j < b.length; j++) {
 				if (result[i] === b[j]) {
 					result.splice(i, 1);
 					i--;
@@ -91,16 +93,16 @@
 	}
 
 	function checkPollution(name) {
-		var old = config.pollution;
+		var newGlobals, deletedGlobals, old = config.pollution;
 		saveGlobal();
 
-		var newGlobals = diff(old, config.pollution);
+		newGlobals = diff(old, config.pollution);
 		if (newGlobals.length > 0) {
 			ok(false, "Introduced global variable(s): " + newGlobals.join(", "));
 			config.expected++;
 		}
 
-		var deletedGlobals = diff(config.pollution, old);
+		deletedGlobals = diff(config.pollution, old);
 		if (deletedGlobals.length > 0) {
 			ok(false, "Deleted global variable(s): " + deletedGlobals.join(", "));
 			config.expected++;
@@ -108,7 +110,6 @@
 	}
 
 	// returns a new Array with the elements that are in a but not in b
-
 
 	function fail(message, exception, callback) {
 		if (typeof console !== "undefined" && console.error && console.warn) {
@@ -655,7 +656,7 @@
 
 		// Figure out if we're running the tests from a server or not
 		QUnit.isLocal = (location.protocol !== 'file:');
-	})();
+	}());
 
 	// Expose the API as global variables, unless an 'exports'
 	// object exists, in that case we assume we're in CommonJS
@@ -747,7 +748,7 @@
 	// Discussions and reference: http://philrathe.com/articles/equiv
 	// Test suites: http://philrathe.com/tests/equiv
 	// Author: Philippe Rathé <prathe@gmail.com>
-	QUnit.equiv = function () {
+	QUnit.equiv = (function () {
 
 		var innerEquiv; // the real equiv function
 		var callers = []; // stack to decide between skip/abort functions
@@ -814,7 +815,7 @@
 			}
 		}
 
-		var callbacks = function () {
+		var callbacks = (function () {
 
 			// for string, boolean, number and null
 
@@ -934,7 +935,7 @@
 					return eq && innerEquiv(aProperties.sort(), bProperties.sort());
 				}
 			};
-		}();
+		}());
 
 		innerEquiv = function innerEquiv() { // can take multiple arguments
 			var args = Array.prototype.slice.apply(arguments);
@@ -952,12 +953,12 @@
 				}
 
 				// apply transition with (1..n) arguments
-			})(args[0], args[1]) && innerEquiv.apply(this, args.splice(1, args.length - 1));
+			}(args[0], args[1]) && innerEquiv.apply(this, args.splice(1, args.length - 1)));
 		};
 
 		return innerEquiv;
 
-	}();
+	}());
 
 	/**
 	 * jsDump
@@ -1155,6 +1156,6 @@
 		};
 
 		return jsDump;
-	})();
+	}());
 
-})(this);
+}(this));
