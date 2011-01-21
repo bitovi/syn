@@ -20,9 +20,7 @@ var copyToDist = function(path){
 	steal.File(path).copyTo("funcunit/syn/resources/"+fileName);
 }
 var filesToCopy = [
-	"funcunit/resources/jquery.js",
-	"jquery/dist/jquery.event.drag.js",
-	"jquery/dist/jquery.event.drop.js"
+	"funcunit/resources/jquery.js"
 ]
 
 for(var i = 0; i < filesToCopy.length; i++) {
