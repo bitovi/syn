@@ -26,12 +26,12 @@
 		 * @return {jQuery.Vector} new vector class.
 		 */
 		app: function (f) {
-			var newArr = [];
+			var i, vec, newArr = [];
 
-			for (var i = 0; i < this.array.length; i++) {
+			for (i = 0; i < this.array.length; i++) {
 				newArr.push(f(this.array[i]));
 			}
-			var vec = new $.Vector();
+			vec = new $.Vector();
 			return vec.update(newArr);
 		},
 		/**
@@ -43,10 +43,10 @@
 		 * @return {$.Vector}
 		 */
 		plus: function () {
-			var args = arguments[0] instanceof $.Vector ? arguments[0].array : $.makeArray(arguments),
+			var i, args = arguments[0] instanceof $.Vector ? arguments[0].array : $.makeArray(arguments),
 				arr = this.array.slice(0),
 				vec = new $.Vector();
-			for (var i = 0; i < args.length; i++) {
+			for (i = 0; i < args.length; i++) {
 				arr[i] = (arr[i] ? arr[i] : 0) + args[i];
 			}
 			return vec.update(arr);
@@ -56,10 +56,10 @@
 		 * @return {jQuery.Vector}
 		 */
 		minus: function () {
-			var args = arguments[0] instanceof $.Vector ? arguments[0].array : $.makeArray(arguments),
+			var i, args = arguments[0] instanceof $.Vector ? arguments[0].array : $.makeArray(arguments),
 				arr = this.array.slice(0),
 				vec = new $.Vector();
-			for (var i = 0; i < args.length; i++) {
+			for (i = 0; i < args.length; i++) {
 				arr[i] = (arr[i] ? arr[i] : 0) - args[i];
 			}
 			return vec.update(arr);
@@ -70,10 +70,10 @@
 		 * @return {jQuery.Vector}
 		 */
 		equals: function () {
-			var args = arguments[0] instanceof $.Vector ? arguments[0].array : $.makeArray(arguments),
+			var i, args = arguments[0] instanceof $.Vector ? arguments[0].array : $.makeArray(arguments),
 				arr = this.array.slice(0),
 				vec = new $.Vector();
-			for (var i = 0; i < args.length; i++) {
+			for (i = 0; i < args.length; i++) {
 				if (arr[i] != args[i]) {
 					return null;
 				}
@@ -155,10 +155,6 @@
 			return new $.Vector(this[which + "Width"](), this[which + "Height"]());
 		}
 	};
-
-
-
-
 }(jQuery));
 (function () {
 
@@ -166,10 +162,10 @@
 
 		//helper that finds handlers by type and calls back a function, this is basically handle
 		findHelper = function (events, types, callback) {
-			for (var t = 0; t < types.length; t++) {
-				var type = types[t],
-					typeHandlers, all = type.indexOf(".") < 0,
-					namespaces, namespace;
+			var t, type, typeHandlers, all, h, handle, namespaces, namespace;
+			for (t = 0; t < types.length; t++) {
+				type = types[t];
+				all = type.indexOf(".") < 0;
 				if (!all) {
 					namespaces = type.split(".");
 					type = namespaces.shift();
@@ -177,8 +173,8 @@
 				}
 				typeHandlers = (events[type] || []).slice(0);
 
-				for (var h = 0; h < typeHandlers.length; h++) {
-					var handle = typeHandlers[h];
+				for (h = 0; h < typeHandlers.length; h++) {
+					handle = typeHandlers[h];
 					if (!handle.selector && (all || namespace.test(handle.namespace))) {
 						callback(type, handle.origHandler || handle.handler);
 					}
@@ -195,7 +191,8 @@
 	 */
 	event.find = function (el, types, selector) {
 		var events = $.data(el, "events"),
-			handlers = [];
+			handlers = [],
+			t, liver, live;
 
 		if (!events) {
 			return handlers;
@@ -205,10 +202,10 @@
 			if (!events.live) {
 				return [];
 			}
-			var live = events.live;
+			live = events.live;
 
-			for (var t = 0; t < live.length; t++) {
-				var liver = live[t];
+			for (t = 0; t < live.length; t++) {
+				liver = live[t];
 				if (liver.selector === selector && $.inArray(liver.origType, types) !== -1) {
 					handlers.push(liver.origHandler || liver.handler);
 				}
@@ -278,9 +275,9 @@
 		}
 		var add = function (handleObj) {
 
-			var selector = handleObj.selector || "";
+			var bySelector, selector = handleObj.selector || "";
 			if (selector) {
-				var bySelector = event.find(this, types, selector);
+				bySelector = event.find(this, types, selector);
 				if (!bySelector.length) {
 					$(this).delegate(selector, startingEvent, onFirst);
 				}
@@ -296,24 +293,24 @@
 
 			}
 
-		};
-		var remove = function (handleObj) {
-			var selector = handleObj.selector || "";
-			if (selector) {
-				var bySelector = event.find(this, types, selector);
-				if (!bySelector.length) {
-					$(this).undelegate(selector, startingEvent, onFirst);
+		},
+			remove = function (handleObj) {
+				var bySelector, selector = handleObj.selector || "";
+				if (selector) {
+					bySelector = event.find(this, types, selector);
+					if (!bySelector.length) {
+						$(this).undelegate(selector, startingEvent, onFirst);
+					}
 				}
-			}
-			else {
-				if (!event.find(this, types, selector).length) {
-					event.remove(this, startingEvent, onFirst, {
-						selector: selector,
-						delegate: this
-					});
+				else {
+					if (!event.find(this, types, selector).length) {
+						event.remove(this, startingEvent, onFirst, {
+							selector: selector,
+							delegate: this
+						});
+					}
 				}
-			}
-		};
+			};
 		$.each(types, function () {
 			event.special[this] = {
 				add: add,
@@ -334,15 +331,15 @@
 			return method.apply(object, args2);
 		};
 	},
-		event = $.event; //,
-	//handle = event.handle; //unused
+		event = $.event;
+	// var handle = event.handle; //unused
 	/**
 	 * @class jQuery.Drag
 	 * @parent specialevents
 	 * @plugin jquery/event/drag
 	 * @download  http://jmvcsite.heroku.com/pluginify?plugins[]=jquery/event/drag/drag.js
 	 * @test jquery/event/drag/qunit.html
-	 * Provides drag events as a special events to jQuery.
+	 * Provides drag events as a special events to jQuery.  
 	 * A jQuery.Drag instance is created on a drag and passed
 	 * as a parameter to the drag event callbacks.  By calling
 	 * methods on the drag event, you can alter the drag's
@@ -350,7 +347,7 @@
 	 * <h2>Drag Events</h2>
 	 * The drag plugin allows you to listen to the following events:
 	 * <ul>
-	 *	 <li><code>dragdown</code> - the mouse cursor is pressed down</li>
+	 *  <li><code>dragdown</code> - the mouse cursor is pressed down</li>
 	 *  <li><code>draginit</code> - the drag motion is started</li>
 	 *  <li><code>dragmove</code> - the drag is moved</li>
 	 *  <li><code>dragend</code> - the drag has ended</li>
@@ -374,14 +371,14 @@
 	 * })
 	 * @codeend
 	 * <h2>Drag Object</h2>
-	 * <p>The drag object is passed after the event to drag
+	 * <p>The drag object is passed after the event to drag 
 	 * event callback functions.  By calling methods
 	 * and changing the properties of the drag object,
 	 * you can alter how the drag behaves.
 	 * </p>
 	 * <p>The drag properties and methods:</p>
 	 * <ul>
-	 *	 <li><code>[jQuery.Drag.prototype.cancel cancel]</code> - stops the drag motion from happening</li>
+	 *  <li><code>[jQuery.Drag.prototype.cancel cancel]</code> - stops the drag motion from happening</li>
 	 *  <li><code>[jQuery.Drag.prototype.ghost ghost]</code> - copys the draggable and drags the cloned element</li>
 	 *  <li><code>[jQuery.Drag.prototype.horizontal horizontal]</code> - limits the scroll to horizontal movement</li>
 	 *  <li><code>[jQuery.Drag.prototype.location location]</code> - where the drag should be on the screen</li>
@@ -457,8 +454,8 @@
 			this.event = ev;
 			this.moved = false;
 			this.allowOtherDrags = false;
-			var mousemove = bind(this, this.mousemove);
-			var mouseup = bind(this, this.mouseup);
+			var mousemove = bind(this, this.mousemove),
+				mouseup = bind(this, this.mouseup);
 			this._mousemove = mousemove;
 			this._mouseup = mouseup;
 			$(document).bind('mousemove', mousemove);
@@ -544,10 +541,10 @@
 			}
 		},
 		makePositioned: function (that) {
-			var pos = that.css('position');
+			var style, pos = that.css('position');
 
 			if (!pos || pos == 'static') {
-				var style = {
+				style = {
 					position: 'relative'
 				};
 
@@ -559,8 +556,8 @@
 			}
 		},
 		callEvents: function (type, element, event, drop) {
-			var cbs = this.callbacks[this.constructor.lowerName + type];
-			for (var i = 0; i < cbs.length; i++) {
+			var i, cbs = this.callbacks[this.constructor.lowerName + type];
+			for (i = 0; i < cbs.length; i++) {
 				cbs[i].call(element, event, this, drop);
 			}
 			return cbs.length;
@@ -581,7 +578,7 @@
 			}
 			/**
 			 * @attribute location
-			 * The location of where the element should be in the page.  This
+			 * The location of where the element should be in the page.  This 
 			 * takes into account the start position of the cursor on the element.
 			 */
 			this.location = pointer.minus(this.mouseElementPosition); // the offset between the mouse pointer and the representative that the user asked for
@@ -600,15 +597,15 @@
 			}
 		},
 		/**
-		 * Sets the position of this drag.
-		 *
+		 * Sets the position of this drag.  
+		 * 
 		 * The limit and scroll plugins
 		 * overwrite this to make sure the drag follows a particular path.
-		 *
+		 * 
 		 * @param {jQuery.Vector} newOffsetv the position of the element (not the mouse)
 		 */
 		position: function (newOffsetv) { //should draw it on the page
-			var dragged_element_css_offset = this.currentDelta(),
+			var style, dragged_element_css_offset = this.currentDelta(),
 				//  the drag element's current left + top css attributes
 				dragged_element_position_vector = // the vector between the movingElement's page and css positions
 				this.movingElement.offsetv().minus(dragged_element_css_offset); // this can be thought of as the original offset
@@ -616,7 +613,7 @@
 
 			this.offsetv = newOffsetv;
 			//dragged_element vector can probably be cached.
-			var style = this.movingElement[0].style;
+			style = this.movingElement[0].style;
 			if (!this._cancelled && !this._horizontal) {
 				style.top = this.required_css_position.top() + "px";
 			}
@@ -734,7 +731,7 @@
 		 * Makes the movingElement go back to its original position after drop.
 		 * @codestart
 		 * ".handle dragend" : function( el, ev, drag ) {
-		 *	drag.revert()
+		 *    drag.revert()
 		 * }
 		 * @codeend
 		 * @param {Boolean} [val] optional, set to false if you don't want to revert.
@@ -814,6 +811,7 @@
 	 */
 	'dragend'], "mousedown", function (e) {
 		$.Drag.mousedown.call($.Drag, e, this);
+
 	});
 
 }(jQuery));
