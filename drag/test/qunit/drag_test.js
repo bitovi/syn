@@ -1,4 +1,4 @@
-module("funcunit/synthetic/drag");
+module("funcunit/syn/drag");
 
 
 test("dragging off the page", function(){

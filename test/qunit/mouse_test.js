@@ -1,4 +1,4 @@
-module("funcunit/synthetic/mouse",{
+module("funcunit/syn/mouse",{
 	setup: function() {
 		st.g("qunit-test-area").innerHTML = "<form id='outer'><div id='inner'>"+
 			"<input type='checkbox' id='checkbox'/>"+

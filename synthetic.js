@@ -27,7 +27,7 @@ var extend = function(d, s) { for (var p in s) d[p] = s[p]; return d;},
 /**
  * @class Syn
  * @download funcunit/dist/syn.js
- * @test funcunit/synthetic/qunit.html
+ * @test funcunit/syn/qunit.html
  * Syn is used to simulate user actions.  It creates synthetic events and
  * performs their default behaviors.
  * 

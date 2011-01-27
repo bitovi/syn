@@ -1,4 +1,4 @@
-module("funcunit/synthetic/key",{
+module("funcunit/syn/key",{
 	setup: function() {
 		st.g("qunit-test-area").innerHTML = "<form id='outer'>"+
 			"<div id='inner'>"+
