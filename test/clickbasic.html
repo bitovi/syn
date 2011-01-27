@@ -31,23 +31,23 @@
 window.onload = function() {
 	var el = document.getElementById('element');
 	el.style.background = '#f99';
-	
-	
+
+
 	var addListener = function(el, type, event){
-			if (el.addEventListener) el.addEventListener(type, event, false);
-			else el.attachEvent('on' + type, event);
+			if (el.addEventListener) {el.addEventListener(type, event, false);}
+			else {el.attachEvent('on' + type, event);}
 	};
-	
-	
+
+
 	addListener(el, 'click', function(){
-			alert('weird')
+			alert('weird');
 		el.innerHTML += ' fn';
 	});
-	
+
 	el.onclick = function(){
 			el.innerHTML += ' attr';
 	};
-	
+
 	setTimeout(function(){
 			Syn.click({}, el, function(){
 					el.style.background = '#99f';
@@ -56,7 +56,7 @@ window.onload = function() {
 
 
 };
-	//]]> 
+	//]]>
 	</script>
 </head>
 <body>

@@ -4,7 +4,7 @@
 		<head>
 				<title>Synthetic Typing Test</title>
 				<style type='text/css'>
-						body {font-family: verdana}
+						body {font-family: verdana, sans-serif;}
 			td {text-align: right}
 						td:nth-child(even) {background: #CCd}
 			#key th:nth-child(even) {background: #CCf}
@@ -113,21 +113,21 @@
 		"\\r" : "\r",
 		"\\t" :"\t",
 		"\\b" : "\b"
-	}
+			};
 
 	isKey = function(str, val){
 		str = convert[str] || str;
 		return keycodes[str] ===  String(val)
-	}
+	};
 	isChar = function(str, val){
 		str = convert[str] || str;
 		return val && (special[str] || str).charCodeAt(0) == val
-	}
+	};
 	keyOrChar = function(str, val){
-		return isKey(str,val) ? "key" :
+		return isKey(str, val) ? "key" :
 			(isChar(str, val) ? "char" : val)
-	}
-	tests= ['prevent']
+	};
+	tests = ['prevent'];
 	data= {
 		prevent :{
 			keyup : [],
@@ -141,21 +141,21 @@
 		test = test || name;
 		var testData = (data[test] = {}),
 			keydown = 0,
-			keypress= 0
+				keypress = 0;
 			keyup = 0;
 
 		bind('t_'+name,'keydown', function(ev){
 			testData.keydown = [ (isChar(name, ev.charCode) ?  "char" : ev.charCode),
-							 keyOrChar(name, ev.keyCode)];
-				keydown++
+				keyOrChar(name, ev.keyCode)];
+			keydown++;
 			if(keydown ==2 ){
 				//testData.repeat.push('keydown')
 			}
-		})
+		});
 
 		bind('t_'+name,'keypress', function(ev){
 			testData.keypress = [ (isChar(name, ev.charCode) ?  "char" : ev.charCode),
-							 keyOrChar(name, ev.keyCode)]
+				keyOrChar(name, ev.keyCode)];
 
 			keypress++;
 
@@ -163,50 +163,49 @@
 				//testData.repeat.push('keypress')
 			}
 			update();
-		})
+		});
 
 		bind('t_'+name,'keyup', function(ev){
 			testData.keyup = [ (isChar(name, ev.charCode) ?  "char" : ev.charCode),
-							 keyOrChar(name, ev.keyCode)]
-				keyup++;
+				keyOrChar(name, ev.keyCode)];
+			keyup++;
 			if(keyup ==2 ){
 				//testData.repeat.push('keyup')
 			}
 
 			update();
 
-		})
+		});
 
 
-
-		$('#t_'+name).val("")
+		$('#t_' + name).val("");
 		tests.push(test)
-	}
-	binder('a','character')
-	binder('\\b','specialChars')
-	binder('down','navigation')
-	binder('shift','special')
-	binder('\\t')
+	};
+	binder('a', 'character');
+	binder('\\b', 'specialChars');
+	binder('down', 'navigation');
+	binder('shift', 'special');
+	binder('\\t');
 	bind('t_tab2','keyup', function(ev){
 		data["\\t"].keyup = [ (isChar("\\t", ev.charCode) ?  "char" : ev.charCode),
-							 keyOrChar("\\t", ev.keyCode)]
-			update();
-	})
-	binder('pause-break')
-	binder('caps')
-	binder('escape')
-	binder('num-lock')
-	binder('scroll-lock')
-	binder('print')
-	binder('f8','function')
-	binder('\\r')
+			keyOrChar("\\t", ev.keyCode)];
+		update();
+	});
+	binder('pause-break');
+	binder('caps');
+	binder('escape');
+	binder('num-lock');
+	binder('scroll-lock');
+	binder('print');
+	binder('f8', 'function');
+	binder('\\r');
 	var pd = function(ev){
 		if(ev.preventDefault)
-			ev.preventDefault();
+			{ev.preventDefault();}
 
 		ev.returnValue = false;
-	}
-	var keyDown_keyPressed = false
+	};
+	var keyDown_keyPressed = false;
 	bind('keyUpPrevent','keydown', function(ev){
 		pd(ev);
 		setTimeout(function(){
@@ -218,13 +217,13 @@
 			}
 			update();
 		},1000)
-	})
+	});
 	bind('keyUpPrevent','keypress', function(ev){
 		keyDown_keyPressed = true;
-	})
+	});
 
 
-	var keyPress_keyUp = false
+	var keyPress_keyUp = false;
 	bind('keyPressPrevent','keypress', function(ev){
 		pd(ev);
 		setTimeout(function(){
@@ -236,17 +235,17 @@
 			}
 			update();
 		},1000)
-	})
+	});
 	bind('keyPressPrevent','keyup', function(ev){
 		keyPress_keyUp = true;
-	})
+	});
 
 
 	var clickData = {
 		right : {},
 		left : {},
 		dblclick :{}
-	}
+	};
 	$.each(['right','left'], function(i, name){
 
 		bind(name+'Click','mousedown',function(ev){
@@ -254,22 +253,22 @@
 				button: ev.button,
 				which: ev.which
 			}
-		})
+		});
 		bind(name+'Click','mouseup',function(ev){
 			clickData[name].mouseup = {
 				button: ev.button,
 				which: ev.which
-			}
+			};
 			setTimeout(function(){
 				$('#clickdata').html($.toJSON(clickData))
 			},100)
-		})
+		});
 		bind(name+'Click','click',function(ev){
 			clickData[name].click = {
 				button: ev.button,
 				which: ev.which
 			}
-		})
+		});
 		bind(name+'Click','contextmenu',function(ev){
 			clickData[name].contextmenu = {
 				button: ev.button,
@@ -277,22 +276,22 @@
 			}
 		})
 
-	})
-	var dblClicks = 0
+	});
+	var dblClicks = 0;
 	bind('dblClick','click',function(ev){
 		clickData.dblclick.click = (++dblClicks)
-	})
+	});
 	bind('dblClick','dblclick',function(ev){
-		clickData.dblclick.dblclick = (1)
+		clickData.dblclick.dblclick = (1);
 		setTimeout(function(){
 			$('#clickdata').html($.toJSON(clickData))
 		},100)
-	})
+	});
 	update = function(){
 		var str = [];
 		$.each(tests, function(i, sub){
 			str.push("'"+sub+ "':<br/> "+$.toJSON(data[sub])+",")
-		})
+		});
 
 		$('#out').html(str.join("<br/>"))
 	}

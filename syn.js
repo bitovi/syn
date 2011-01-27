@@ -1,7 +1,1 @@
-steal(
-	'synthetic',
-	'mouse',
-	'browsers',
-	'key',
-	'drag/drag'
-)
+steal('synthetic', 'mouse', 'browsers', 'key', 'drag/drag');
