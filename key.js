@@ -1,4 +1,6 @@
-steal("synthetic").then(function() {
+steal("synthetic")
+.then("browsers")
+.then(function() {
 (function(){
 var h = Syn.helpers,
 	S = Syn,
