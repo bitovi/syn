@@ -311,6 +311,7 @@ h.extend(Syn.key,{
 					after = current.substr(sel.end),
 					character = key;
 				
+				console.log("setting",this.value,before, character, after)
 				this.value = before+character+after;
 				//handle IE inserting \r\n
 				var charLength = character == "\n" && S.support.textareaCarriage ? 2 : character.length;
@@ -546,6 +547,16 @@ h.extend(Syn.create,{
 			}
 		}
 	},
+	keypress : {
+		setup : function(type, options, element){
+			// if this browsers supports writing keys on events
+			// but doesn't write them if the element isn't focused
+			// focus on the element (ignored if already focused)
+			if(S.support.keyCharacters && !S.support.keysOnNotFocused){
+				element.focus()
+			}
+		}
+	},
 	keyup : {
 		setup: function( type, options, element ) {
 			if(h.inArray(options,Syn.key.kinds.special )!= -1){
@@ -758,7 +769,8 @@ h.extend(Syn.init.prototype,
 		input, 
 		submitted = false,
 		anchor,
-		textarea;
+		textarea,
+		inputter;
 		
 	div.innerHTML = "<form id='outer'>"+
 		"<input name='checkbox' type='checkbox'/>"+
@@ -776,33 +788,40 @@ h.extend(Syn.init.prototype,
 	checkbox = form.childNodes[0];
 	submit = form.childNodes[2];
 	anchor = form.getElementsByTagName("a")[0];
-	textarea = form.getElementsByTagName("textarea")[0]
+	textarea = form.getElementsByTagName("textarea")[0];
+	inputter = form.childNodes[3];
+	
 	form.onsubmit = function(ev){
 		if (ev.preventDefault) 
 			ev.preventDefault();
 		S.support.keypressSubmits = true;
 		ev.returnValue = false;
 		return false;
-	}
-	Syn.trigger("keypress", "\r", form.childNodes[3]);
+	};
+	// Firefox 4 won't write key events if the element isn't focused
+	inputter.focus();
+	Syn.trigger("keypress", "\r", inputter);
 	
 	
-	Syn.trigger("keypress", "a", form.childNodes[3]);
-	S.support.keyCharacters = form.childNodes[3].value == "a";
+	Syn.trigger("keypress", "a", inputter);
+	S.support.keyCharacters = inputter.value == "a";
 	
 	
-	form.childNodes[3].value = "a"
-	Syn.trigger("keypress", "\b", form.childNodes[3]);
-	S.support.backspaceWorks = form.childNodes[3].value == "";
+	inputter.value = "a";
+	Syn.trigger("keypress", "\b", inputter);
+	S.support.backspaceWorks = inputter.value == "";
 	
 		
 	
-	form.childNodes[3].onchange = function(){
+	inputter.onchange = function(){
 		S.support.focusChanges = true;
 	}
-	form.childNodes[3].focus();
-	Syn.trigger("keypress", "a", form.childNodes[3]);
-	form.childNodes[5].focus();
+	inputter.focus();
+	Syn.trigger("keypress", "a", inputter);
+	form.childNodes[5].focus(); // this will throw a change event
+	
+	Syn.trigger("keypress", "b", inputter);
+	S.support.keysOnNotFocused = inputter.value == "ab"; 
 	
 	//test keypress \r on anchor submits
 	S.bind(anchor,"click",function(ev){
@@ -815,7 +834,7 @@ h.extend(Syn.init.prototype,
 	Syn.trigger("keypress", "\r", anchor);
 	
 	S.support.textareaCarriage = textarea.value.length == 4
-	document.documentElement.removeChild(div);
+	//document.documentElement.removeChild(div);
 	
 	S.support.ready++;
 })();

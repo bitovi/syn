@@ -23,11 +23,16 @@ st = {
 };
 
 
-(function(){
-	for(var name in Syn.support){
-		st.log(name+": "+Syn.support[name])
+setTimeout(function(){
+	if(Syn.support.ready ==2){
+		for(var name in Syn.support){
+			st.log(name+": "+Syn.support[name])
+		}
+	}else{
+		setTimeout(arguments.callee, 1);
 	}
-})();
+	
+},1);
 
 test("Selecting a select element", function(){
 	st.g("qunit-test-area").innerHTML = 
