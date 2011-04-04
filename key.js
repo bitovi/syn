@@ -834,7 +834,7 @@ h.extend(Syn.init.prototype,
 	Syn.trigger("keypress", "\r", anchor);
 	
 	S.support.textareaCarriage = textarea.value.length == 4
-	//document.documentElement.removeChild(div);
+	document.documentElement.removeChild(div);
 	
 	S.support.ready++;
 })();
