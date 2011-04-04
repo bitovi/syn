@@ -564,15 +564,17 @@ h.extend(Syn.create,{
 			}
 		}
 		},
-	key : {
+	key: {
 		// return the options for a key event
-		options: function( type, options, element ) {
+		options: function(type, options, element){
 			//check if options is character or has character
-			options = typeof options != "object" ? {character : options} : options;
+			options = typeof options != "object" ? {
+				character: options
+			} : options;
 			
 			//don't change the orignial
 			options = h.extend({}, options)
-			if(options.character){
+			if (options.character) {
 				h.extend(options, S.key.options(options.character, type));
 				delete options.character;
 			}
@@ -587,30 +589,29 @@ h.extend(Syn.create,{
 			return options;
 		},
 		// creates a key event
-		event : document.createEvent ? 
-			function(type, options, element){  //Everyone Else
+		event: function(type, options, element){ //Everyone Else
+			if (h.getWindow(element).document.createEvent) {
 				var event;
 				
 				try {
-		
+				
 					event = element.ownerDocument.createEvent("KeyEvents");
-					event.initKeyEvent(type, true, true, window, 
-						options.ctrlKey, options.altKey, options.shiftKey, options.metaKey,
-						options.keyCode, options.charCode );
-				} catch(e) {
-					event = h.createBasicStandardEvent(type,options)
+					event.initKeyEvent(type, true, true, window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.keyCode, options.charCode);
+				} 
+				catch (e) {
+					event = h.createBasicStandardEvent(type, options)
 				}
 				event.synthetic = true;
 				return event;
-
-			} : 
-			function(type, options, element){
-				var event = h.createEventObject.apply(this,arguments);
+			}
+			else {
+				var event = h.createEventObject.apply(this, arguments);
 				h.extend(event, options)
-
+				
 				return event;
 			}
 		}
+	}
 });
 
 var convert = {

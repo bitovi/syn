@@ -14,12 +14,20 @@ st = {
 	unbinder: function( id, ev, f ) {
 		st.unbind(st.g(id), ev, f)
 	},
-	bind : window.addEventListener ? 
-			function(el, ev, f){el.addEventListener(ev, f, false)} : 
-			function(el, ev, f){ el.attachEvent("on"+ev, f) },
-	unbind : window.addEventListener ?
-			function(el, ev, f){ el.removeEventListener(ev, f, false)} :
-			function(el, ev, f){ el.detachEvent("on"+ev, f) }
+	bind : function(el, ev, f){
+		return el.addEventListener ? 
+			el.addEventListener(ev, f, false) : 
+			 el.attachEvent("on"+ev, f) 
+	},
+	unbind : function(el, ev, f){
+		return el.addEventListener ?
+			el.removeEventListener(ev, f, false) :
+			el.detachEvent("on"+ev, f) 
+	},
+	rootJoin : (typeof steal == "undefined" ? function(path){
+			return "../../"+path;
+		} : 
+		function(path){ return steal.root.join(path) } )
 };
 
 
@@ -98,15 +106,7 @@ test("focus triggers focus events", function(){
 
 test("focus on an element then another in another page", function(){
 	stop(10000);
-	var rootJoin;
-	if(typeof steal == "undefined"){ 
-		// hardcoding this path so the standalone synthetic tests will pass
-		rootJoin = function(path){
-			return "../../"+path;
-		};
-	} else {
-		rootJoin = $.proxy(steal.root.join, steal.root);
-	}
+	var rootJoin  = st.rootJoin;
 	
 	var page1 = rootJoin("funcunit/syn/test/qunit/page1.html"),
 		page2 = rootJoin("funcunit/syn/test/qunit/page2.html"),

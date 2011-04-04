@@ -1,7 +1,8 @@
 //handles mosue events
 (function(){
 
-var h = Syn.helpers;
+var h = Syn.helpers,
+	getWin = h.getWindow;
 
 Syn.mouse = {};
 h.extend(Syn.defaults,{
@@ -19,7 +20,7 @@ h.extend(Syn.defaults,{
 		//get old values
 		var href,
 			radioChanged = Syn.data(element,"radioChanged"),
-			scope = Syn.helpers.getWindow(element),
+			scope = getWin(element),
 			nodeName = element.nodeName.toLowerCase();
 		
 		if( (href = Syn.data(element,"href") ) ){
@@ -125,10 +126,10 @@ h.extend(Syn.create,{
 				relatedTarget : document.documentElement
 			}, options);
 		},
-		event : document.createEvent ? 
-			function(type, defaults, element){  //Everyone Else
+		event : function(type, defaults, element){  //Everyone Else
+			if(getWin(element).document.createEvent){
 				var event;
-				
+			
 				try {
 					event = element.ownerDocument.createEvent('MouseEvents');
 					event.initMouseEvent(type, 
@@ -143,8 +144,11 @@ h.extend(Syn.create,{
 				}
 				event.synthetic = true;
 				return event;
-			} : 
-			h.createEventObject
+			}else{
+				return h.createEventObject(type, defaults, element)
+			}
+			
+		}
 	},
 	click : {
 		setup: function( type, options, element ) {
