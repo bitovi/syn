@@ -127,7 +127,8 @@ h.extend(Syn.create,{
 			}, options);
 		},
 		event : function(type, defaults, element){  //Everyone Else
-			if(getWin(element).document.createEvent){
+			var doc = getWin(element).document
+			if(doc.createEvent){
 				var event;
 			
 				try {
@@ -140,7 +141,7 @@ h.extend(Syn.create,{
 						defaults.ctrlKey,defaults.altKey,defaults.shiftKey,defaults.metaKey,
 						defaults.button,defaults.relatedTarget);
 				} catch(e) {
-					event = h.createBasicStandardEvent(type,defaults)
+					event = h.createBasicStandardEvent(type,defaults, doc)
 				}
 				event.synthetic = true;
 				return event;

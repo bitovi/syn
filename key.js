@@ -590,7 +590,8 @@ h.extend(Syn.create,{
 		},
 		// creates a key event
 		event: function(type, options, element){ //Everyone Else
-			if (h.getWindow(element).document.createEvent) {
+			var doc = h.getWindow(element).document;
+			if (doc.createEvent) {
 				var event;
 				
 				try {
@@ -599,7 +600,7 @@ h.extend(Syn.create,{
 					event.initKeyEvent(type, true, true, window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.keyCode, options.charCode);
 				} 
 				catch (e) {
-					event = h.createBasicStandardEvent(type, options)
+					event = h.createBasicStandardEvent(type, options, doc);
 				}
 				event.synthetic = true;
 				return event;

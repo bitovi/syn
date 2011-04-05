@@ -354,12 +354,12 @@ extend(Syn,{
 	//some generic helpers
 	helpers : {
 		createEventObject : createEventObject,
-		createBasicStandardEvent: function( type, defaults ) {
+		createBasicStandardEvent: function( type, defaults , doc) {
 			var event;
 			try {
-				event = document.createEvent("Events");
+				event = doc.createEvent("Events");
 			} catch(e2) {
-				event = document.createEvent("UIEvents");
+				event = doc.createEvent("UIEvents");
 			} finally {
 				event.initEvent(type, true, true);
 				extend(event, defaults);
