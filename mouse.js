@@ -1,3 +1,4 @@
+steal("synthetic").then(function() {
 //handles mosue events
 (function(){
 
@@ -318,3 +319,4 @@ h.extend(Syn.create,{
 
 
 })()
+});

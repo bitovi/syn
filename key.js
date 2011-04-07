@@ -1,3 +1,6 @@
+steal("synthetic")
+.then("browsers")
+.then(function() {
 (function(){
 var h = Syn.helpers,
 	S = Syn,
@@ -841,3 +844,4 @@ h.extend(Syn.init.prototype,
 	S.support.ready++;
 })();
 }())
+});
