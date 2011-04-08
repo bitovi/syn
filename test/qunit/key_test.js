@@ -4,7 +4,7 @@ module("funcunit/synthetic/key",{
 			"<div id='inner'>"+
 				"<input type='input' id='key' value=''/>"+
 				"<a href='#abc' id='focusLink'>click me</a>"+
-				"<textarea id='synTextArea'></textarea>"
+				"<textarea id='synTextArea'></textarea>"+
 				"</div></form>";
 	}
 })

@@ -264,4 +264,49 @@ test("Double Click", function(){
 		equals(eventSequence.join(', '), 'click, click, dblclick', 'expected event sequence for doubleclick');
 		start();
 	})
-})
+});
+
+// tests against IE9's weirdness where popup windows don't have dispatchEvent
+test("h3 click in popup", 1,function(){
+	st.g("qunit-test-area").innerHTML = "";
+
+	
+	stop();
+	/*var page1 = st.rootJoin("funcunit/syn/test/qunit/h3.html"),
+		iframe = document.createElement('iframe'),
+		calls = 0;
+	
+	st.bind(iframe,"load",function(){
+		var el = iframe.contentWindow.document.getElementById('strange')
+		st.bind(el,"click",function(){
+			ok(true, "h3 was clicked");
+			
+		});
+		Syn.click( el ,{}, function(){
+			start();
+		})
+
+			
+			
+	});
+	iframe.src = page1
+	st.g("qunit-test-area").appendChild(iframe);*/
+	
+	
+	var popup = window.open( st.rootJoin("funcunit/syn/test/qunit/h3.html"), "synthing")
+	
+	setTimeout(function(){
+		var el = popup.document.getElementById('strange')
+		st.bind(el,"click",function(){
+			ok(true, "h3 was clicked");
+			
+		});
+		Syn.click( el ,{}, function(){
+			start();
+			popup.close()
+		})
+
+			
+			
+	},500);
+});

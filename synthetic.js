@@ -143,23 +143,19 @@ Syn.key.browsers["Envjs\ Resig/20070309 PilotFish/1.2.0.10\1.6"] = {
  */
 Syn = function(type, options, element, callback){		
 	return ( new Syn.init(type, options, element, callback) )
-}
-	
-if(window.addEventListener){ // Mozilla, Netscape, Firefox
-	bind = function(el, ev, f){
-		el.addEventListener(ev, f, false)
-	}
-	unbind = function(el, ev, f){
-		el.removeEventListener(ev, f, false)
-	}
-}else{
-	bind = function(el, ev, f){
-		el.attachEvent("on"+ev, f)
-	}
-	unbind = function(el, ev, f){
-		el.detachEvent("on"+ev, f)
-	}
-}	
+};
+
+bind = function(el, ev, f){
+	return el.addEventListener ? 
+		el.addEventListener(ev, f, false) : 
+		 el.attachEvent("on"+ev, f) 
+};
+unbind = function(el, ev, f){
+	return el.addEventListener ?
+		el.removeEventListener(ev, f, false) :
+		el.detachEvent("on"+ev, f) 
+};
+
 /**
  * @Static
  */	
@@ -358,12 +354,12 @@ extend(Syn,{
 	//some generic helpers
 	helpers : {
 		createEventObject : createEventObject,
-		createBasicStandardEvent: function( type, defaults ) {
+		createBasicStandardEvent: function( type, defaults , doc) {
 			var event;
 			try {
-				event = document.createEvent("Events");
+				event = doc.createEvent("Events");
 			} catch(e2) {
-				event = document.createEvent("UIEvents");
+				event = doc.createEvent("UIEvents");
 			} finally {
 				event.initEvent(type, true, true);
 				extend(event, defaults);
@@ -421,36 +417,37 @@ extend(Syn,{
 	 * @param {Object} type
 	 * @param {Object} autoPrevent
 	 */
-	dispatch : (document.documentElement.dispatchEvent ? 
-				function(event, element, type, autoPrevent){
-					var preventDefault = event.preventDefault, 
-						prevents = autoPrevent ? -1 : 0;
-					
-					//automatically prevents the default behavior for this event
-					//this is to protect agianst nasty browser freezing bug in safari
-					if(autoPrevent){
-						bind(element, type, function(ev){
-							ev.preventDefault()
-							unbind(this, type, arguments.callee)
-						})
-					}
-					
-					
-					event.preventDefault = function(){
-						prevents++;
-						if(++prevents > 0){
-							preventDefault.apply(this,[]);
-						}
-					}
-					element.dispatchEvent(event)
-					return prevents <= 0;
-				} : 
-				function(event, element, type){
-					try {window.event = event;}catch(e) {}
-					//source element makes sure element is still in the document
-					return element.sourceIndex <= 0 || element.fireEvent('on'+type, event)
+	dispatch : function(event, element, type, autoPrevent){
+		
+		// dispatchEvent doesn't always work in IE (mostly in a popup)
+		if(element.dispatchEvent && event){	
+			var preventDefault = event.preventDefault, 
+				prevents = autoPrevent ? -1 : 0;
+			
+			//automatically prevents the default behavior for this event
+			//this is to protect agianst nasty browser freezing bug in safari
+			if(autoPrevent){
+				bind(element, type, function(ev){
+					ev.preventDefault()
+					unbind(this, type, arguments.callee)
+				})
+			}
+			
+			
+			event.preventDefault = function(){
+				prevents++;
+				if(++prevents > 0){
+					preventDefault.apply(this,[]);
 				}
-			),
+			}
+			element.dispatchEvent(event)
+			return prevents <= 0;
+		} else {
+			try {window.event = event;}catch(e) {}
+			//source element makes sure element is still in the document
+			return element.sourceIndex <= 0 || (element.fireEvent && element.fireEvent('on'+type, event))
+		}
+	},
 	/**
 	 * @attribute
 	 * @hide
@@ -459,11 +456,23 @@ extend(Syn,{
 	create :  {
 		//-------- PAGE EVENTS ---------------------
 		page : {
-			event : document.createEvent ? function(type, options, element){
-					var event = element.ownerDocument.createEvent("Events");
-					event.initEvent(type, true, true ); 
+			event: function(type, options, element){
+				var doc = Syn.helpers.getWindow(element).document || document;
+				if (doc.createEvent) {
+					var event = doc.createEvent("Events");
+
+					event.initEvent(type, true, true);
 					return event;
-				} : createEventObject
+				}
+				else {
+					var event;
+					try {
+						event = createEventObject(type, options, element);
+					}
+					catch (e) {}
+					return event;
+				}
+			}
 		},
 		// unique events
 		focus : {
