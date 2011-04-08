@@ -457,8 +457,9 @@ extend(Syn,{
 		//-------- PAGE EVENTS ---------------------
 		page : {
 			event: function(type, options, element){
-				if (Syn.helpers.getWindow(element).document.createEvent) {
-					var event = element.ownerDocument.createEvent("Events");
+				var doc = Syn.helpers.getWindow(element).document || document;
+				if (doc.createEvent) {
+					var event = doc.createEvent("Events");
 					event.initEvent(type, true, true);
 					return event;
 				}

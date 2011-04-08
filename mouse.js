@@ -127,12 +127,12 @@ h.extend(Syn.create,{
 			}, options);
 		},
 		event : function(type, defaults, element){  //Everyone Else
-			var doc = getWin(element).document
+			var doc = getWin(element).document || document
 			if(doc.createEvent){
 				var event;
 			
 				try {
-					event = element.ownerDocument.createEvent('MouseEvents');
+					event = doc.createEvent('MouseEvents');
 					event.initMouseEvent(type, 
 						defaults.bubbles, defaults.cancelable, 
 						defaults.view, 

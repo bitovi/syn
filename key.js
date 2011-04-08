@@ -590,13 +590,13 @@ h.extend(Syn.create,{
 		},
 		// creates a key event
 		event: function(type, options, element){ //Everyone Else
-			var doc = h.getWindow(element).document;
+			var doc = h.getWindow(element).document || document;
 			if (doc.createEvent) {
 				var event;
 				
 				try {
 				
-					event = element.ownerDocument.createEvent("KeyEvents");
+					event = doc.createEvent("KeyEvents");
 					event.initKeyEvent(type, true, true, window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.keyCode, options.charCode);
 				} 
 				catch (e) {
