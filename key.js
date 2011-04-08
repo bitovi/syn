@@ -591,7 +591,7 @@ h.extend(Syn.create,{
 		// creates a key event
 		event: function(type, options, element){ //Everyone Else
 			var doc = h.getWindow(element).document;
-			if (doc.createEvent) {
+			if (doc && doc.createEvent) {
 				var event;
 				
 				try {
@@ -606,8 +606,12 @@ h.extend(Syn.create,{
 				return event;
 			}
 			else {
-				var event = h.createEventObject.apply(this, arguments);
-				h.extend(event, options)
+				var event;
+				try {
+					event = h.createEventObject.apply(this, arguments);
+					h.extend(event, options)
+				}
+				catch (e) {}
 				
 				return event;
 			}
@@ -713,7 +717,7 @@ h.extend(Syn.init.prototype,
 	},
 	/**
 	 * @function type
-	 * Types sequence of [Syn.prototype.key key actions].  Each
+	 * Types sequence of [Syn.key key actions].  Each
 	 * character is typed, one at a type.
 	 * Multi-character keys like 'left' should be
 	 * enclosed in square brackents.

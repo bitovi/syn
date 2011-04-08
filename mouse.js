@@ -128,7 +128,7 @@ h.extend(Syn.create,{
 		},
 		event : function(type, defaults, element){  //Everyone Else
 			var doc = getWin(element).document
-			if(doc.createEvent){
+			if(doc && doc.createEvent){
 				var event;
 			
 				try {
@@ -146,7 +146,13 @@ h.extend(Syn.create,{
 				event.synthetic = true;
 				return event;
 			}else{
-				return h.createEventObject(type, defaults, element)
+				var event;
+				try {
+					event = h.createEventObject(type, defaults, element)
+				}
+				catch (e) {}
+				
+				return event;
 			}
 			
 		}
