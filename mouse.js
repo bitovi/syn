@@ -146,7 +146,13 @@ h.extend(Syn.create,{
 				event.synthetic = true;
 				return event;
 			}else{
-				return h.createEventObject(type, defaults, element)
+				var event;
+				try {
+					event = h.createEventObject(type, defaults, element)
+				}
+				catch (e) {}
+				
+				return event;
 			}
 			
 		}

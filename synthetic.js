@@ -420,7 +420,7 @@ extend(Syn,{
 	dispatch : function(event, element, type, autoPrevent){
 		
 		// dispatchEvent doesn't always work in IE (mostly in a popup)
-		if(element.dispatchEvent){	
+		if(element.dispatchEvent && event){	
 			var preventDefault = event.preventDefault, 
 				prevents = autoPrevent ? -1 : 0;
 			
@@ -445,7 +445,7 @@ extend(Syn,{
 		} else {
 			try {window.event = event;}catch(e) {}
 			//source element makes sure element is still in the document
-			return element.sourceIndex <= 0 || element.fireEvent('on'+type, event)
+			return element.sourceIndex <= 0 || (element.fireEvent && element.fireEvent('on'+type, event))
 		}
 	},
 	/**
@@ -460,11 +460,17 @@ extend(Syn,{
 				var doc = Syn.helpers.getWindow(element).document || document;
 				if (doc.createEvent) {
 					var event = doc.createEvent("Events");
+
 					event.initEvent(type, true, true);
 					return event;
 				}
 				else {
-					return createEventObject(type, options, element);
+					var event;
+					try {
+						event = createEventObject(type, options, element);
+					}
+					catch (e) {}
+					return event;
 				}
 			}
 		},
