@@ -2,7 +2,8 @@ steal("synthetic").then(function() {
 //handles mosue events
 (function(){
 
-var h = Syn.helpers;
+var h = Syn.helpers,
+	getWin = h.getWindow;
 
 Syn.mouse = {};
 h.extend(Syn.defaults,{
@@ -20,7 +21,7 @@ h.extend(Syn.defaults,{
 		//get old values
 		var href,
 			radioChanged = Syn.data(element,"radioChanged"),
-			scope = Syn.helpers.getWindow(element),
+			scope = getWin(element),
 			nodeName = element.nodeName.toLowerCase();
 		
 		if( (href = Syn.data(element,"href") ) ){
@@ -126,12 +127,13 @@ h.extend(Syn.create,{
 				relatedTarget : document.documentElement
 			}, options);
 		},
-		event : document.createEvent ? 
-			function(type, defaults, element){  //Everyone Else
+		event : function(type, defaults, element){  //Everyone Else
+			var doc = getWin(element).document || document
+			if(doc.createEvent){
 				var event;
-				
+			
 				try {
-					event = element.ownerDocument.createEvent('MouseEvents');
+					event = doc.createEvent('MouseEvents');
 					event.initMouseEvent(type, 
 						defaults.bubbles, defaults.cancelable, 
 						defaults.view, 
@@ -140,12 +142,21 @@ h.extend(Syn.create,{
 						defaults.ctrlKey,defaults.altKey,defaults.shiftKey,defaults.metaKey,
 						defaults.button,defaults.relatedTarget);
 				} catch(e) {
-					event = h.createBasicStandardEvent(type,defaults)
+					event = h.createBasicStandardEvent(type,defaults, doc)
 				}
 				event.synthetic = true;
 				return event;
-			} : 
-			h.createEventObject
+			}else{
+				var event;
+				try {
+					event = h.createEventObject(type, defaults, element)
+				}
+				catch (e) {}
+				
+				return event;
+			}
+			
+		}
 	},
 	click : {
 		setup: function( type, options, element ) {

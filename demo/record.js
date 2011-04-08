@@ -238,7 +238,7 @@ $(function(){
 	$(function(){
 		$("#code, #clearme").val("");
 	})
-	$('#app').mxui_filler({parent: document.body});
+	$('#app').mxui_layout_fill({parent: document.body});
 
 	$("#run").click(function(){
 		REPLAY = true;
