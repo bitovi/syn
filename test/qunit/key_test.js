@@ -389,3 +389,11 @@ test("Typing Shift Left and Right", function(){
 
 	})
 })
+
+test("shift characters", function(){
+	stop()
+	Syn.type("@", 'key' , function(){
+		equals( st.g('key').value, "@", "@ character works" );
+		start();
+	})
+})
