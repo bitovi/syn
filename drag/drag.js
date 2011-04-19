@@ -1,3 +1,4 @@
+steal("../synthetic").then(function() {
 (function(){
 	// document body has to exists for this test
 
@@ -272,3 +273,4 @@ Syn.helpers.extend(Syn.init.prototype,{
 	}
 })
 }())
+});
