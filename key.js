@@ -314,7 +314,6 @@ h.extend(Syn.key,{
 					after = current.substr(sel.end),
 					character = key;
 				
-				console.log("setting",this.value,before, character, after)
 				this.value = before+character+after;
 				//handle IE inserting \r\n
 				var charLength = character == "\n" && S.support.textareaCarriage ? 2 : character.length;
