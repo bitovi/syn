@@ -134,14 +134,14 @@ asyncTest("page down, page up, home, end", function(){
 			ok( st.g("scrolldiv").scrollTop > 10 , "Moved down")
 		},
 		"page-up": function() {
-			ok( st.g("scrolldiv").scrollTop == 0 , "Moved back up (page-up)")
+			ok( st.g("scrolldiv").scrollTop === 0 , "Moved back up (page-up)")
 		},
 		"end" : function() {
 			var sd = st.g("scrolldiv")
 			ok( sd.scrollTop == sd.scrollHeight - sd.clientHeight , "Moved to the end")
 		},
 		"home" : function() {
-			ok( st.g("scrolldiv").scrollTop == 0 , "Moved back up (home)")
+			ok( st.g("scrolldiv").scrollTop === 0 , "Moved back up (home)")
 		}
 	},
 	order = [],
@@ -155,7 +155,9 @@ asyncTest("page down, page up, home, end", function(){
 		Syn.key( name, "scrolldiv")
 	};
 	for(var name in keyTest){
-		order.push(name)
+		if (keyTest.hasOwnProperty(name)) { 
+			order.push(name)
+		}
 	}
 			
 	st.bind(st.g("scrolldiv"),"scroll",function(ev){
@@ -270,8 +272,8 @@ test("range tests", function(){
 })
 
 test("Type with tabs", function(){
-	st.g("qunit-test-area").innerHTML 
-		= 	"<input id='third'/>" +
+	st.g("qunit-test-area").innerHTML =
+		 	"<input id='third'/>" +
 			"<a tabindex='1' id='first' href='javascript://'>First</a>"+
 			"<input tabindex='2' id='second'/>"+
 			"<input id='fourth'/>"
@@ -295,8 +297,8 @@ test("Type with tabs", function(){
 });
 
 test("Type with shift tabs", function(){
-	st.g("qunit-test-area").innerHTML 
-		= 	"<input id='third'/>" +
+	st.g("qunit-test-area").innerHTML =
+		 	"<input id='third'/>" +
 			"<a tabindex='1' id='first' href='javascript://'>First</a>"+
 			"<input tabindex='2' id='second'/>"+
 			"<input id='fourth'/>"
