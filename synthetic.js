@@ -1,6 +1,9 @@
 (function() {
 	var extend = function( d, s ) {
-		for ( var p in s ) d[p] = s[p];
+		var p;
+		for (p in s) {
+			d[p] = s[p];
+		}
 		return d;
 	},
 		// only uses browser detection for key events
@@ -8,7 +11,7 @@
 			msie: !! (window.attachEvent && !window.opera),
 			opera: !! window.opera,
 			webkit: navigator.userAgent.indexOf('AppleWebKit/') > -1,
-			safari: navigator.userAgent.indexOf('AppleWebKit/') > -1 && navigator.userAgent.indexOf('Chrome/') == -1,
+			safari: navigator.userAgent.indexOf('AppleWebKit/') > -1 && navigator.userAgent.indexOf('Chrome/') === -1,
 			gecko: navigator.userAgent.indexOf('Gecko') > -1,
 			mobilesafari: !! navigator.userAgent.match(/Apple.*Mobile.*Safari/),
 			rhino: navigator.userAgent.match(/Rhino/) && true
@@ -19,7 +22,7 @@
 		},
 		data = {},
 		id = 1,
-		expando = "_synthetic" + (new Date() - 0),
+		expando = "_synthetic" + new Date().getTime(),
 		bind, unbind, key = /keypress|keyup|keydown/,
 		page = /load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll/,
 		//this is maintained so we can click on html and blur the active element
@@ -143,14 +146,14 @@
 		 * @return Syn
 		 */
 		Syn = function( type, options, element, callback ) {
-			return (new Syn.init(type, options, element, callback))
+			return (new Syn.init(type, options, element, callback));
 		};
 
 	bind = function( el, ev, f ) {
-		return el.addEventListener ? el.addEventListener(ev, f, false) : el.attachEvent("on" + ev, f)
+		return el.addEventListener ? el.addEventListener(ev, f, false) : el.attachEvent("on" + ev, f);
 	};
 	unbind = function( el, ev, f ) {
-		return el.addEventListener ? el.removeEventListener(ev, f, false) : el.detachEvent("on" + ev, f)
+		return el.addEventListener ? el.removeEventListener(ev, f, false) : el.detachEvent("on" + ev, f);
 	};
 
 	/**
@@ -172,11 +175,11 @@
 			this.element = args.element;
 
 			//run event
-			if ( typeof this[type] == "function" ) {
+			if ( typeof this[type] === "function" ) {
 				this[type](args.options, args.element, function( defaults, el ) {
 					args.callback && args.callback.apply(self, arguments);
-					self.done.apply(self, arguments)
-				})
+					self.done.apply(self, arguments);
+				});
 			} else {
 				this.result = Syn.trigger(type, args.options, args.element);
 				args.callback && args.callback.call(this, args.element, this.result);
@@ -184,13 +187,13 @@
 		},
 		jquery: function( el, fast ) {
 			if ( window.FuncUnit && window.FuncUnit.jquery ) {
-				return window.FuncUnit.jquery
+				return window.FuncUnit.jquery;
 			}
 			if ( el ) {
-				return Syn.helpers.getWindow(el).jQuery || window.jQuery
+				return Syn.helpers.getWindow(el).jQuery || window.jQuery;
 			}
 			else {
-				return window.jQuery
+				return window.jQuery;
 			}
 		},
 		/**
@@ -199,16 +202,17 @@
 		 * @return {Object}
 		 */
 		args: function() {
-			var res = {}
-			for ( var i = 0; i < arguments.length; i++ ) {
-				if ( typeof arguments[i] == 'function' ) {
-					res.callback = arguments[i]
+			var res = {},
+				i = 0;
+			for ( ; i < arguments.length; i++ ) {
+				if ( typeof arguments[i] === 'function' ) {
+					res.callback = arguments[i];
 				} else if ( arguments[i] && arguments[i].jquery ) {
 					res.element = arguments[i][0];
 				} else if ( arguments[i] && arguments[i].nodeName ) {
 					res.element = arguments[i];
-				} else if ( res.options && typeof arguments[i] == 'string' ) { //we can get by id
-					res.element = document.getElementById(arguments[i])
+				} else if ( res.options && typeof arguments[i] === 'string' ) { //we can get by id
+					res.element = document.getElementById(arguments[i]);
 				}
 				else if ( arguments[i] ) {
 					res.options = arguments[i];
@@ -231,26 +235,26 @@
 				if (!Syn.support.focusChanges ) {
 					var element = this,
 						nodeName = element.nodeName.toLowerCase();
-					Syn.data(element, "syntheticvalue", element.value)
+					Syn.data(element, "syntheticvalue", element.value);
 
 					//TODO, this should be textarea too
 					//and this might be for only text style inputs ... hmmmmm ....
-					if ( nodeName == "input" || nodeName == "textarea" ) {
+					if ( nodeName === "input" || nodeName === "textarea" ) {
 						bind(element, "blur", function() {
 							if ( Syn.data(element, "syntheticvalue") != element.value ) {
 
 								Syn.trigger("change", {}, element);
 							}
-							unbind(element, "blur", arguments.callee)
-						})
+							unbind(element, "blur", arguments.callee);
+						});
 
 					}
 				}
 			},
 			submit: function() {
 				Syn.onParents(this, function( el ) {
-					if ( el.nodeName.toLowerCase() == 'form' ) {
-						el.submit()
+					if ( el.nodeName.toLowerCase() === 'form' ) {
+						el.submit();
 						return false;
 					}
 				});
@@ -259,11 +263,11 @@
 		changeOnBlur: function( element, prop, value ) {
 
 			bind(element, "blur", function() {
-				if ( value != element[prop] ) {
+				if ( value !== element[prop] ) {
 					Syn.trigger("change", {}, element);
 				}
-				unbind(element, "blur", arguments.callee)
-			})
+				unbind(element, "blur", arguments.callee);
+			});
 
 		},
 		/**
@@ -273,8 +277,8 @@
 		 * @param {Object} type
 		 */
 		closest: function( el, type ) {
-			while ( el && el.nodeName.toLowerCase() != type.toLowerCase() ) {
-				el = el.parentNode
+			while ( el && el.nodeName.toLowerCase() !== type.toLowerCase() ) {
+				el = el.parentNode;
 			}
 			return el;
 		},
@@ -293,7 +297,7 @@
 			if (!data[el[expando]] ) {
 				data[el[expando]] = {};
 			}
-			d = data[el[expando]]
+			d = data[el[expando]];
 			if ( value ) {
 				data[el[expando]][key] = value;
 			} else {
@@ -310,8 +314,8 @@
 		onParents: function( el, func ) {
 			var res;
 			while ( el && res !== false ) {
-				res = func(el)
-				el = el.parentNode
+				res = func(el);
+				el = el.parentNode;
 			}
 			return el;
 		},
@@ -324,7 +328,9 @@
 		 */
 		isFocusable: function( elem ) {
 			var attributeNode;
-			return (this.focusable.test(elem.nodeName) || ((attributeNode = elem.getAttributeNode("tabIndex")) && attributeNode.specified)) && Syn.isVisible(elem)
+			return (this.focusable.test(elem.nodeName) || 
+				((attributeNode = elem.getAttributeNode("tabIndex")) 
+				&& attributeNode.specified)) && Syn.isVisible(elem);
 		},
 		/**
 		 * Returns if an element is visible or not
@@ -332,7 +338,7 @@
 		 * @param {Object} elem
 		 */
 		isVisible: function( elem ) {
-			return (elem.offsetWidth && elem.offsetHeight) || (elem.clientWidth && elem.clientHeight)
+			return (elem.offsetWidth && elem.offsetHeight) || (elem.clientWidth && elem.clientHeight);
 		},
 		/**
 		 * Gets the tabIndex as a number or null
@@ -341,7 +347,7 @@
 		 */
 		tabIndex: function( elem ) {
 			var attributeNode = elem.getAttributeNode("tabIndex");
-			return attributeNode && attributeNode.specified && (parseInt(elem.getAttribute('tabIndex')) || 0)
+			return attributeNode && attributeNode.specified && (parseInt(elem.getAttribute('tabIndex')) || 0);
 		},
 		bind: bind,
 		unbind: unbind,
@@ -362,22 +368,23 @@
 				return event;
 			},
 			inArray: function( item, array ) {
-				for ( var i = 0; i < array.length; i++ ) {
-					if ( array[i] == item ) {
+				var i =0;
+				for ( ; i < array.length; i++ ) {
+					if ( array[i] === item ) {
 						return i;
 					}
 				}
 				return -1;
 			},
 			getWindow: function( element ) {
-				return element.ownerDocument.defaultView || element.ownerDocument.parentWindow
+				return element.ownerDocument.defaultView || element.ownerDocument.parentWindow;
 			},
 			extend: extend,
 			scrollOffset: function( win , set) {
 				var doc = win.document.documentElement,
 					body = win.document.body;
 				if(set){
-					window.scrollTo(set.left, set.top)
+					window.scrollTo(set.left, set.top);
 					
 				} else { 
 					return {
@@ -399,12 +406,13 @@
 						body.clientHeight || docHeight,
 					width: compat && docWidth ||
 						body.clientWidth || docWidth
-				}
+				};
 			},
 			addOffset: function( options, el ) {
-				var jq = Syn.jquery(el)
-				if ( typeof options == 'object' && options.clientX === undefined && options.clientY === undefined && options.pageX === undefined && options.pageY === undefined && jq ) {
-					var el = jq(el)
+				var jq = Syn.jquery(el),
+					off;
+				if ( typeof options === 'object' && options.clientX === undefined && options.clientY === undefined && options.pageX === undefined && options.pageY === undefined && jq ) {
+					el = jq(el);
 					off = el.offset();
 					options.pageX = off.left + el.width() / 2;
 					options.pageY = off.top + el.height() / 2;
@@ -438,9 +446,9 @@
 				//this is to protect agianst nasty browser freezing bug in safari
 				if ( autoPrevent ) {
 					bind(element, type, function( ev ) {
-						ev.preventDefault()
-						unbind(this, type, arguments.callee)
-					})
+						ev.preventDefault();
+						unbind(this, type, arguments.callee);
+					});
 				}
 
 
@@ -449,15 +457,15 @@
 					if (++prevents > 0 ) {
 						preventDefault.apply(this, []);
 					}
-				}
-				element.dispatchEvent(event)
+				};
+				element.dispatchEvent(event);
 				return prevents <= 0;
 			} else {
 				try {
 					window.event = event;
 				} catch (e) {}
 				//source element makes sure element is still in the document
-				return element.sourceIndex <= 0 || (element.fireEvent && element.fireEvent('on' + type, event))
+				return element.sourceIndex <= 0 || (element.fireEvent && element.fireEvent('on' + type, event));
 			}
 		},
 		/**
@@ -469,15 +477,15 @@
 			//-------- PAGE EVENTS ---------------------
 			page: {
 				event: function( type, options, element ) {
-					var doc = Syn.helpers.getWindow(element).document || document;
+					var doc = Syn.helpers.getWindow(element).document || document,
+						event;
 					if ( doc.createEvent ) {
-						var event = doc.createEvent("Events");
+						event = doc.createEvent("Events");
 
 						event.initEvent(type, true, true);
 						return event;
 					}
 					else {
-						var event;
 						try {
 							event = createEventObject(type, options, element);
 						}
@@ -491,7 +499,7 @@
 				event: function( type, options, element ) {
 					Syn.onParents(element, function( el ) {
 						if ( Syn.isFocusable(el) ) {
-							if ( el.nodeName.toLowerCase() != 'html' ) {
+							if ( el.nodeName.toLowerCase() !== 'html' ) {
 								el.focus();
 								activeElement = el;
 							}
@@ -500,7 +508,7 @@
 								// in FF.  We should detect this and do a true focus instead
 								// of just a blur
 								var doc = Syn.helpers.getWindow(element).document;
-								if ( doc != window.document ) {
+								if ( doc !== window.document ) {
 									return false;
 								} else if ( doc.activeElement ) {
 									doc.activeElement.blur();
@@ -512,7 +520,7 @@
 
 
 							}
-							return false
+							return false;
 						}
 					});
 					return true;
@@ -571,14 +579,14 @@
 				event, ret, autoPrevent, dispatchEl = element;
 
 			//any setup code?
-			Syn.support.ready == 2 && setup && setup(type, options, element);
+			Syn.support.ready === 2 && setup && setup(type, options, element);
 
 			autoPrevent = options._autoPrevent;
 			//get kind
 			delete options._autoPrevent;
 
 			if ( createType.event ) {
-				ret = createType.event(type, options, element)
+				ret = createType.event(type, options, element);
 			} else {
 				//convert options
 				options = createKind.options ? createKind.options(type, options, element) : options;
@@ -588,14 +596,14 @@
 				}
 
 				//create the event
-				event = createKind.event(type, options, dispatchEl)
+				event = createKind.event(type, options, dispatchEl);
 
 				//send the event
-				ret = Syn.dispatch(event, dispatchEl, type, autoPrevent)
+				ret = Syn.dispatch(event, dispatchEl, type, autoPrevent);
 			}
 
 			//run default behavior
-			ret && Syn.support.ready == 2 && Syn.defaults[type] && Syn.defaults[type].call(element, options, autoPrevent);
+			ret && Syn.support.ready === 2 && Syn.defaults[type] && Syn.defaults[type].call(element, options, autoPrevent);
 			return ret;
 		},
 		eventSupported: function( eventName ) {
@@ -613,7 +621,6 @@
 		}
 
 	});
-	var h = Syn.helpers;
 	/**
 	 * @Prototype
 	 */
@@ -652,12 +659,12 @@
 			//otherwise ... unshift it
 			this.queue.unshift(function( el, prevented ) {
 
-				if ( typeof this[type] == "function" ) {
+				if ( typeof this[type] === "function" ) {
 					this.element = args.element || el;
 					this[type](args.options, this.element, function( defaults, el ) {
 						args.callback && args.callback.apply(self, arguments);
-						self.done.apply(self, arguments)
-					})
+						self.done.apply(self, arguments);
+					});
 				} else {
 					this.result = Syn.trigger(type, args.options, args.element);
 					args.callback && args.callback.call(this, args.element, this.result);
@@ -672,22 +679,22 @@
 		 * @param {Function} [callback]
 		 */
 		delay: function( timeout, callback ) {
-			if ( typeof timeout == 'function' ) {
+			if ( typeof timeout === 'function' ) {
 				callback = timeout;
 				timeout = null;
 			}
-			timeout = timeout || 600
+			timeout = timeout || 600;
 			var self = this;
 			this.queue.unshift(function() {
 				setTimeout(function() {
 					callback && callback.apply(self, [])
-					self.done.apply(self, arguments)
-				}, timeout)
-			})
+					self.done.apply(self, arguments);
+				}, timeout);
+			});
 			return this;
 		},
 		done: function( defaults, el ) {
-			el && (this.element = el);;
+			el && (this.element = el);
 			if ( this.queue.length ) {
 				this.queue.pop().call(this, this.element, defaults);
 			}
@@ -726,21 +733,21 @@
 
 			//timeout is b/c IE is stupid and won't call focus handlers
 			setTimeout(function() {
-				Syn.trigger("mouseup", options, element)
+				Syn.trigger("mouseup", options, element);
 				if (!Syn.support.mouseDownUpClicks || force ) {
-					Syn.trigger("click", options, element)
-					callback(true)
+					Syn.trigger("click", options, element);
+					callback(true);
 				} else {
 					//we still have to run the default (presumably)
-					Syn.create.click.setup('click', options, element)
-					Syn.defaults.click.call(element)
+					Syn.create.click.setup('click', options, element);
+					Syn.defaults.click.call(element);
 					//must give time for callback
 					setTimeout(function() {
-						callback(true)
-					}, 1)
+						callback(true);
+					}, 1);
 				}
 
-			}, 1)
+			}, 1);
 		},
 		/**
 		 * Right clicks in browsers that support it (everyone but opera).
@@ -750,18 +757,18 @@
 		 */
 		"_rightClick": function( options, element, callback ) {
 			Syn.helpers.addOffset(options, element);
-			var mouseopts = extend(extend({}, Syn.mouse.browser.right.mouseup), options)
+			var mouseopts = extend(extend({}, Syn.mouse.browser.right.mouseup), options);
 
 			Syn.trigger("mousedown", mouseopts, element);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
 			setTimeout(function() {
-				Syn.trigger("mouseup", mouseopts, element)
+				Syn.trigger("mouseup", mouseopts, element);
 				if ( Syn.mouse.browser.contextmenu ) {
-					Syn.trigger("contextmenu", extend(extend({}, Syn.mouse.browser.right.contextmenu), options), element)
+					Syn.trigger("contextmenu", extend(extend({}, Syn.mouse.browser.right.contextmenu), options), element);
 				}
-				callback(true)
-			}, 1)
+				callback(true);
+			}, 1);
 		},
 		/**
 		 * @function dblclick
@@ -781,25 +788,26 @@
 			this._click(options, element, function() {
 				setTimeout(function() {
 					self._click(options, element, function() {
-						Syn.trigger("dblclick", options, element)
-						callback(true)
-					}, true)
-				}, 2)
+						Syn.trigger("dblclick", options, element);
+						callback(true);
+					}, true);
+				}, 2);
 
-			})
+			});
 		}
-	})
+	});
 
 	var actions = ["click", "dblclick", "move", "drag", "key", "type", 'rightClick'],
 		makeAction = function( name ) {
 			Syn[name] = function( options, element, callback ) {
-				return Syn("_" + name, options, element, callback)
-			}
+				return Syn("_" + name, options, element, callback);
+			};
 			Syn.init.prototype[name] = function( options, element, callback ) {
-				return this.then("_" + name, options, element, callback)
-			}
-		}
-		for ( var i = 0; i < actions.length; i++ ) {
+				return this.then("_" + name, options, element, callback);
+			};
+		},
+		i = 0;
+		for ( ; i < actions.length; i++ ) {
 			makeAction(actions[i]);
 		}
 		/**
@@ -813,10 +821,10 @@
 		 */
 		if ( window.jQuery || (window.FuncUnit && window.FuncUnit.jquery) ) {
 			((window.FuncUnit && window.FuncUnit.jquery) || window.jQuery).fn.triggerSyn = function( type, options, callback ) {
-				Syn(type, options, this[0], callback)
+				Syn(type, options, this[0], callback);
 				return this;
 			};
 		}
 
 		window.Syn = Syn;
-}())
+}());
