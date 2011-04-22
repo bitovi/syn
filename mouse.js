@@ -22,10 +22,11 @@
 			var href, radioChanged = Syn.data(element, "radioChanged"),
 				scope = getWin(element),
 				nodeName = element.nodeName.toLowerCase();
-
-			if ((href = Syn.data(element, "href"))) {
-				element.setAttribute('href', href)
-			}
+			
+			//this code was for restoring the href attribute to prevent popup opening
+			//if ((href = Syn.data(element, "href"))) {
+			//	element.setAttribute('href', href)
+			//}
 
 			//run href javascript
 			if (!Syn.support.linkHrefJS && /^\s*javascript:/.test(element.href) ) {
@@ -158,14 +159,14 @@
 					}
 				}
 
-				if (
-				nodeName == "a" && element.href && !/^\s*javascript:/.test(element.href) ) {
+				if ( nodeName == "a" && element.href && !/^\s*javascript:/.test(element.href) ) {
 
 					//save href
 					Syn.data(element, "href", element.href)
 
 					//remove b/c safari/opera will open a new tab instead of changing the page
-					element.setAttribute('href', 'javascript://')
+					// this has been removed because newer versions don't have this problem
+					//element.setAttribute('href', 'javascript://')
 					//however this breaks scripts using the href
 					//we need to listen to this and prevent the default behavior
 					//and run the default behavior ourselves. Boo!
