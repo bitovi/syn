@@ -1,3 +1,4 @@
+steal.then(function(){
 //steal("synthetic").then(function() {
 //handles mosue events
 (function() {
@@ -286,3 +287,4 @@
 
 })()
 //});
+})

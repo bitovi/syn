@@ -1,3 +1,4 @@
+steal.then(function(){
 //steal("synthetic")
 //	.then("mouse")
 //	.then(function() {
@@ -150,3 +151,4 @@
 		return Syn.mouse.browsers.gecko;
 	})();
 //});
+})
