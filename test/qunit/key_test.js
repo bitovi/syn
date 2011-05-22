@@ -1,4 +1,4 @@
-module("funcunit/synthetic/key",{
+module("funcunit/syn/key",{
 	setup: function() {
 		st.g("qunit-test-area").innerHTML = "<form id='outer'>"+
 			"<div id='inner'>"+
@@ -12,11 +12,11 @@ test("Key Characters", function(){
 	st.g("key").value = "";
 	Syn.key("a","key");
 	equals(st.g("key").value, "a", "a written");
-	
+
 	st.g("key").value = "";
 	Syn.key("A","key");
 	equals(st.g("key").value, "A", "A written");
-	
+
 	st.g("key").value = "";
 	Syn.key("1","key");
 	equals(st.g("key").value, "1", "1 written");
@@ -27,7 +27,7 @@ test("Key Event Order", 1, function(){
 		recorder = function(ev){
 			order.push(ev.type)
 		};
-	
+
 	st.binder("key","keydown", recorder );
 	st.binder("key","keypress", recorder );
 	st.binder("key","keyup", recorder );
@@ -36,7 +36,7 @@ test("Key Event Order", 1, function(){
 		same(order,["keydown","keypress","keyup"],"Key order is correct")
 		start();
 	});
-	
+
 })
 
 test("Key \\r Submits Forms", 1, function(){
@@ -96,7 +96,7 @@ test("Key \\b", function(){
 
 //tests when the key is inserted
 test("Key Character Order", function(){
-	
+
 	var upVal,
 		pressVal,
 		downVal
@@ -105,7 +105,7 @@ test("Key Character Order", function(){
 	} );
 	st.binder("key","keypress",function(){
 		pressVal = st.g("key").value
-		
+
 	} );
 	st.binder("key","keydown",function(){
 		downVal = st.g("key").value
@@ -121,13 +121,13 @@ test("Key Character Order", function(){
 })
 
 asyncTest("page down, page up, home, end", function(){
-	st.g("qunit-test-area").innerHTML = 
+	st.g("qunit-test-area").innerHTML =
 		"<div id='scrolldiv' style='width:100px;height:200px;overflow-y:scroll;' tabindex='0'>"+
 		"<div id='innerdiv' style='height:1000px;'><a href='javascript://'>Scroll on me</a></div></div>";
-	
-	//reset the scroll top	
+
+	//reset the scroll top
 	st.g("scrolldiv").scrollTop =0;
-	
+
 	//list of keys to press and what to test after the scroll event
 	var keyTest = {
 		"page-down": function() {
@@ -155,11 +155,11 @@ asyncTest("page down, page up, home, end", function(){
 		Syn.key( name, "scrolldiv")
 	};
 	for(var name in keyTest){
-		if (keyTest.hasOwnProperty(name)) { 
+		if (keyTest.hasOwnProperty(name)) {
 			order.push(name)
 		}
 	}
-			
+
 	st.bind(st.g("scrolldiv"),"scroll",function(ev){
 		keyTest[order[i]]()
 		i++;
@@ -176,8 +176,8 @@ test("range tests", function(){
 	var selectText = function(el, start, end){
 		if(el.setSelectionRange){
 			if(!end){
-                el.focus();
-                el.setSelectionRange(start, start);
+								el.focus();
+								el.setSelectionRange(start, start);
 			} else {
 				el.selectionStart = start;
 				el.selectionEnd = end;
@@ -188,24 +188,24 @@ test("range tests", function(){
 			r.moveStart('character', start);
 			end = end || start;
 			r.moveEnd('character', end - el.value.length);
-			
+
 			r.select();
-		} 
+		}
 	}
 	st.g("qunit-test-area").innerHTML = "<form id='outer'><div id='inner'><input type='input' id='key' value=''/></div></form>"+
 		"<textarea id='mytextarea' />";
-	
+
 	var keyEl = st.g("key")
 	var textAreaEl = st.g("mytextarea")
-	
+
 	// test delete range
 	keyEl.value = "012345";
 	selectText(keyEl, 1, 3);
-	
+
 	Syn.key("delete","key")
-	
+
 	equals(keyEl.value, "0345", "delete range works");
-	
+
 	// test delete key
 	keyEl.value = "012345";
 	selectText(keyEl, 2);
@@ -218,14 +218,14 @@ test("range tests", function(){
 	keyEl.value = "123456";
 	selectText(keyEl, 1, 3);
 
-	
+
 	Syn.key("a","key");
 	equals(keyEl.value, "1a456", "character range works");
 
 	// test character key
 	keyEl.value = "123456";
 	selectText(keyEl, 2);
-	
+
 	Syn.key("a","key");
 	equals(keyEl.value, "12a3456", "character insertion works");
 
@@ -234,17 +234,17 @@ test("range tests", function(){
 	selectText(keyEl, 1, 3);
 	Syn.key("\b","key");
 	equals(keyEl.value, "1456", "backspace range works");
-	
+
 	// test backspace key
 	keyEl.value = "123456";
 	selectText(keyEl, 2);
 	Syn.key("\b","key");
 	equals(keyEl.value, "13456", "backspace works");
-	
+
 	// test textarea ranges
 	textAreaEl.value = "123456";
 	selectText(textAreaEl, 1, 3);
-	
+
 	Syn.key("delete",textAreaEl);
 	equals(textAreaEl.value, "1456", "delete range works in a textarea");
 
@@ -253,32 +253,32 @@ test("range tests", function(){
 	selectText(textAreaEl, 1, 3);
 	Syn.key("a",textAreaEl);
 	equals(textAreaEl.value, "1a456", "character range works in a textarea");
-	
+
 	// test textarea ranges
 	textAreaEl.value = "123456";
 	selectText(textAreaEl, 1, 3);
 	Syn.key("\b",textAreaEl);
 	equals(textAreaEl.value, "1456", "backspace range works in a textarea");
-	
+
 	// test textarea ranges
 	textAreaEl.value = "123456";
 	selectText(textAreaEl, 1, 3);
 	Syn.key("\r",textAreaEl);
-	
+
 	equals(textAreaEl.value.replace("\r",""), "1\n456", "return range works in a textarea");
-	
-    //st.g("qunit-test-area").innerHTML = "";
-	
+
+		//st.g("qunit-test-area").innerHTML = "";
+
 })
 
 test("Type with tabs", function(){
 	st.g("qunit-test-area").innerHTML =
-		 	"<input id='third'/>" +
+			"<input id='third'/>" +
 			"<a tabindex='1' id='first' href='javascript://'>First</a>"+
 			"<input tabindex='2' id='second'/>"+
 			"<input id='fourth'/>"
 	st.g('first').focus();
-	
+
 	var clicked = 0;
 	st.binder('first', 'click', function(){
 		clicked++;
@@ -298,12 +298,12 @@ test("Type with tabs", function(){
 
 test("Type with shift tabs", function(){
 	st.g("qunit-test-area").innerHTML =
-		 	"<input id='third'/>" +
+			"<input id='third'/>" +
 			"<a tabindex='1' id='first' href='javascript://'>First</a>"+
 			"<input tabindex='2' id='second'/>"+
 			"<input id='fourth'/>"
 	st.g('first').focus();
-	
+
 	var clicked = 0;
 	st.binder('first', 'click', function(){
 		clicked++;
@@ -326,8 +326,8 @@ test("Type left and right", function(){
 	stop()
 	Syn.type("012345678[left][left][left]\b",'key', function(){
 		equals( st.g('key').value, "01234678", "left works" );
-		
-		
+
+
 			Syn.type("[right][right]a",'key', function(){
 				equals( st.g('key').value, "0123467a8", "right works" );
 				start();
@@ -335,7 +335,7 @@ test("Type left and right", function(){
 
 	})
 
-	
+
 });
 test("Type left and delete", function(){
 	stop()
@@ -343,12 +343,12 @@ test("Type left and delete", function(){
 		equals( st.g('key').value, "12", "left delete works" );
 		start();
 	})
-	
+
 });
 test("Typing Shift", function(){
 	stop()
 
-	
+
 	var shift = false;
 	st.binder('key','keypress', function(ev){
 		shift = ev.shiftKey
@@ -380,11 +380,11 @@ test("Typing Shift Left and Right", function(){
 	Syn.type("012345678[shift][left][left][left][shift-up]\b[left]\b",'key', function(){
 		equals( st.g('key').value, "01235", "shift left works" );
 
-		
-		
+
+
 
 		Syn.type("[left][left][shift][right][right]\b[shift-up]",'key', function(){
-			
+
 			equals( st.g('key').value, "015", "shift right works" );
 			start();
 		})

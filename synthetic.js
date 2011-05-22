@@ -32,14 +32,14 @@ steal.then(function(){
 		/**
 		 * @class Syn
 		 * @download funcunit/dist/syn.js
-		 * @test funcunit/synthetic/qunit.html
+		 * @test funcunit/syn/qunit.html
 		 * Syn is used to simulate user actions.  It creates synthetic events and
 		 * performs their default behaviors.
-		 * 
+		 *
 		 * <h2>Basic Use</h2>
 		 * The following clicks an input element with <code>id='description'</code>
 		 * and then types <code>'Hello World'</code>.
-		 * 
+		 *
 		 @codestart
 		 Syn.click({},'description')
 		 .type("Hello World")
@@ -47,10 +47,10 @@ steal.then(function(){
 		 * <h2>User Actions and Events</h2>
 		 * <p>Syn is typically used to simulate user actions as opposed to triggering events. Typing characters
 		 * is an example of a user action.  The keypress that represents an <code>'a'</code>
-		 * character being typed is an example of an event. 
+		 * character being typed is an example of an event.
 		 * </p>
 		 * <p>
-		 *   While triggering events is supported, it's much more useful to simulate actual user behavior.  The 
+		 *   While triggering events is supported, it's much more useful to simulate actual user behavior.  The
 		 *   following actions are supported by Syn:
 		 * </p>
 		 * <ul>
@@ -61,21 +61,21 @@ steal.then(function(){
 		 *   <li><code>[Syn.prototype.move move]</code> - moves the mouse from one position to another (triggering mouseover / mouseouts).</li>
 		 *   <li><code>[Syn.prototype.drag drag]</code> - a mousedown, followed by mousemoves, and a mouseup.</li>
 		 * </ul>
-		 * All actions run asynchronously.  
-		 * Click on the links above for more 
+		 * All actions run asynchronously.
+		 * Click on the links above for more
 		 * information on how to use the specific action.
 		 * <h2>Asynchronous Callbacks</h2>
-		 * Actions don't complete immediately. This is almost 
-		 * entirely because <code>focus()</code> 
+		 * Actions don't complete immediately. This is almost
+		 * entirely because <code>focus()</code>
 		 * doesn't run immediately in IE.
-		 * If you provide a callback function to Syn, it will 
+		 * If you provide a callback function to Syn, it will
 		 * be called after the action is completed.
-		 * <br/>The following checks that "Hello World" was entered correctly: 
+		 * <br/>The following checks that "Hello World" was entered correctly:
 		 @codestart
 		 Syn.click({},'description')
 		 .type("Hello World", function(){
-		 
-		 ok("Hello World" == document.getElementById('description').value)  
+
+		 ok("Hello World" == document.getElementById('description').value)
 		 })
 		 @codeend
 		 <h2>Asynchronous Chaining</h2>
@@ -94,14 +94,14 @@ steal.then(function(){
 		 ok($('#newRecipe').parents('#favorites').length);
 		 })
 		 @codeend
-		 
+
 		 <h2>jQuery Helper</h2>
 		 If jQuery is present, Syn adds a triggerSyn helper you can use like:
 		 @codestart
 		 $("#description").triggerSyn("type","Hello World");
 		 @codeend
 		 * <h2>Key Event Recording</h2>
-		 * <p>Every browser has very different rules for dispatching key events.  
+		 * <p>Every browser has very different rules for dispatching key events.
 		 * As there is no way to feature detect how a browser handles key events,
 		 * synthetic uses a description of how the browser behaves generated
 		 * by a recording application.  </p>
@@ -122,10 +122,10 @@ steal.then(function(){
 		 * Syn fully supports IE 6+, FF 3+, Chrome, Safari, Opera 10+.
 		 * With FF 1+, drag / move events are only partially supported. They will
 		 * not trigger mouseover / mouseout events.<br/>
-		 * Safari crashes when a mousedown is triggered on a select.  Syn will not 
+		 * Safari crashes when a mousedown is triggered on a select.  Syn will not
 		 * create this event.
 		 * <h2>Contributing to Syn</h2>
-		 * Have we missed something? We happily accept patches.  The following are 
+		 * Have we missed something? We happily accept patches.  The following are
 		 * important objects and properties of Syn:
 		 * <ul>
 		 * 	<li><code>Syn.create</code> - contains methods to setup, convert options, and create an event of a specific type.</li>
@@ -135,10 +135,10 @@ steal.then(function(){
 		 * </ul>
 		 * <h2>Roll Your Own Functional Test Framework</h2>
 		 * <p>Syn is really the foundation of JavaScriptMVC's functional testing framework - [FuncUnit].
-		 *   But, we've purposely made Syn work without any dependencies in the hopes that other frameworks or 
+		 *   But, we've purposely made Syn work without any dependencies in the hopes that other frameworks or
 		 *   testing solutions can use it as well.
 		 * </p>
-		 * @constructor 
+		 * @constructor
 		 * Creates a synthetic event on the element.
 		 * @param {Object} type
 		 * @param {Object} options
@@ -226,8 +226,8 @@ steal.then(function(){
 		},
 		/**
 		 * @attribute defaults
-		 * Default actions for events.  Each default function is called with this as its 
-		 * element.  It should return true if a timeout 
+		 * Default actions for events.  Each default function is called with this as its
+		 * element.  It should return true if a timeout
 		 * should happen after it.  If it returns an element, a timeout will happen
 		 * and the next event will happen on that element.
 		 */
@@ -329,8 +329,8 @@ steal.then(function(){
 		 */
 		isFocusable: function( elem ) {
 			var attributeNode;
-			return (this.focusable.test(elem.nodeName) || 
-				((attributeNode = elem.getAttributeNode("tabIndex")) 
+			return (this.focusable.test(elem.nodeName) ||
+				((attributeNode = elem.getAttributeNode("tabIndex"))
 				&& attributeNode.specified)) && Syn.isVisible(elem);
 		},
 		/**
@@ -386,14 +386,14 @@ steal.then(function(){
 					body = win.document.body;
 				if(set){
 					window.scrollTo(set.left, set.top);
-					
-				} else { 
+
+				} else {
 					return {
 						left: (doc && doc.scrollLeft || body && body.scrollLeft || 0) + (doc.clientLeft || 0),
 						top: (doc && doc.scrollTop || body && body.scrollTop || 0) + (doc.clientTop || 0)
 					};
 				}
-				
+
 			},
 			scrollDimensions: function(win){
 				var doc = win.document.documentElement,
@@ -401,7 +401,7 @@ steal.then(function(){
 					docWidth = doc.clientWidth,
 					docHeight = doc.clientHeight,
 					compat = win.document.compatMode === "CSS1Compat";
-				
+
 				return {
 					height: compat && docHeight ||
 						body.clientHeight || docHeight,
@@ -561,7 +561,7 @@ steal.then(function(){
 			ready: 0
 		},
 		/**
-		 * Creates a synthetic event and dispatches it on the element.  
+		 * Creates a synthetic event and dispatches it on the element.
 		 * This will run any default actions for the element.
 		 * Typically you want to use Syn, but if you want the return value, use this.
 		 * @param {String} type
@@ -638,11 +638,11 @@ steal.then(function(){
 		 * @codestart
 		 * Syn('click',{},'age')
 		 *   .then('type','I am 12',function(){
-		 *   equals($('#age').val(),"12")  
+		 *   equals($('#age').val(),"12")
 		 * })
 		 * @codeend
 		 * If the element argument is undefined, then the last element is used.
-		 * 
+		 *
 		 * @param {String} type The type of event or action to create: "_click", "_dblclick", "_drag", "_type".
 		 * @param {Object} options Optiosn to pass to the event.
 		 * @param {String|HTMLElement} [element] A element's id or an element.  If undefined, defaults to the previous element.
@@ -703,8 +703,8 @@ steal.then(function(){
 		},
 		/**
 		 * @function click
-		 * Clicks an element by triggering a mousedown, 
-		 * mouseup, 
+		 * Clicks an element by triggering a mousedown,
+		 * mouseup,
 		 * and a click event.
 		 * <h3>Example</h3>
 		 * @codestart
@@ -712,7 +712,7 @@ steal.then(function(){
 		 *   //check something
 		 * })
 		 * @codeend
-		 * You can also provide the coordinates of the click.  
+		 * You can also provide the coordinates of the click.
 		 * If jQuery is present, it will set clientX and clientY
 		 * for you.  Here's how to set it yourself:
 		 * @codestart
