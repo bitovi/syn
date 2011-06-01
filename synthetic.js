@@ -765,7 +765,7 @@ steal.then(function(){
 			//timeout is b/c IE is stupid and won't call focus handlers
 			setTimeout(function() {
 				Syn.trigger("mouseup", mouseopts, element);
-				if ( Syn.mouse.browser.contextmenu ) {
+				if ( Syn.mouse.browser.right.contextmenu ) {
 					Syn.trigger("contextmenu", extend(extend({}, Syn.mouse.browser.right.contextmenu), options), element);
 				}
 				callback(true);
