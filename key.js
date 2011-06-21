@@ -1,5 +1,4 @@
 steal.then(function(){
-(function() {
 	var h = Syn.helpers,
 		S = Syn,
 
@@ -903,5 +902,4 @@ steal.then(function(){
 
 		S.support.ready++;
 	})();
-}());
 })

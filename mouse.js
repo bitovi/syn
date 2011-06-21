@@ -1,7 +1,5 @@
 steal.then(function(){
-//steal("synthetic").then(function() {
 //handles mosue events
-(function() {
 
 	var h = Syn.helpers,
 		getWin = h.getWindow;
@@ -283,8 +281,4 @@ steal.then(function(){
 		window.__synthTest = oldSynth;
 		Syn.support.ready++;
 	})();
-
-
-})()
-//});
 })

@@ -1,5 +1,4 @@
 steal.then(function(){
-(function() {
 	var extend = function( d, s ) {
 		var p;
 		for (p in s) {
@@ -828,5 +827,4 @@ steal.then(function(){
 		}
 
 		window.Syn = Syn;
-}());
 })
