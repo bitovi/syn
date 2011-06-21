@@ -1,4 +1,4 @@
-module("funcunit/synthetic/drag");
+module("funcunit/syn/drag");
 
 
 test("dragging off the page", function(){
@@ -81,8 +81,8 @@ test("move", function(){
 	
 	stop();
 	Syn.move({
-		from : {clientX: 2, clientY: 50},
-		to :	{clientX: 199, clientY: 50},
+		from : {pageX: 2, pageY: 50},
+		to :	{pageX: 199, pageY: 50},
 		duration: 1000
 	}, "wrap", function(){
 		
