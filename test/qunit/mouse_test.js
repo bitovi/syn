@@ -5,6 +5,7 @@ module("funcunit/synthetic/mouse",{
 			"<input type='radio' name='radio' value='radio1' id='radio1'/>"+
 			"<input type='radio' name='radio' value='radio2' id='radio2'/>"+
 			"<a href='javascript:doSomething()' id='jsHref'>click me</a>"+
+			"<a href='#aHash' id='jsHrefHash'>click me</a>"+
 			"<input type='submit' id='submit'/></div></form>"
 			
 	}
@@ -167,6 +168,20 @@ test("Click Anchor Runs HREF JavaScript", function(){
 	
 	window.doSomething = doSomething;
 })
+
+test("Click! Anchor has href", function(){
+	stop();
+	st.binder("jsHrefHash","click",function(ev){
+		ok(this.href.indexOf("#aHash") > -1 ,"got href");
+	});
+	
+	Syn.click({},"jsHrefHash", function(){
+		equals(window.location.hash,"#aHash","hash set ...")
+		start();
+		window.location.hash=""
+	})
+})
+
 test("Click! Anchor Focuses", 2, function(){
 	st.g("qunit-test-area").innerHTML = "<a href='#abc' id='focusme'>I am visible</a>";
 	

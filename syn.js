@@ -4,4 +4,4 @@ steal(
 	'browsers',
 	'key',
 	'drag/drag'
-)
+);
