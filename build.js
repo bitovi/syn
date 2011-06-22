@@ -1,4 +1,4 @@
-load('steal/rhino/steal.js')
+load('steal/rhino/rhino.js')
 
 /**
  * Build syn, funcunit, user-extensions
