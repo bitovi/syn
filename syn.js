@@ -1,7 +1,7 @@
-steal('synthetic')
-	.then('mouse')
-	.then('browsers')
+steal('./synthetic.js')
+	.then('./mouse.js')
+	.then('./browsers.js')
 	.then(
-		'key',
-		'drag/drag'
+		'./key.js',
+		'./drag'
 	);

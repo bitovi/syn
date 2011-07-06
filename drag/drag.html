@@ -18,23 +18,22 @@
 	<div class='over'>Move over me</div>
 	<p id='end'>end</p>
 <script type='text/javascript' src='../../../steal/steal.js'></script>
-<script type='text/javascript'>
-	steal.plugins('funcunit/synthetic', 'funcunit/synthetic/drag','jquery').start();
-</script>
 <script type='text/javascript' id="demo-source">
-	setTimeout(function(){
-		Syn("move",{
-			from: "#start",
-			to: "#end",
-			duration: 1000
-		},"start")
-	},1000)
-	
-	
-	$(".over").bind('mouseover',function(){
-		$(this).addClass('hover')
-	}).bind('mouseout',function(){
-		$(this).removeClass('hover')
+	steal('funcunit/synthetic', 'funcunit/synthetic/drag','jquery').then(function(){
+		setTimeout(function(){
+			Syn("move",{
+				from: "#start",
+				to: "#end",
+				duration: 1000
+			},"start")
+		},1000)
+		
+		
+		$(".over").bind('mouseover',function(){
+			$(this).addClass('hover')
+		}).bind('mouseout',function(){
+			$(this).removeClass('hover')
+		})
 	})
 </script>
     </body>

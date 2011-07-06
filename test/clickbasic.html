@@ -14,9 +14,6 @@
 	
 	
 	<script type='text/javascript' src='../../../steal/steal.js'></script>
-	<script type='text/javascript'>
-		steal.plugins('funcunit/synthetic').start();
-	</script>
 		
 	
 	<style type='text/css'>
@@ -28,6 +25,7 @@
 	</style>
 	<script type='text/javascript'>
 	//<![CDATA[ 
+steal('funcunit/synthetic').then(function(){
 window.onload = function() {
 	var el = document.getElementById('element');
 	el.style.background = '#f99';
@@ -56,6 +54,7 @@ window.onload = function() {
 
 
 };
+})
 	//]]> 
 	</script>
 </head>

@@ -4,7 +4,7 @@ load('steal/rhino/rhino.js')
  * Build syn, funcunit, user-extensions
  */
 steal.File('funcunit/syn/dist').mkdir()
-steal('//steal/build/pluginify/pluginify', function(s){
+steal('steal/build/pluginify', function(s){
 	steal.build.pluginify("funcunit/syn",{
 		global: "true",
 		nojquery: true,

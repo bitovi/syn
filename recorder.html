@@ -89,10 +89,8 @@
 <h3>Click Data</h3>
 <pre id='clickdata'></pre>
 <script type='text/javascript' src='../../steal/steal.js'></script>
-<script type='text/javascript'>
-	steal.plugins('funcunit/syn','jquery','jquery/lang/json').start();
-</script>
 <script type='text/javascript' id="demo-source">
+	steal('funcunit/syn','jquery','jquery/lang/json').then(function(){
 	var gId = function(id){
 		return document.getElementById(id)
 	},
@@ -296,6 +294,7 @@
 		
 		$('#out').html(str.join("<br/>"))
 	}
+	})
 	
 	
 </script>

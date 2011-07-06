@@ -14,15 +14,14 @@
     	</form>
 		<a href='' id='go'>Go</a>
 <script type='text/javascript' src='../../../steal/steal.js'></script>
-<script type='text/javascript'>
-	steal.plugins('funcunit/synthetic','jquery').start();
-</script>
 <script type='text/javascript' id="demo-source">
-	$("#go").click(function(ev){
-		ev.preventDefault();
-		setTimeout(function(){
-			Syn.click({},'submitter')
-		},100)
+	steal('funcunit/synthetic','jquery').then(function(){
+		$("#go").click(function(ev){
+			ev.preventDefault();
+			setTimeout(function(){
+				Syn.click({},'submitter')
+			},100)
+		})
 	})
 </script>
     </body>
