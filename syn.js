@@ -3,5 +3,5 @@ steal('./synthetic.js')
 	.then('./browsers.js')
 	.then(
 		'./key.js',
-		'./drag'
+		'./drag/drag'
 	);
