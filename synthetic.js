@@ -455,7 +455,7 @@ steal.then(function(){
 				event.preventDefault = function() {
 					prevents++;
 					if (++prevents > 0 ) {
-						preventDefault.apply(this, []);
+						preventDefault.apply(event, []);
 					}
 				};
 				element.dispatchEvent(event);
