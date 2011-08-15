@@ -2,4 +2,8 @@
 steal("jquery")
  .then("funcunit/syn")  //load your app
  .then('funcunit/qunit')  //load qunit
- .then("./syn_test.js", "./mouse_test.js", "./key_test.js")
+ .then(
+ 	"./syn_test.js", 
+ 	"./mouse_test.js", 
+	"./key_test.js"
+)

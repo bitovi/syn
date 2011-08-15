@@ -120,7 +120,7 @@ test("Key Character Order", function(){
 
 })
 
-asyncTest("page down, page up, home, end", function(){
+test("page down, page up, home, end", function(){
 	st.g("qunit-test-area").innerHTML = 
 		"<div id='scrolldiv' style='width:100px;height:200px;overflow-y:scroll;' tabindex='0'>"+
 		"<div id='innerdiv' style='height:1000px;'><a href='javascript://'>Scroll on me</a></div></div>";
@@ -273,10 +273,10 @@ test("range tests", function(){
 
 test("Type with tabs", function(){
 	st.g("qunit-test-area").innerHTML =
-		 	"<input id='third'/>" +
+		 	"<input tabindex='3' id='third'/>" +
 			"<a tabindex='1' id='first' href='javascript://'>First</a>"+
 			"<input tabindex='2' id='second'/>"+
-			"<input id='fourth'/>"
+			"<input tabindex='4' id='fourth'/>"
 	st.g('first').focus();
 	
 	var clicked = 0;
@@ -298,10 +298,10 @@ test("Type with tabs", function(){
 
 test("Type with shift tabs", function(){
 	st.g("qunit-test-area").innerHTML =
-		 	"<input id='third'/>" +
+		 	"<input tabindex='3' id='third'/>" +
 			"<a tabindex='1' id='first' href='javascript://'>First</a>"+
 			"<input tabindex='2' id='second'/>"+
-			"<input id='fourth'/>"
+			"<input tabindex='4' id='fourth'/>"
 	st.g('first').focus();
 	
 	var clicked = 0;
