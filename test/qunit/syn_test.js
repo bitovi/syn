@@ -67,7 +67,7 @@ test("Selecting a select element", function(){
 	
 })
 
-asyncTest("scrollTop triggers scroll events", function(){
+test("scrollTop triggers scroll events", function(){
 	st.g("qunit-test-area").innerHTML = "<div id='scroller' style='height:100px;width: 100px;overflow:auto'>"+
 			"<div style='height: 200px; width: 100%'>text"+
 			"</div>"+

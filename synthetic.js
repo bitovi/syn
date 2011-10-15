@@ -1,4 +1,4 @@
-steal.then(function(){
+(function(){
 	var extend = function( d, s ) {
 		var p;
 		for (p in s) {
@@ -186,8 +186,8 @@ steal.then(function(){
 			}
 		},
 		jquery: function( el, fast ) {
-			if ( window.FuncUnit && window.FuncUnit.jquery ) {
-				return window.FuncUnit.jquery;
+			if ( window.FuncUnit && window.FuncUnit.jQuery ) {
+				return window.FuncUnit.jQuery;
 			}
 			if ( el ) {
 				return Syn.helpers.getWindow(el).jQuery || window.jQuery;
@@ -827,4 +827,4 @@ steal.then(function(){
 		}
 
 		window.Syn = Syn;
-})
+})()
