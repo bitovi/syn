@@ -8,7 +8,7 @@ steal('steal/build/pluginify', function(s){
 	steal.build.pluginify("funcunit/syn",{
 		global: "true",
 		nojquery: true,
-		destination: "funcunit/syn/dist/syn.js"
+		out: "funcunit/syn/dist/syn.js"
 	})
 })
 // add drag/drop
@@ -20,7 +20,7 @@ var copyToDist = function(path){
 	steal.File(path).copyTo("funcunit/syn/resources/"+fileName);
 }
 var filesToCopy = [
-	"jquery/jquery.js"
+	"funcunit/browser/resources/jquery.js"
 ]
 
 for(var i = 0; i < filesToCopy.length; i++) {
