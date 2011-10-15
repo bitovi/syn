@@ -545,7 +545,6 @@
 					}
 				}
 				orders.sort(sort);
-				console.log(focusEls, tabIndex)
 				//now find current
 				for ( i = 0; i < orders.length; i++ ) {
 					el = orders[i][0];

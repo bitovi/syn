@@ -2361,7 +2361,6 @@
 					top =0;
 					diff = -off.top;
 				}
-				console.log("moving", from.clientY,from.clientY - diff, off.top, top )
 				from.clientY = from.clientY - diff;
 				to.clientY = to.clientY - diff;
 				Syn.helpers.scrollOffset(win,{top: top, left: off.left});
