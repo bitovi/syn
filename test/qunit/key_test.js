@@ -398,4 +398,17 @@ test("shift characters", function(){
 		equals( st.g('key').value, "@", "@ character works" );
 		start();
 	})
+});
+
+test("number key codes",1, function(){
+	stop()
+	
+	st.binder("key","keydown",function(ev){
+		ok(ev.keyCode === 40,"key codes are numbers" )
+		start();
+	} );
+	
+	Syn.type("[down]", 'key' , function(){
+	});
 })
+
