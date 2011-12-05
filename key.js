@@ -346,7 +346,7 @@
 			if ( charCode == 'char' ) {
 				result.charCode = key.charCodeAt(0)
 			} else if ( charCode !== null ) {
-				result.charCode = charCode;
+				result.charCode = charCode || null;
 			}
 
 
