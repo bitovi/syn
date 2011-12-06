@@ -821,6 +821,9 @@
 		 */
 		if ( (window.FuncUnit && window.FuncUnit.jQuery) || window.jQuery ) {
 			((window.FuncUnit && window.FuncUnit.jQuery) || window.jQuery).fn.triggerSyn = function( type, options, callback ) {
+				if(!this[0]){
+					throw "Can't "+type.substring(1)+" because no element matching '"+this.selector+"' was found"
+				}
 				Syn(type, options, this[0], callback);
 				return this;
 			};
