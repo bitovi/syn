@@ -346,7 +346,14 @@
 			if ( charCode == 'char' ) {
 				result.charCode = key.charCodeAt(0)
 			} else if ( charCode !== null ) {
-				result.charCode = charCode || null;
+				result.charCode = charCode;
+			}
+
+			// all current browsers have which property to normalize keyCode/charCode
+			if(result.keyCode){
+				result.which = result.keyCode;
+			} else {
+				result.which = result.charCode;
 			}
 
 

@@ -400,11 +400,12 @@ test("shift characters", function(){
 	})
 });
 
-test("number key codes",1, function(){
+test("number key codes", 2, function(){
 	stop()
 	
 	st.binder("key","keydown",function(ev){
 		ok(ev.keyCode === 40,"key codes are numbers" )
+		ok(ev.which === ev.keyCode, "which is normalized")
 		start();
 	} );
 	
