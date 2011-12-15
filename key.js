@@ -367,6 +367,8 @@
 			'function': ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12']
 		},
 		//returns the default function
+		// some keys have default functions
+		// some 'kinds' of keys have default functions
 		getDefault: function( key ) {
 			//check if it is described directly
 			if ( Syn.key.defaults[key] ) {
@@ -734,8 +736,9 @@
 				return;
 			}
 
-
-			var caret = Syn.typeable.test(element.nodeName) && getSelection(element),
+			// keep reference to current activeElement
+			var activeElement = h.getWindow(element).document.activeElement,			
+				caret = Syn.typeable.test(element.nodeName) && getSelection(element),
 				key = convert[options] || options,
 				// should we run default events
 				runDefaults = Syn.trigger('keydown', key, element),
@@ -748,9 +751,8 @@
 
 				// the result of the default event
 				defaultResult,
-
-				// options for keypress
-				keypressOptions = Syn.key.options(key, 'keypress')
+				
+				keypressOptions = Syn.key.options(key, 'keypress');
 
 
 				if ( runDefaults ) {
@@ -759,6 +761,11 @@
 						defaultResult = getDefault(key).call(element, keypressOptions, h.getWindow(element), key, undefined, caret)
 					} else {
 						//do keypress
+						// check if activeElement changed b/c someone called focus in keydown
+						if( activeElement !== h.getWindow(element).document.activeElement ) {
+							element = h.getWindow(element).document.activeElement;
+						}
+						
 						runDefaults = Syn.trigger('keypress', keypressOptions, element)
 						if ( runDefaults ) {
 							defaultResult = getDefault(key).call(element, keypressOptions, h.getWindow(element), key, undefined, caret)
@@ -767,6 +774,11 @@
 				} else {
 					//canceled ... possibly don't run keypress
 					if ( keypressOptions && h.inArray('keypress', prevent.keydown) == -1 ) {
+						// check if activeElement changed b/c someone called focus in keydown
+						if( activeElement !== h.getWindow(element).document.activeElement ) {
+							element = h.getWindow(element).document.activeElement;
+						}
+						
 						Syn.trigger('keypress', keypressOptions, element)
 					}
 				}
@@ -904,7 +916,8 @@
 		})
 		Syn.trigger("keypress", "\r", anchor);
 
-		S.support.textareaCarriage = textarea.value.length == 4
+		S.support.textareaCarriage = textarea.value.length == 4;
+		
 		document.documentElement.removeChild(div);
 
 		S.support.ready++;

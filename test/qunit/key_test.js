@@ -413,3 +413,16 @@ test("number key codes", 2, function(){
 	});
 })
 
+test("focus moves on keydown to another element", function(){
+	stop();
+	st.binder("key","keydown",function(ev){
+		st.g('synTextArea').focus();
+
+	});
+	st.binder("synTextArea","keypress",function(ev){
+		ok(true, "keypress called");
+		start();
+	});
+	Syn.type("a", 'key' , function(){
+	});
+})
