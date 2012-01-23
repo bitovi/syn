@@ -1,9 +1,13 @@
-//we probably have to have this only describing where the tests are
-steal("jquery")
- .then("funcunit/syn")  //load your app
- .then('funcunit/qunit')  //load qunit
- .then(
- 	"./syn_test.js", 
- 	"./mouse_test.js", 
-	"./key_test.js"
-)
+steal('jquery')
+.then('funcunit/qunit')
+.then('funcunit/syn/synthetic.js')
+.then('funcunit/syn/mouse.js')
+.then('funcunit/syn/browsers.js')
+.then('funcunit/syn/key.js')
+.then('funcunit/syn/test/qunit/syn_test.js')
+.then('funcunit/syn/test/qunit/mouse_test.js')
+.then('funcunit/syn/test/qunit/key_test.js')
+.then('jquery/event/drag')
+.then('jquery/event/drop')
+.then('funcunit/syn/drag/drag.js')
+.then('funcunit/syn/drag/test/qunit/drag_test.js')
