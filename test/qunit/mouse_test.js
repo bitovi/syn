@@ -131,7 +131,7 @@ test("Click Radio Buttons", function(){
 	
 });
 
-test("Click! Event Order", 4, function(){
+test("Click! Event Order", Syn.skipFocusTests? 3: 4, function(){
 	var order = 0;
 	st.g("qunit-test-area").innerHTML = "<input id='focusme'/>";
 	
@@ -140,15 +140,17 @@ test("Click! Event Order", 4, function(){
 		equals(++order,1,"mousedown")
 	});
 	
-	st.binder("focusme","focus",function(){
-		equals(++order, 2,"focus")
-	});
+	if(!Syn.skipFocusTests){
+		st.binder("focusme","focus",function(){
+			equals(++order, 2,"focus")
+		});
+	}
 	
 	st.binder("focusme","mouseup",function(){
-		equals(++order,3,"mouseup")
+		equals(++order,Syn.skipFocusTests? 2: 3,"mouseup")
 	});
 	st.binder("focusme","click",function(ev){
-		equals(++order,4,"click")
+		equals(++order,Syn.skipFocusTests? 3: 4,"click")
 		if(ev.preventDefault)
 			ev.preventDefault();
 		ev.returnValue = false;
@@ -181,12 +183,14 @@ test("Click! Anchor has href", function(){
 	})
 })
 
-test("Click! Anchor Focuses", 2, function(){
+test("Click! Anchor Focuses", Syn.skipFocusTests? 1: 2, function(){
 	st.g("qunit-test-area").innerHTML = "<a href='#abc' id='focusme'>I am visible</a>";
 	
-	st.binder("focusme","focus",function(ev){
-		ok(true,"focused");
-	});
+	if(!Syn.skipFocusTests){
+		st.binder("focusme","focus",function(ev){
+			ok(true,"focused");
+		});
+	}
 	
 	st.binder("focusme","click",function(ev){
 		ok(true,"clicked");
@@ -206,45 +210,48 @@ test("Click! Anchor Focuses", 2, function(){
 	
 
 })
-test("Click away causes Blur Change", function(){
-	st.g("qunit-test-area").innerHTML = "<input id='one'/><input id='two'/>";
-	
-	var change = 0, blur = 0;
-	
-	st.binder("one","blur",function(){
-		blur++;
-	} );
-	st.binder("one","change",function(){
-		change++;
-	} );
-	
-	stop();
-	Syn.click({},"one")
-		.key("a")
-		.click({},"two", function(){
-			start()
-			equals(change, 1 , "Change called once");
-			equals(blur, 1 , "Blur called once");
-		})
-	
-});
 
-test("Click HTML causes blur  change", function(){
-	st.g("qunit-test-area").innerHTML = "<input id='one'/><input id='two'/>";
+if(!Syn.skipFocusTests){
+	test("Click away causes Blur Change", function(){
+		st.g("qunit-test-area").innerHTML = "<input id='one'/><input id='two'/>";
+		
+		var change = 0, blur = 0;
+		
+		st.binder("one","blur",function(){
+			blur++;
+		} );
+		st.binder("one","change",function(){
+			change++;
+		} );
+		
+		stop();
+		Syn.click({},"one")
+			.key("a")
+			.click({},"two", function(){
+				start()
+				equals(change, 1 , "Change called once");
+				equals(blur, 1 , "Blur called once");
+			})
+		
+	});
 	
-	var change = 0;
-	st.binder("one","change",function(){
-		change++;
-	} );
-	
-	stop();
-	Syn.click({},"one")
-		.key("a")
-		.click({},document.documentElement, function(){
-			start()
-			equals(change, 1 , "Change called once");
-		})
-})
+	test("Click HTML causes blur  change", function(){
+		st.g("qunit-test-area").innerHTML = "<input id='one'/><input id='two'/>";
+		
+		var change = 0;
+		st.binder("one","change",function(){
+			change++;
+		} );
+		
+		stop();
+		Syn.click({},"one")
+			.key("a")
+			.click({},document.documentElement, function(){
+				start()
+				equals(change, 1 , "Change called once");
+			})
+	})
+}
 test("Right Click", function(){
 	st.g("qunit-test-area").innerHTML = "<div id='one'>right click me</div>";
 	stop()

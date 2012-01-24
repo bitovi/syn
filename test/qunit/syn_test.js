@@ -87,22 +87,23 @@ test("scrollTop triggers scroll events", function(){
 	
 })
 
-test("focus triggers focus events", function(){
-	st.g("qunit-test-area").innerHTML = "<input type='text' id='focusme'/>";
-	
-	st.binder("focusme","focus",function(ev){
-		ok(true,"focus creates event");
-		st.g("qunit-test-area").innerHTML ="";
-		start();
-	} );
-	stop();
-	setTimeout(function(){
-		st.g("focusme").focus();
-	
-	},10)
-	
-});
-
+if(!Syn.skipFocusTests){
+	test("focus triggers focus events", function(){
+		st.g("qunit-test-area").innerHTML = "<input type='text' id='focusme'/>";
+		
+		st.binder("focusme","focus",function(ev){
+			ok(true,"focus creates event");
+			st.g("qunit-test-area").innerHTML ="";
+			start();
+		} );
+		stop();
+		setTimeout(function(){
+			st.g("focusme").focus();
+		
+		},10)
+		
+	});
+}
 
 test("focus on an element then another in another page", function(){
 	stop();
