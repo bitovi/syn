@@ -126,6 +126,38 @@ test("Select is changed on click", function(){
 	Syn.trigger('click', {}, st.g('s1o1'));
 	equals(st.g('s1').selectedIndex, 0, "select worked");
 	equals(select1, 2, "change event");
+});
+
+test("Select is change on click (iframe)", function(){
+	stop();
+	var rootJoin  = st.rootJoin;
+	
+	var page3 = rootJoin("funcunit/syn/test/qunit/page3.html"),
+		iframe = document.createElement('iframe');
+
+	st.bind(iframe,"load",function(){
+		var iget = function(id){
+			return iframe.contentWindow.document.getElementById(id);
+		};
+		st.bind(iget('select1'), "change", function(){
+			ok(true, "select worked");
+		});
+		st.bind(iget('select2'), "change", function(){
+			ok(true, "select worked");
+		});
+
+		Syn.click(iget('s1o2'), {}, function(){
+			start();
+			Syn.click(iget('s2o2'));
+			Syn.click(iget('s1o1'));
+		});
+
+	});
+
+	iframe.src = page3
+		
+	st.g("qunit-test-area").appendChild(iframe);
+	
 })
 
 test("Click Radio Buttons", function(){
