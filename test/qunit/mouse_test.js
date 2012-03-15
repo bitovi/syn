@@ -314,7 +314,7 @@ test("h3 click in popup", 1,function(){
 	st.g("qunit-test-area").appendChild(iframe);*/
 	
 	
-	var popup = window.open( st.rootJoin("funcunit/syn/test/qunit/h3.html"), "synthing")
+	var popup = window.open( "test/qunit/h3.html", "synthing")
 	
 	setTimeout(function(){
 		var el = popup.document.getElementById('strange')
