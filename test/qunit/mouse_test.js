@@ -313,8 +313,11 @@ test("h3 click in popup", 1,function(){
 	iframe.src = page1
 	st.g("qunit-test-area").appendChild(iframe);*/
 	
-	
-	var popup = window.open( "test/qunit/h3.html", "synthing")
+	var path = "test/qunit/h3.html";
+	if(typeof steal !== 'undefined'){
+		path = st.rootJoin("funcunit/syn/test/qunit/h3.html");
+	}
+	var popup = window.open( path, "synthing")
 	
 	setTimeout(function(){
 		var el = popup.document.getElementById('strange')
