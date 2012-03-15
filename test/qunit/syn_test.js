@@ -109,8 +109,8 @@ test("focus on an element then another in another page", function(){
 	stop();
 	var rootJoin  = st.rootJoin;
 	
-	var page1 = rootJoin("funcunit/syn/test/qunit/page1.html"),
-		page2 = rootJoin("funcunit/syn/test/qunit/page2.html"),
+	var page1 = "test/qunit/page1.html",
+		page2 = "test/qunit/page2.html",
 		iframe = document.createElement('iframe'),
 		calls = 0;
 	
