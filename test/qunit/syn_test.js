@@ -27,7 +27,7 @@ st = {
 	rootJoin : (typeof steal == "undefined" ? function(path){
 			return "../../"+path;
 		} : 
-		function(path){ return steal.root.join(path) } )
+		function(path){ return steal.config().root.join(path) } )
 };
 
 
