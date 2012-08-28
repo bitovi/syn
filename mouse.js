@@ -1,4 +1,4 @@
-steal('./synthetic', function() {
+(function() {
 //handles mosue events
 
 	var h = Syn.helpers,
@@ -281,4 +281,4 @@ steal('./synthetic', function() {
 		window.__synthTest = oldSynth;
 		Syn.support.ready++;
 	})();
-});
+})()

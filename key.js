@@ -1,4 +1,4 @@
-steal('./synthetic', function() {
+(function() {
 	var h = Syn.helpers,
 		S = Syn,
 
@@ -921,4 +921,4 @@ steal('./synthetic', function() {
 
 		S.support.ready++;
 	})();
-});
+})()

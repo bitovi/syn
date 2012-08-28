@@ -1,4 +1,4 @@
-steal('./synthetic', function() {
+(function() {
 	Syn.key.browsers = {
 		webkit : {
 			'prevent':
@@ -147,4 +147,4 @@ steal('./synthetic', function() {
 		}
 		return Syn.mouse.browsers.gecko;
 	})();
-})
+})()
