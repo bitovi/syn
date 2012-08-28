@@ -1,4 +1,4 @@
-(function(){
+steal('./synthetic', function() {
 	var h = Syn.helpers,
 		S = Syn,
 
@@ -82,7 +82,6 @@
 
 
 		};
-
 	/**
 	 * @add Syn static
 	 */
@@ -922,4 +921,4 @@
 
 		S.support.ready++;
 	})();
-})()
+});
