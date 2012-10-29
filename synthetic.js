@@ -1,4 +1,4 @@
-(function(){
+steal(function(){
 	var extend = function( d, s ) {
 		var p;
 		for (p in s) {
@@ -818,24 +818,8 @@
 	for ( ; i < actions.length; i++ ) {
 		makeAction(actions[i]);
 	}
-	/**
-	 * Used for creating and dispatching synthetic events.
-	 * @codestart
-	 * new MVC.Syn('click').send(MVC.$E('id'))
-	 * @codeend
-	 * @constructor Sets up a synthetic event.
-	 * @param {String} type type of event, ex: 'click'
-	 * @param {optional:Object} options
-	 */
-	if ( (window.FuncUnit && window.FuncUnit.jQuery) || window.jQuery ) {
-		((window.FuncUnit && window.FuncUnit.jQuery) || window.jQuery).fn.triggerSyn = function( type, options, callback ) {
-			if(!this[0]){
-				throw "Can't "+type.substring(1)+" because no element matching '"+this.selector+"' was found"
-			}
-			Syn(type, options, this[0], callback);
-			return this;
-		};
-	}
 
-	window.Syn = Syn;
-})()
+	
+
+	return Syn;
+})

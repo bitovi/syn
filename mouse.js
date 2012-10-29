@@ -1,4 +1,4 @@
-(function() {
+steal('./synthetic',function(Syn) {
 //handles mosue events
 
 	var h = Syn.helpers,
@@ -281,4 +281,5 @@
 		window.__synthTest = oldSynth;
 		Syn.support.ready++;
 	})();
-})()
+	
+});

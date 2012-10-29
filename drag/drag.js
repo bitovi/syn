@@ -1,4 +1,4 @@
-(function() {
+steal('../synthetic.js',function(Syn) {
 	
 	// check if elementFromPageExists
 	(function() {
@@ -318,4 +318,4 @@
 
 			}
 		})
-})()
+});

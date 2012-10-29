@@ -1,4 +1,4 @@
-(function() {
+steal('./synthetic','./browsers.js',function(Syn) {
 	var h = Syn.helpers,
 		S = Syn,
 
@@ -921,4 +921,5 @@
 
 		S.support.ready++;
 	})();
-})()
+	
+});
