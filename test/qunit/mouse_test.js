@@ -1,5 +1,4 @@
-(function(){
-	
+steal("funcunit/syn/synthetic.js", function(Syn){	
 	var didSomething = false;
 	window.doSomething = function(){
 		didSomething = true;
@@ -336,4 +335,4 @@ test("h3 click in popup", 1,function(){
 });
 
 
-})()
+})

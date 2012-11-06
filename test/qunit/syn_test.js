@@ -1,3 +1,5 @@
+steal("funcunit/syn/synthetic.js", function(Syn){
+	
 module("funcunit/syn")
 
 st = {
@@ -141,4 +143,6 @@ test("focus on an element then another in another page", function(){
 	
 	
 	st.g("qunit-test-area").appendChild(iframe);
+})
+
 })

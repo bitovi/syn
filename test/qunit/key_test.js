@@ -1,3 +1,4 @@
+steal("funcunit/syn/synthetic.js", function(Syn){
 module("funcunit/synthetic/key",{
 	setup: function() {
 		st.g("qunit-test-area").innerHTML = "<form id='outer'>"+
@@ -425,4 +426,5 @@ test("focus moves on keydown to another element", function(){
 	});
 	Syn.type("a", 'key' , function(){
 	});
+})
 })
