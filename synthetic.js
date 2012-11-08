@@ -609,19 +609,7 @@ steal(function(){
 				ret = Syn.dispatch(event, dispatchEl, type, autoPrevent);
 			}
 			
-			// check if element is no longer accessible because firing the event caused the page to change or element to be removed (for IE clicks mostly)
-			var elemIsAccessible = true;
-			try {
-				// will throw error if element access is denied
-				element.nodeType;
-			} catch(e){
-				elemIsAccessible = false;
-			}
-
-			//run default behavior
-			if(elemIsAccessible) {
-				ret && Syn.support.ready === 2 && Syn.defaults[type] && Syn.defaults[type].call(element, options, autoPrevent);
-			}
+			ret && Syn.support.ready === 2 && Syn.defaults[type] && Syn.defaults[type].call(element, options, autoPrevent);
 			return ret;
 		},
 		eventSupported: function( eventName ) {
