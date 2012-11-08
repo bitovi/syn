@@ -172,7 +172,7 @@ test("Click Anchor Runs HREF JavaScript", function(){
 test("Click! Anchor has href", function(){
 	stop();
 	st.binder("jsHrefHash","click",function(ev){
-		ok(this.href.indexOf("#aHash") > -1 ,"got href");
+		ok(ev.srcElement.href.indexOf("#aHash") > -1 ,"got href");
 	});
 	
 	Syn.click({},"jsHrefHash", function(){
