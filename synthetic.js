@@ -328,9 +328,15 @@ steal(function(){
 		 */
 		isFocusable: function( elem ) {
 			var attributeNode;
-			return (this.focusable.test(elem.nodeName) || 
-				((attributeNode = elem.getAttributeNode("tabIndex")) 
-				&& attributeNode.specified)) && Syn.isVisible(elem);
+
+			// IE8 Standards doesn't like this on some elements
+			if(elem.getAttributeNode){
+				attributeNode = elem.getAttributeNode("tabIndex")
+			}
+
+			return this.focusable.test(elem.nodeName) || 
+				   (attributeNode && attributeNode.specified) && 
+				    Syn.isVisible(elem);
 		},
 		/**
 		 * Returns if an element is visible or not
