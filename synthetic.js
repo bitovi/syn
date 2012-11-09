@@ -383,7 +383,9 @@ steal(function(){
 				return -1;
 			},
 			getWindow: function( element ) {
-				return element.ownerDocument.defaultView || element.ownerDocument.parentWindow;
+				if(element.ownerDocument){
+					return element.ownerDocument.defaultView || element.ownerDocument.parentWindow;
+				}
 			},
 			extend: extend,
 			scrollOffset: function( win , set) {

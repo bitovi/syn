@@ -21,24 +21,9 @@ test("Key Characters", function(){
 	st.g("key").value = "";
 	Syn.key("1","key");
 	equals(st.g("key").value, "1", "1 written");
-})
+});
 
-test("Key Event Order", 1, function(){
-	var order = [],
-		recorder = function(ev){
-			order.push(ev.type)
-		};
-	
-	st.binder("key","keydown", recorder );
-	st.binder("key","keypress", recorder );
-	st.binder("key","keyup", recorder );
-	stop();
-	Syn.key("B","key", function(){
-		same(order,["keydown","keypress","keyup"],"Key order is correct")
-		start();
-	});
-	
-})
+
 
 test("Key \\r Submits Forms", 1, function(){
 	var submit = 0;
@@ -73,6 +58,23 @@ test("Key \\r Clicks Links", 1, function(){
 		start();
 	})
 });
+
+test("Key Event Order", 1, function(){
+	var order = [],
+		recorder = function(ev){
+			order.push(ev.type)
+		};
+	
+	st.binder("key","keydown", recorder );
+	st.binder("key","keypress", recorder );
+	st.binder("key","keyup", recorder );
+	stop();
+	Syn.key("B","key", function(){
+		same(order,["keydown","keypress","keyup"],"Key order is correct")
+		start();
+	});
+	
+})
 
 test("Key \\r Adds Newline in Textarea", function(){
 	st.g('synTextArea').value = "";
