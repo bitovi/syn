@@ -172,7 +172,7 @@ test("Click Anchor Runs HREF JavaScript", function(){
 test("Click! Anchor has href", function(){
 	stop();
 	st.binder("jsHrefHash","click",function(ev){
-		ok(this.href.indexOf("#aHash") > -1 ,"got href");
+		ok(ev.srcElement.href.indexOf("#aHash") > -1 ,"got href");
 	});
 	
 	Syn.click({},"jsHrefHash", function(){
@@ -333,6 +333,36 @@ test("h3 click in popup", 1,function(){
 			
 	},500);
 });
+
+test("focus on an element then another in another page", function(){
+	stop();
+	
+	var page1 = "test/qunit/page1.html",
+		page2 = "test/qunit/page2.html"
+
+	if(typeof steal !== 'undefined'){
+		page1 = st.rootJoin("funcunit/syn/test/qunit/page1.html");
+		page2 = st.rootJoin("funcunit/syn/test/qunit/page2.html");
+	}
+	
+	var iframe = document.createElement('iframe'),
+		calls = 0;
+	
+	st.bind(iframe,"load", function(){
+		if(calls == 0){	
+			Syn.click( iframe.contentWindow.document.getElementById("first") ,{}, function(){			
+				iframe.contentWindow.location = page2;
+			});
+			calls++;
+		}else{
+			Syn.click( iframe.contentWindow.document.getElementById("second") ,{}, function(){
+				start();
+			});
+		}
+	});
+	iframe.src = page1
+	st.g("qunit-test-area").appendChild(iframe);
+})
 
 
 })
