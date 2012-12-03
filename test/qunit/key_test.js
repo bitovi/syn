@@ -24,9 +24,17 @@ test("Key Characters", function(){
 });
 
 
-
-test("Key \\r Submits Forms", 1, function(){
-	var submit = 0;
+test("Key \\r Submits Forms", 2, function(){
+	var submit = 0, 
+		change = 0;
+	st.binder("key","change",function(ev){
+		change++;
+		if ( ev.preventDefault ) {
+			ev.preventDefault();
+		}
+		ev.returnValue = false;
+		return false;
+	});
 	st.binder("outer","submit",function(ev){
 		submit++;
 		if ( ev.preventDefault ) {
@@ -38,6 +46,7 @@ test("Key \\r Submits Forms", 1, function(){
 	stop()
 	Syn.key("\r","key", function(){
 		equals(submit, 1, "submit on keypress");
+		equals(change, 1, "submit on keypress");
 		start();
 	})
 })

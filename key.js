@@ -492,6 +492,10 @@ steal('./synthetic','./browsers.js',function(Syn) {
 
 				var nodeName = this.nodeName.toLowerCase()
 				// submit a form
+				if (nodeName == 'input' ) {
+					Syn.trigger("change", {}, this);
+				}
+				
 				if (!S.support.keypressSubmits && nodeName == 'input' ) {
 					var form = Syn.closest(this, "form");
 					if ( form ) {
