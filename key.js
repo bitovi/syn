@@ -534,8 +534,8 @@ steal('./synthetic','./browsers.js',function(Syn) {
 					i = 0,
 					el,
 					//the tabindex of the tabable element we are looking at
-					elIndex, firstNotIndexed, prev;
-				orders = [];
+					elIndex, firstNotIndexed, prev,
+					orders = [];
 				for (; i < focusEls.length; i++ ) {
 					orders.push([focusEls[i], i]);
 				}
@@ -562,9 +562,9 @@ steal('./synthetic','./browsers.js',function(Syn) {
 					el = orders[i][0];
 					if ( this == el ) {
 						if (!Syn.key.shiftKey ) {
-                            current = orders[ (i + 1) % orders.length ][0];
+							current = orders[ (i + 1) % orders.length ][0];
 						} else {
-                            current = orders[ (orders.length + i - 1) % orders.length ][0];
+							current = orders[ (orders.length + i - 1) % orders.length ][0];
 						}
 
 					}
