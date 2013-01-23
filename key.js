@@ -562,15 +562,9 @@ steal('./synthetic','./browsers.js',function(Syn) {
 					el = orders[i][0];
 					if ( this == el ) {
 						if (!Syn.key.shiftKey ) {
-							current = orders[i + 1][0];
-							if (!current ) {
-								current = orders[0][0]
-							}
+                            current = orders[ (i + 1) % orders.length ][0];
 						} else {
-							current = orders[i - 1][0];
-							if (!current ) {
-								current = orders[focusEls.length - 1][0]
-							}
+                            current = orders[ (orders.length + i - 1) % orders.length ][0];
 						}
 
 					}
