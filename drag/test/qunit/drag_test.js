@@ -93,8 +93,8 @@ test("move", function(){
 		duration: 1000
 	}, "wrap", function(){
 		
-		equals(clientX, 199)
-		equals(clientY, 50)
+		equal(clientX, 199)
+		equal(clientY, 50)
 		$(document.documentElement).unbind('mousemove',move )
 		for(var i=0; i < els.length;i++){
 			ok(els[i] == targets[i], "target is right")

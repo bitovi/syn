@@ -282,5 +282,5 @@ steal('./synthetic',function(Syn) {
 		window.__synthTest = oldSynth;
 		Syn.support.ready++;
 	})();
-	
+	return Syn;
 });

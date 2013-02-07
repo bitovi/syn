@@ -318,4 +318,5 @@ steal('../synthetic.js',function(Syn) {
 
 			}
 		})
+	return Syn;
 });

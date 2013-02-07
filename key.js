@@ -928,5 +928,6 @@ steal('./synthetic','./browsers.js',function(Syn) {
 
 		S.support.ready++;
 	})();
+	return Syn;
 	
 });

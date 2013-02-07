@@ -147,4 +147,5 @@ steal('./synthetic','./mouse.js',function(Syn) {
 		}
 		return Syn.mouse.browsers.gecko;
 	})();
+	return Syn;
 });
