@@ -1,6 +1,6 @@
-steal("funcunit/syn/synthetic.js", function(Syn){
+steal("synthetic.js", function(Syn){
 	
-module("funcunit/syn/drag");
+module("syn/drag");
 
 
 // test("dragging off the page", function(){
@@ -25,11 +25,11 @@ module("funcunit/syn/drag");
 // 	
 // 	
 	// $('#drag')
-		// .live("draginit", function(){})
+		// .on("draginit", function(){})
 // 		
 	// $('#drop')
-		// .live("dropinit", function(){ })
-		// .live("dropover", function(){ 
+		// .on("dropinit", function(){ })
+		// .on("dropover", function(){ 
 			// drops.dropover = true;
 		// })
 // 	
@@ -131,42 +131,42 @@ test("dragging an element with duration", function(){
 	
 	
 	$('#drag')
-		.live("dragdown", function(){
+		.on("dragdown", function(){
 			drags.dragdown = true;
 		})
-		.live("draginit", function(){
+		.on("draginit", function(){
 			drags.draginit = true;
 		})
-		.live("dragmove", function(){
+		.on("dragmove", function(){
 			drags.dragmove = true;
 		})
-		.live("dragend", function(){
+		.on("dragend", function(){
 			drags.dragend = true;
 		})
-		.live("dragover", function(){
+		.on("dragover", function(){
 			drags.dragover = true;
 		})
-		.live("dragout", function(){
+		.on("dragout", function(){
 			drags.dragout = true;
 		});
 		
 	$('#drop')
-		.live("dropinit", function(){ 
+		.on("dropinit", function(){ 
 			drops.dropinit = true;
 		})
-		.live("dropover", function(){ 
+		.on("dropover", function(){ 
 			drops.dropover = true;
 		})
-		.live("dropout", function(){ 
+		.on("dropout", function(){ 
 			drops.dropout = true;
 		})
-		.live("dropmove", function(){ 
+		.on("dropmove", function(){ 
 			drops.dropmove = true;
 		})
-		.live("dropon", function(){ 
+		.on("dropon", function(){ 
 			drops.dropon = true;
 		})
-		.live("dropend", function(){ 
+		.on("dropend", function(){ 
 			drops.dropend = true;
 		})
 	

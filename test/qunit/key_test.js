@@ -1,5 +1,5 @@
-steal("funcunit/syn/synthetic.js", function(Syn){
-module("funcunit/synthetic/key",{
+steal("synthetic.js", function(Syn){
+module("synthetic/key",{
 	setup: function() {
 		st.g("qunit-test-area").innerHTML = "<form id='outer'>"+
 			"<div id='inner'>"+
@@ -79,7 +79,7 @@ test("Key Event Order", 1, function(){
 	st.binder("key","keyup", recorder );
 	stop();
 	Syn.key("B","key", function(){
-		same(order,["keydown","keypress","keyup"],"Key order is correct")
+		deepEqual(order,["keydown","keypress","keyup"],"Key order is correct")
 		start();
 	});
 	

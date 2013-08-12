@@ -1,29 +1,33 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-            "http://www.w3.org/TR/html4/strict.dtd">
+<!doctype html>
 <html>
-<head>
-  <link rel="stylesheet" type="text/css" href="resources/qunit/qunit.css"/>
-  <title>QUnit Test</title>
-  <style>
+	<head>
+		<link rel="stylesheet" href="lib/qunit/qunit/qunit.css"/>
+		<title>Syn Tests</title>
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture"></div>
+		<div id="qunit-test-area"></div>
 
-  </style>
+		<script src="steal/steal.js"></script>
+		<script src="lib/qunit/qunit/qunit.js"></script>
 
-</head>
-<body>
+		<script type="text/javascript">
+			QUnit.config.autostart = false;
 
-<h1 id="qunit-header">Syn Test Suite</h1>
-
-<h2 id="qunit-banner"></h2>
-
-<div id="qunit-testrunner-toolbar"></div>
-<h2 id="qunit-userAgent"></h2>
-
-<div id="test-content"></div>
-<div>NOTE: This test only works in Chrome/Safari from a server, not from localhost</div>
-<ol id="qunit-tests"></ol>
-<div id='syntheticSupport'></div>
-<div id="qunit-test-area"></div>
-<div id="mlog"></div>
-<script type='text/javascript' src='../../steal/steal.js?funcunit/syn/test/qunit'></script>
-</body>
+			steal('synthetic.js')
+			.then('mouse.js')
+			.then('browsers.js')
+			.then('key.js')
+			.then('test/qunit/syn_test.js')
+			.then('test/qunit/key_test.js')
+			.then('jquery/event/drag')
+			.then('jquery/event/drop')
+			.then('drag/drag.js')
+			.then('drag/test/qunit/drag_test.js')
+			.then('test/qunit/mouse_test.js', function() {
+				QUnit.start();
+			});
+		</script>
+	</body>
 </html>

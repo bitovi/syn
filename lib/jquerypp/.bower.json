@@ -1,0 +1,14 @@
+{
+  "name": "jquerypp",
+  "homepage": "https://github.com/bitovi/jquerypp",
+  "version": "1.0.1",
+  "_release": "1.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.0.1",
+    "commit": "7101b15ee14944f781c8c3921710cc2dfb7b7403"
+  },
+  "_source": "git://github.com/bitovi/jquerypp.git",
+  "_target": "~1.0.1",
+  "_direct": true
+}

@@ -1,0 +1,3 @@
+[submodule "steal"]
+	path = steal
+	url = git@github.com:bitovi/steal.git

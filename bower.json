@@ -1,0 +1,13 @@
+{
+	"name": "Syn",
+	"version": "1.0.0",
+	"ignore": [],
+	"dependencies": {
+
+	},
+	"devDependencies": {
+		"jquery": "2.0.3",
+		"jquerypp": "1.0.1",
+		"qunit": "1.12.0"
+	}
+}
