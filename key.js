@@ -728,7 +728,7 @@ steal('./synthetic','./browsers.js',function(Syn) {
 		 * @codeend
 		 * For each character, a keydown, keypress, and keyup is triggered if
 		 * appropriate.
-		 * @param {String} options
+		 * @param {String|Number} options
 		 * @param {HTMLElement} [element]
 		 * @param {Function} [callback]
 		 * @return {HTMLElement} the element currently focused.
@@ -831,7 +831,7 @@ steal('./synthetic','./browsers.js',function(Syn) {
 		_type: function( options, element, callback ) {
 			//break it up into parts ...
 			//go through each type and run
-			var parts = options.match(/(\[[^\]]+\])|([^\[])/g),
+			var parts = (options+"").match(/(\[[^\]]+\])|([^\[])/g),
 				self = this,
 				runNextPart = function( runDefaults, el ) {
 					var part = parts.shift();
