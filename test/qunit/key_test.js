@@ -438,4 +438,12 @@ test("focus moves on keydown to another element", function(){
 	Syn.type("a", 'key' , function(){
 	});
 })
+
+test("typing in a number works", function() {
+  stop();
+  Syn.type(9999, 'key', function() {
+    equal( st.g('key').value, "9999", "typing in numbers works" );
+    start();
+  });
+});
 })
