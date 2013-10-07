@@ -851,82 +851,86 @@ steal('./synthetic','./browsers.js',function(Syn) {
 		}
 	});
 
+	if(!Syn.config.support) {
+		//do support code
+		!function() {
+			if (!document.body ) {
+				setTimeout(arguments.callee, 1)
+				return;
+			}
 
-	//do support code
-	(function() {
-		if (!document.body ) {
-			setTimeout(arguments.callee, 1)
-			return;
-		}
+			var div = document.createElement("div"),
+				checkbox, submit, form, input, submitted = false,
+				anchor, textarea, inputter;
 
-		var div = document.createElement("div"),
-			checkbox, submit, form, input, submitted = false,
-			anchor, textarea, inputter;
+			div.innerHTML = "<form id='outer'>" + 
+							"<input name='checkbox' type='checkbox'/>" + 
+							"<input name='radio' type='radio' />" + 
+							"<input type='submit' name='submitter'/>" + 
+							"<input type='input' name='inputter'/>" + 
+							"<input name='one'>" + 
+							"<input name='two'/>" + 
+							"<a href='#abc'></a>" + 
+							"<textarea>1\n2</textarea>" +
+							"</form>";
 
-		div.innerHTML = "<form id='outer'>" + 
-						"<input name='checkbox' type='checkbox'/>" + 
-						"<input name='radio' type='radio' />" + 
-						"<input type='submit' name='submitter'/>" + 
-						"<input type='input' name='inputter'/>" + 
-						"<input name='one'>" + 
-						"<input name='two'/>" + 
-						"<a href='#abc'></a>" + 
-						"<textarea>1\n2</textarea>" +
-						"</form>";
+			document.documentElement.appendChild(div);
+			form = div.firstChild;
+			checkbox = form.childNodes[0];
+			submit = form.childNodes[2];
+			anchor = form.getElementsByTagName("a")[0];
+			textarea = form.getElementsByTagName("textarea")[0];
+			inputter = form.childNodes[3];
 
-		document.documentElement.appendChild(div);
-		form = div.firstChild;
-		checkbox = form.childNodes[0];
-		submit = form.childNodes[2];
-		anchor = form.getElementsByTagName("a")[0];
-		textarea = form.getElementsByTagName("textarea")[0];
-		inputter = form.childNodes[3];
-
-		form.onsubmit = function( ev ) {
-			if ( ev.preventDefault ) ev.preventDefault();
-			Syn.support.keypressSubmits = true;
-			ev.returnValue = false;
-			return false;
-		};
-		// Firefox 4 won't write key events if the element isn't focused
-		inputter.focus();
-		Syn.trigger("keypress", "\r", inputter);
-
-
-		Syn.trigger("keypress", "a", inputter);
-		Syn.support.keyCharacters = inputter.value == "a";
+			form.onsubmit = function( ev ) {
+				if ( ev.preventDefault ) ev.preventDefault();
+				Syn.support.keypressSubmits = true;
+				ev.returnValue = false;
+				return false;
+			};
+			// Firefox 4 won't write key events if the element isn't focused
+			inputter.focus();
+			Syn.trigger("keypress", "\r", inputter);
 
 
-		inputter.value = "a";
-		Syn.trigger("keypress", "\b", inputter);
-		Syn.support.backspaceWorks = inputter.value == "";
+			Syn.trigger("keypress", "a", inputter);
+			Syn.support.keyCharacters = inputter.value == "a";
+
+
+			inputter.value = "a";
+			Syn.trigger("keypress", "\b", inputter);
+			Syn.support.backspaceWorks = inputter.value == "";
 
 
 
-		inputter.onchange = function() {
-			Syn.support.focusChanges = true;
-		}
-		inputter.focus();
-		Syn.trigger("keypress", "a", inputter);
-		form.childNodes[5].focus(); // this will throw a change event
-		Syn.trigger("keypress", "b", inputter);
-		Syn.support.keysOnNotFocused = inputter.value == "ab";
+			inputter.onchange = function() {
+				Syn.support.focusChanges = true;
+			}
+			inputter.focus();
+			Syn.trigger("keypress", "a", inputter);
+			form.childNodes[5].focus(); // this will throw a change event
+			Syn.trigger("keypress", "b", inputter);
+			Syn.support.keysOnNotFocused = inputter.value == "ab";
 
-		//test keypress \r on anchor submits
-		Syn.bind(anchor, "click", function( ev ) {
-			if ( ev.preventDefault ) ev.preventDefault();
-			Syn.support.keypressOnAnchorClicks = true;
-			ev.returnValue = false;
-			return false;
-		})
-		Syn.trigger("keypress", "\r", anchor);
+			//test keypress \r on anchor submits
+			Syn.bind(anchor, "click", function( ev ) {
+				if ( ev.preventDefault ) ev.preventDefault();
+				Syn.support.keypressOnAnchorClicks = true;
+				ev.returnValue = false;
+				return false;
+			})
+			Syn.trigger("keypress", "\r", anchor);
 
-		Syn.support.textareaCarriage = textarea.value.length == 4;
-		
-		document.documentElement.removeChild(div);
+			Syn.support.textareaCarriage = textarea.value.length == 4;
+			
+			document.documentElement.removeChild(div);
 
-		Syn.support.ready++;
-	})();
+			Syn.support.ready++;
+		}();
+	}
+	else {
+		Syn.support = Syn.config.support;
+	}
+
 	return Syn;
-	
 });

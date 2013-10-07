@@ -1,4 +1,7 @@
 steal(function(){
+	//allow for configuration of Syn
+	var opts = window.Syn ? window.Syn : {};
+
 	var extend = function( d, s ) {
 		var p;
 		for (p in s) {
@@ -148,6 +151,8 @@ steal(function(){
 		Syn = function( type, options, element, callback ) {
 			return (new Syn.init(type, options, element, callback));
 		};
+
+		Syn.config = opts;
 
 	bind = function( el, ev, f ) {
 		return el.addEventListener ? el.addEventListener(ev, f, false) : el.attachEvent("on" + ev, f);
