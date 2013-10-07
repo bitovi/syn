@@ -55,6 +55,6 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('testee');
 
 	grunt.registerTask('build', ['exec:pluginify', 'concat']);
-	grunt.registerTask('test', ['connect', 'testee']);
+	grunt.registerTask('test', ['connect:server', 'testee']);
 
 };
