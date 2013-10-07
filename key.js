@@ -929,7 +929,7 @@ steal('./synthetic','./browsers.js',function(Syn) {
 		}();
 	}
 	else {
-		Syn.support = Syn.config.support;
+		Syn.helpers.extend(Syn.support, Syn.config.support);
 	}
 
 	return Syn;
