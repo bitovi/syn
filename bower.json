@@ -1,0 +1,34 @@
+{
+	"name": "Syn",
+	"version": "3.3.0",
+	"author": {
+		"name": "Bitovi",
+		"email": "contact@bitovi.com",
+		"web": "http://bitovi.com/"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:bitovi/syn.git",
+		"github": "https://github.com/bitovi/syn"
+	},
+	"licenses": [{
+		"type": "MIT",
+		"url": "http://opensource.org/licenses/mit-license.php"
+	}],
+	"dependencies": {
+	},
+	"devDependencies": {
+		"jquery": "2.0.x",
+		"qunit": "1.10.x"
+	},
+	"ignore": [
+		"/build.js",
+		"stealconfig.js",
+		"/test",
+		"/steal",
+		"/drag",
+		"/demo",
+		"/*.js",
+		"/*.html"
+	]
+}

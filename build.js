@@ -1,21 +1,30 @@
-load('steal/rhino/rhino.js')
+var pluginify = require('steal').build.pluginify;
+var fs = require('fs');
 
-/**
- * Build syn, funcunit, user-extensions
- */
-steal.File('funcunit/syn/dist').mkdir()
-steal('steal/build/pluginify', function(s){
-	steal.build.pluginify("funcunit/syn",{
-		global: "true",
-		nojquery: true,
-		out: "funcunit/syn/dist/syn.js"
-	})
-})
-// add drag/drop
+pluginify('syn.js', {
+	ignore: [/lib/],
+	wrapper: '!function(window) {\n<%= content %>\n\n' +
+		'}(window);',
+	steal: {
+		root: __dirname,
+		map: {
+			'*': {
+				'jquery/jquery.js' : 'lib/jquery/jquery.js'
+			}
+		},
+		shim: {
+			'jquery': {
+				'exports': 'jQuery'
+			}
+		}
+	},
+	shim: { 'jquery/jquery.js': 'jQuery' }
+}, function(error, content) {
+	fs.exists('build', function(exists) {
+		if(!exists) {
+			fs.mkdir('build');
+		};
 
-var copyToDist = function(path){
-	var fileNameArr = path.split("/"),
-		fileName = fileNameArr[fileNameArr.length - 1];
-	print("copying to "+fileName)
-	steal.File(path).copyTo("funcunit/syn/resources/"+fileName);
-}
+		fs.writeFile(__dirname + '/build/syn.js', content);
+	});
+});

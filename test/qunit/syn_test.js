@@ -1,6 +1,6 @@
-steal("funcunit/syn/synthetic.js", function(Syn){
+steal("synthetic.js", function(Syn){
 	
-module("funcunit/syn")
+module("syn")
 
 st = {
 	g: function( id ) {
@@ -58,15 +58,12 @@ test("Selecting a select element", function(){
 	
 	stop()
 	Syn.click( st.g("two"), function(){
-		equals(change, 1 , "change called once")
-		equals(st.g("outer").select.selectedIndex, 1, "Change Selected Index");
-		//st.g("qunit-test-area").innerHTML = ""
+		equal(change, 1 , "change called once")
+		equal(st.g("outer").select.selectedIndex, 1, "Change Selected Index");
+
 		start();
-	})
-
-
-
-	
+		st.g("qunit-test-area").innerHTML = "";
+	});
 })
 
 test("scrollTop triggers scroll events", function(){

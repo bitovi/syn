@@ -1,4 +1,14 @@
-(function(){
+/*
+ * Syn - 3.3.0
+ * 
+ * Copyright (c) 2013 Bitovi
+ * Mon, 07 Oct 2013 20:43:19 GMT
+ * Licensed MIT */
+
+!function(window) {
+
+// ## synthetic.js
+var __m2 = (function(){
 	var extend = function( d, s ) {
 		var p;
 		for (p in s) {
@@ -186,8 +196,8 @@
 			}
 		},
 		jquery: function( el, fast ) {
-			if ( window.FuncUnit && window.FuncUnit.jquery ) {
-				return window.FuncUnit.jquery;
+			if ( window.FuncUnit && window.FuncUnit.jQuery ) {
+				return window.FuncUnit.jQuery;
 			}
 			if ( el ) {
 				return Syn.helpers.getWindow(el).jQuery || window.jQuery;
@@ -328,9 +338,15 @@
 		 */
 		isFocusable: function( elem ) {
 			var attributeNode;
-			return (this.focusable.test(elem.nodeName) || 
-				((attributeNode = elem.getAttributeNode("tabIndex")) 
-				&& attributeNode.specified)) && Syn.isVisible(elem);
+
+			// IE8 Standards doesn't like this on some elements
+			if(elem.getAttributeNode){
+				attributeNode = elem.getAttributeNode("tabIndex")
+			}
+
+			return this.focusable.test(elem.nodeName) || 
+				   (attributeNode && attributeNode.specified) && 
+				    Syn.isVisible(elem);
 		},
 		/**
 		 * Returns if an element is visible or not
@@ -377,7 +393,9 @@
 				return -1;
 			},
 			getWindow: function( element ) {
-				return element.ownerDocument.defaultView || element.ownerDocument.parentWindow;
+				if(element.ownerDocument){
+					return element.ownerDocument.defaultView || element.ownerDocument.parentWindow;
+				}
 			},
 			extend: extend,
 			scrollOffset: function( win , set) {
@@ -529,19 +547,26 @@
 		},
 		/**
 		 * @attribute support
+		 * 
 		 * Feature detected properties of a browser's event system.
 		 * Support has the following properties:
-		 * <ul>
-		 * 	<li><code>clickChanges</code> - clicking on an option element creates a change event.</li>
-		 *  <li><code>clickSubmits</code> - clicking on a form button submits the form.</li>
-		 *  <li><code>mouseupSubmits</code> - a mouseup on a form button submits the form.</li>
-		 *  <li><code>radioClickChanges</code> - clicking a radio button changes the radio.</li>
-		 *  <li><code>focusChanges</code> - focus/blur creates a change event.</li>
-		 *  <li><code>linkHrefJS</code> - An achor's href JavaScript is run.</li>
-		 *  <li><code>mouseDownUpClicks</code> - A mousedown followed by mouseup creates a click event.</li>
-		 *  <li><code>tabKeyTabs</code> - A tab key changes tabs.</li>
-		 *  <li><code>keypressOnAnchorClicks</code> - Keying enter on an anchor triggers a click.</li>
-		 * </ul>
+		 * 
+		 *   - `backspaceWorks` - typing a backspace removes a character
+		 *   - `clickChanges` - clicking on an option element creates a change event.
+		 *   - `clickSubmits` - clicking on a form button submits the form.
+		 *   - `focusChanges` - focus/blur creates a change event.
+		 *   - `keypressOnAnchorClicks` - Keying enter on an anchor triggers a click.
+		 *   - `keypressSubmits` - enter key submits
+		 *   - `keyCharacters` - typing a character shows up
+		 *   - `keysOnNotFocused` - enters keys when not focused.
+		 *   - `linkHrefJS` - An achor's href JavaScript is run.
+		 *   - `mouseDownUpClicks` - A mousedown followed by mouseup creates a click event.
+		 *   - `mouseupSubmits` - a mouseup on a form button submits the form.
+		 *   - `radioClickChanges` - clicking a radio button changes the radio.
+		 *   - `tabKeyTabs` - A tab key changes tabs.
+		 *   - `textareaCarriage` - a new line in a textarea creates a carriage return.
+		 *   
+		 * 
 		 */
 		support: {
 			clickChanges: false,
@@ -601,8 +626,7 @@
 				//send the event
 				ret = Syn.dispatch(event, dispatchEl, type, autoPrevent);
 			}
-
-			//run default behavior
+			
 			ret && Syn.support.ready === 2 && Syn.defaults[type] && Syn.defaults[type].call(element, options, autoPrevent);
 			return ret;
 		},
@@ -807,28 +831,18 @@
 			};
 		},
 		i = 0;
-		for ( ; i < actions.length; i++ ) {
-			makeAction(actions[i]);
-		}
-		/**
-		 * Used for creating and dispatching synthetic events.
-		 * @codestart
-		 * new MVC.Syn('click').send(MVC.$E('id'))
-		 * @codeend
-		 * @constructor Sets up a synthetic event.
-		 * @param {String} type type of event, ex: 'click'
-		 * @param {optional:Object} options
-		 */
-		if ( (window.FuncUnit && window.FuncUnit.jQuery) || window.jQuery ) {
-			((window.FuncUnit && window.FuncUnit.jQuery) || window.jQuery).fn.triggerSyn = function( type, options, callback ) {
-				Syn(type, options, this[0], callback);
-				return this;
-			};
-		}
 
-		window.Syn = Syn;
-})(true);
-(function(){
+	for ( ; i < actions.length; i++ ) {
+		makeAction(actions[i]);
+	}
+
+	
+
+	return Syn;
+})();
+
+// ## mouse.js
+var __m3 = (function(Syn) {
 //handles mosue events
 
 	var h = Syn.helpers,
@@ -841,16 +855,18 @@
 		},
 		click: function() {
 			// prevents the access denied issue in IE if the click causes the element to be destroyed
-			var element = this;
+			var element = this, href, type, radioChanged, nodeName, scope;
 			try {
-				element.nodeType;
+				href = element.href;
+				type = element.type;
+				createChange = Syn.data(element, "createChange");
+				radioChanged = Syn.data(element, "radioChanged");
+				scope = getWin(element);
+				nodeName = element.nodeName.toLowerCase();
 			} catch (e) {
 				return;
 			}
 			//get old values
-			var href, radioChanged = Syn.data(element, "radioChanged"),
-				scope = getWin(element),
-				nodeName = element.nodeName.toLowerCase();
 			
 			//this code was for restoring the href attribute to prevent popup opening
 			//if ((href = Syn.data(element, "href"))) {
@@ -858,9 +874,9 @@
 			//}
 
 			//run href javascript
-			if (!Syn.support.linkHrefJS && /^\s*javascript:/.test(element.href) ) {
+			if (!Syn.support.linkHrefJS && /^\s*javascript:/.test(href) ) {
 				//eval js
-				var code = element.href.replace(/^\s*javascript:/, "")
+				var code = href.replace(/^\s*javascript:/, "")
 
 				//try{
 				if ( code != "//" && code.indexOf("void(0)") == -1 ) {
@@ -873,7 +889,7 @@
 			}
 
 			//submit a form
-			if (!(Syn.support.clickSubmits) && (nodeName == "input" && element.type == "submit") || nodeName == 'button' ) {
+			if (!(Syn.support.clickSubmits) && (nodeName == "input" && type == "submit") || nodeName == 'button' ) {
 
 				var form = Syn.closest(element, "form");
 				if ( form ) {
@@ -882,14 +898,13 @@
 
 			}
 			//follow a link, probably needs to check if in an a.
-			if ( nodeName == "a" && element.href && !/^\s*javascript:/.test(element.href) ) {
-
-				scope.location.href = element.href;
+			if ( nodeName == "a" && element.href && !/^\s*javascript:/.test(href) ) {
+				scope.location.href = href;
 
 			}
 
 			//change a checkbox
-			if ( nodeName == "input" && element.type == "checkbox" ) {
+			if ( nodeName == "input" && type == "checkbox" ) {
 
 				//if(!Syn.support.clickChecks && !Syn.support.changeChecks){
 				//	element.checked = !element.checked;
@@ -900,13 +915,13 @@
 			}
 
 			//change a radio button
-			if ( nodeName == "input" && element.type == "radio" ) { // need to uncheck others if not checked
+			if ( nodeName == "input" && type == "radio" ) { // need to uncheck others if not checked
 				if ( radioChanged && !Syn.support.radioClickChanges ) {
 					Syn.trigger("change", {}, element);
 				}
 			}
 			// change options
-			if ( nodeName == "option" && Syn.data(element, "createChange") ) {
+			if ( nodeName == "option" && createChange ) {
 				Syn.trigger("change", {}, element.parentNode); //does not bubble
 				Syn.data(element, "createChange", false)
 			}
@@ -1111,8 +1126,11 @@
 		window.__synthTest = oldSynth;
 		Syn.support.ready++;
 	})();
-})(true);
-(function(){
+	return Syn;
+})(__m2);
+
+// ## browsers.js
+var __m4 = (function(Syn) {
 	Syn.key.browsers = {
 		webkit : {
 			'prevent':
@@ -1261,10 +1279,12 @@
 		}
 		return Syn.mouse.browsers.gecko;
 	})();
-})(true);
-(function(){
+	return Syn;
+})(__m2, __m3);
+
+// ## key.js
+var __m5 = (function(Syn) {
 	var h = Syn.helpers,
-		S = Syn,
 
 		// gets the selection of an input or textarea
 		getSelection = function( el ) {
@@ -1346,7 +1366,6 @@
 
 
 		};
-
 	/**
 	 * @add Syn static
 	 */
@@ -1393,124 +1412,124 @@
 		 */
 		keycodes: {
 			//backspace
-			'\b': '8',
+			'\b': 8,
 
 			//tab
-			'\t': '9',
+			'\t': 9,
 
 			//enter
-			'\r': '13',
+			'\r': 13,
 
 			//special
-			'shift': '16',
-			'ctrl': '17',
-			'alt': '18',
+			'shift': 16,
+			'ctrl': 17,
+			'alt': 18,
 
 			//weird
-			'pause-break': '19',
-			'caps': '20',
-			'escape': '27',
-			'num-lock': '144',
-			'scroll-lock': '145',
-			'print': '44',
+			'pause-break': 19,
+			'caps': 20,
+			'escape': 27,
+			'num-lock': 144,
+			'scroll-lock': 145,
+			'print': 44,
 
 			//navigation
-			'page-up': '33',
-			'page-down': '34',
-			'end': '35',
-			'home': '36',
-			'left': '37',
-			'up': '38',
-			'right': '39',
-			'down': '40',
-			'insert': '45',
-			'delete': '46',
+			'page-up': 33,
+			'page-down': 34,
+			'end': 35,
+			'home': 36,
+			'left': 37,
+			'up': 38,
+			'right': 39,
+			'down': 40,
+			'insert': 45,
+			'delete': 46,
 
 			//normal characters
-			' ': '32',
-			'0': '48',
-			'1': '49',
-			'2': '50',
-			'3': '51',
-			'4': '52',
-			'5': '53',
-			'6': '54',
-			'7': '55',
-			'8': '56',
-			'9': '57',
-			'a': '65',
-			'b': '66',
-			'c': '67',
-			'd': '68',
-			'e': '69',
-			'f': '70',
-			'g': '71',
-			'h': '72',
-			'i': '73',
-			'j': '74',
-			'k': '75',
-			'l': '76',
-			'm': '77',
-			'n': '78',
-			'o': '79',
-			'p': '80',
-			'q': '81',
-			'r': '82',
-			's': '83',
-			't': '84',
-			'u': '85',
-			'v': '86',
-			'w': '87',
-			'x': '88',
-			'y': '89',
-			'z': '90',
+			' ': 32,
+			'0': 48,
+			'1': 49,
+			'2': 50,
+			'3': 51,
+			'4': 52,
+			'5': 53,
+			'6': 54,
+			'7': 55,
+			'8': 56,
+			'9': 57,
+			'a': 65,
+			'b': 66,
+			'c': 67,
+			'd': 68,
+			'e': 69,
+			'f': 70,
+			'g': 71,
+			'h': 72,
+			'i': 73,
+			'j': 74,
+			'k': 75,
+			'l': 76,
+			'm': 77,
+			'n': 78,
+			'o': 79,
+			'p': 80,
+			'q': 81,
+			'r': 82,
+			's': 83,
+			't': 84,
+			'u': 85,
+			'v': 86,
+			'w': 87,
+			'x': 88,
+			'y': 89,
+			'z': 90,
 			//normal-characters, numpad
-			'num0': '96',
-			'num1': '97',
-			'num2': '98',
-			'num3': '99',
-			'num4': '100',
-			'num5': '101',
-			'num6': '102',
-			'num7': '103',
-			'num8': '104',
-			'num9': '105',
-			'*': '106',
-			'+': '107',
-			'-': '109',
-			'.': '110',
+			'num0': 96,
+			'num1': 97,
+			'num2': 98,
+			'num3': 99,
+			'num4': 100,
+			'num5': 101,
+			'num6': 102,
+			'num7': 103,
+			'num8': 104,
+			'num9': 105,
+			'*': 106,
+			'+': 107,
+			'-': 109,
+			'.': 110,
 			//normal-characters, others
-			'/': '111',
-			';': '186',
-			'=': '187',
-			',': '188',
-			'-': '189',
-			'.': '190',
-			'/': '191',
-			'`': '192',
-			'[': '219',
-			'\\': '220',
-			']': '221',
-			"'": '222',
+			'/': 111,
+			';': 186,
+			'=': 187,
+			',': 188,
+			'-': 189,
+			'.': 190,
+			'/': 191,
+			'`': 192,
+			'[': 219,
+			'\\': 220,
+			']': 221,
+			"'": 222,
 
 			//ignore these, you shouldn't use them
-			'left window key': '91',
-			'right window key': '92',
-			'select key': '93',
+			'left window key': 91,
+			'right window key': 92,
+			'select key': 93,
 
 
-			'f1': '112',
-			'f2': '113',
-			'f3': '114',
-			'f4': '115',
-			'f5': '116',
-			'f6': '117',
-			'f7': '118',
-			'f8': '119',
-			'f9': '120',
-			'f10': '121',
-			'f11': '122',
-			'f12': '123'
+			'f1': 112,
+			'f2': 113,
+			'f3': 114,
+			'f4': 115,
+			'f5': 116,
+			'f6': 117,
+			'f7': 118,
+			'f8': 119,
+			'f9': 120,
+			'f10': 121,
+			'f11': 122,
+			'f12': 123
 		},
 
 		// what we can type in
@@ -1561,20 +1580,20 @@
 		// retrieves a description of what events for this character should look like
 		data: function( key ) {
 			//check if it is described directly
-			if ( S.key.browser[key] ) {
-				return S.key.browser[key];
+			if ( Syn.key.browser[key] ) {
+				return Syn.key.browser[key];
 			}
-			for ( var kind in S.key.kinds ) {
-				if ( h.inArray(key, S.key.kinds[kind]) > -1 ) {
-					return S.key.browser[kind]
+			for ( var kind in Syn.key.kinds ) {
+				if ( h.inArray(key, Syn.key.kinds[kind]) > -1 ) {
+					return Syn.key.browser[kind]
 				}
 			}
-			return S.key.browser.character
+			return Syn.key.browser.character
 		},
 
 		//returns the special key if special
 		isSpecial: function( keyCode ) {
-			var specials = S.key.kinds.special;
+			var specials = Syn.key.kinds.special;
 			for ( var i = 0; i < specials.length; i++ ) {
 				if ( Syn.keycodes[specials[i]] == keyCode ) {
 					return specials[i];
@@ -1613,6 +1632,13 @@
 				result.charCode = charCode;
 			}
 
+			// all current browsers have which property to normalize keyCode/charCode
+			if(result.keyCode){
+				result.which = result.keyCode;
+			} else {
+				result.which = result.charCode;
+			}
+
 
 			return result
 		},
@@ -1624,6 +1650,8 @@
 			'function': ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12']
 		},
 		//returns the default function
+		// some keys have default functions
+		// some 'kinds' of keys have default functions
 		getDefault: function( key ) {
 			//check if it is described directly
 			if ( Syn.key.defaults[key] ) {
@@ -1643,7 +1671,7 @@
 					key = key.match(/\d+/)[0]
 				}
 
-				if ( force || (!S.support.keyCharacters && Syn.typeable.test(this.nodeName)) ) {
+				if ( force || (!Syn.support.keyCharacters && Syn.typeable.test(this.nodeName)) ) {
 					var current = this.value,
 						before = current.substr(0, sel.start),
 						after = current.substr(sel.end),
@@ -1651,7 +1679,7 @@
 
 					this.value = before + character + after;
 					//handle IE inserting \r\n
-					var charLength = character == "\n" && S.support.textareaCarriage ? 2 : character.length;
+					var charLength = character == "\n" && Syn.support.textareaCarriage ? 2 : character.length;
 					Syn.selectText(this, before.length + charLength)
 				}
 			},
@@ -1713,7 +1741,7 @@
 			},
 			'\b': function( options, scope, key, force, sel ) {
 				//this assumes we are deleting from the end
-				if (!S.support.backspaceWorks && Syn.typeable.test(this.nodeName) ) {
+				if (!Syn.support.backspaceWorks && Syn.typeable.test(this.nodeName) ) {
 					var current = this.value,
 						before = current.substr(0, sel.start),
 						after = current.substr(sel.end);
@@ -1731,7 +1759,7 @@
 				}
 			},
 			'delete': function( options, scope, key, force, sel ) {
-				if (!S.support.backspaceWorks && Syn.typeable.test(this.nodeName) ) {
+				if (!Syn.support.backspaceWorks && Syn.typeable.test(this.nodeName) ) {
 					var current = this.value,
 						before = current.substr(0, sel.start),
 						after = current.substr(sel.end);
@@ -1748,7 +1776,11 @@
 
 				var nodeName = this.nodeName.toLowerCase()
 				// submit a form
-				if (!S.support.keypressSubmits && nodeName == 'input' ) {
+				if (nodeName == 'input' ) {
+					Syn.trigger("change", {}, this);
+				}
+				
+				if (!Syn.support.keypressSubmits && nodeName == 'input' ) {
 					var form = Syn.closest(this, "form");
 					if ( form ) {
 						Syn.trigger("submit", {}, form);
@@ -1756,11 +1788,11 @@
 
 				}
 				//newline in textarea
-				if (!S.support.keyCharacters && nodeName == 'textarea' ) {
+				if (!Syn.support.keyCharacters && nodeName == 'textarea' ) {
 					Syn.key.defaults.character.call(this, options, scope, "\n", undefined, sel)
 				}
 				// 'click' hyperlinks
-				if (!S.support.keypressOnAnchorClicks && nodeName == 'a' ) {
+				if (!Syn.support.keypressOnAnchorClicks && nodeName == 'a' ) {
 					Syn.trigger("click", {}, this);
 				}
 			},
@@ -1869,6 +1901,9 @@
 			},
 			'shift': function() {
 				return null;
+			},
+			'ctrl': function() {
+				return null;
 			}
 		}
 	});
@@ -1887,7 +1922,7 @@
 				// if this browsers supports writing keys on events
 				// but doesn't write them if the element isn't focused
 				// focus on the element (ignored if already focused)
-				if ( S.support.keyCharacters && !S.support.keysOnNotFocused ) {
+				if ( Syn.support.keyCharacters && !Syn.support.keysOnNotFocused ) {
 					element.focus()
 				}
 			}
@@ -1910,7 +1945,7 @@
 				//don't change the orignial
 				options = h.extend({}, options)
 				if ( options.character ) {
-					h.extend(options, S.key.options(options.character, type));
+					h.extend(options, Syn.key.options(options.character, type));
 					delete options.character;
 				}
 
@@ -1991,8 +2026,9 @@
 				return;
 			}
 
-
-			var caret = Syn.typeable.test(element.nodeName) && getSelection(element),
+			// keep reference to current activeElement
+			var activeElement = h.getWindow(element).document.activeElement,			
+				caret = Syn.typeable.test(element.nodeName) && getSelection(element),
 				key = convert[options] || options,
 				// should we run default events
 				runDefaults = Syn.trigger('keydown', key, element),
@@ -2005,9 +2041,8 @@
 
 				// the result of the default event
 				defaultResult,
-
-				// options for keypress
-				keypressOptions = Syn.key.options(key, 'keypress')
+				
+				keypressOptions = Syn.key.options(key, 'keypress');
 
 
 				if ( runDefaults ) {
@@ -2016,6 +2051,11 @@
 						defaultResult = getDefault(key).call(element, keypressOptions, h.getWindow(element), key, undefined, caret)
 					} else {
 						//do keypress
+						// check if activeElement changed b/c someone called focus in keydown
+						if( activeElement !== h.getWindow(element).document.activeElement ) {
+							element = h.getWindow(element).document.activeElement;
+						}
+						
 						runDefaults = Syn.trigger('keypress', keypressOptions, element)
 						if ( runDefaults ) {
 							defaultResult = getDefault(key).call(element, keypressOptions, h.getWindow(element), key, undefined, caret)
@@ -2024,6 +2064,11 @@
 				} else {
 					//canceled ... possibly don't run keypress
 					if ( keypressOptions && h.inArray('keypress', prevent.keydown) == -1 ) {
+						// check if activeElement changed b/c someone called focus in keydown
+						if( activeElement !== h.getWindow(element).document.activeElement ) {
+							element = h.getWindow(element).document.activeElement;
+						}
+						
 						Syn.trigger('keypress', keypressOptions, element)
 					}
 				}
@@ -2124,7 +2169,7 @@
 
 		form.onsubmit = function( ev ) {
 			if ( ev.preventDefault ) ev.preventDefault();
-			S.support.keypressSubmits = true;
+			Syn.support.keypressSubmits = true;
 			ev.returnValue = false;
 			return false;
 		};
@@ -2134,40 +2179,45 @@
 
 
 		Syn.trigger("keypress", "a", inputter);
-		S.support.keyCharacters = inputter.value == "a";
+		Syn.support.keyCharacters = inputter.value == "a";
 
 
 		inputter.value = "a";
 		Syn.trigger("keypress", "\b", inputter);
-		S.support.backspaceWorks = inputter.value == "";
+		Syn.support.backspaceWorks = inputter.value == "";
 
 
 
 		inputter.onchange = function() {
-			S.support.focusChanges = true;
+			Syn.support.focusChanges = true;
 		}
 		inputter.focus();
 		Syn.trigger("keypress", "a", inputter);
 		form.childNodes[5].focus(); // this will throw a change event
 		Syn.trigger("keypress", "b", inputter);
-		S.support.keysOnNotFocused = inputter.value == "ab";
+		Syn.support.keysOnNotFocused = inputter.value == "ab";
 
 		//test keypress \r on anchor submits
-		S.bind(anchor, "click", function( ev ) {
+		Syn.bind(anchor, "click", function( ev ) {
 			if ( ev.preventDefault ) ev.preventDefault();
-			S.support.keypressOnAnchorClicks = true;
+			Syn.support.keypressOnAnchorClicks = true;
 			ev.returnValue = false;
 			return false;
 		})
 		Syn.trigger("keypress", "\r", anchor);
 
-		S.support.textareaCarriage = textarea.value.length == 4
+		Syn.support.textareaCarriage = textarea.value.length == 4;
+		
 		document.documentElement.removeChild(div);
 
-		S.support.ready++;
+		Syn.support.ready++;
 	})();
-})(true);
-(function() {
+	return Syn;
+	
+})(__m2, __m4);
+
+// ## drag/drag.js
+var __m6 = (function(Syn) {
 	
 	// check if elementFromPageExists
 	(function() {
@@ -2300,8 +2350,8 @@
 			var j = Syn.jquery()(el),
 				o = j.offset();
 			return {
-				pageX: o.left + (j.width() / 2),
-				pageY: o.top + (j.height() / 2)
+				pageX: o.left + (j.outerWidth() / 2),
+				pageY: o.top + (j.outerHeight() / 2)
 			}
 		},
 		convertOption = function( option, win, from ) {
@@ -2487,4 +2537,13 @@
 
 			}
 		})
-}());
+	return Syn;
+})(__m2);
+
+// ## syn.js
+var __m1 = (function(Syn){
+	window.Syn = Syn;
+	return Syn;
+})(__m2, __m3, __m4, __m5, __m6);
+
+}(window);
