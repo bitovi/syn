@@ -9,8 +9,7 @@ module("synthetic/key",{
 				"</div></form>";
 	},
 
-	teardown: function() {
-		st.g("qunit-test-area").innerHTML = '';
+	teardown: function() {		st.g("qunit-test-area").innerHTML = '';
 	}
 })
 test("Key Characters", function(){

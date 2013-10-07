@@ -414,6 +414,7 @@ test("focus on an element then another in another page", function(){
 			calls++;
 		}else{
 			Syn.click( iframe.contentWindow.document.getElementById("second") ,{}, function(){
+				ok(iframe.contentWindow.document.getElementById("second") === iframe.contentWindow.document.activeElement);
 				start();
 			});
 		}

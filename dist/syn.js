@@ -2,7 +2,7 @@
  * Syn - 3.3.0
  * 
  * Copyright (c) 2013 Bitovi
- * Mon, 07 Oct 2013 20:43:19 GMT
+ * Mon, 07 Oct 2013 21:19:04 GMT
  * Licensed MIT */
 
 !function(window) {
@@ -2543,7 +2543,6 @@ var __m6 = (function(Syn) {
 // ## syn.js
 var __m1 = (function(Syn){
 	window.Syn = Syn;
-	return Syn;
 })(__m2, __m3, __m4, __m5, __m6);
 
 }(window);
