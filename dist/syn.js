@@ -1,8 +1,8 @@
 /*
- * Syn - 3.3.0-pre
+ * Syn - 3.3.0
  * 
  * Copyright (c) 2013 Bitovi
- * Mon, 07 Oct 2013 23:37:46 GMT
+ * Tue, 08 Oct 2013 00:15:48 GMT
  * Licensed MIT */
 
 !function(window) {
@@ -2219,7 +2219,7 @@ var __m5 = (function(Syn) {
 		}();
 	}
 	else {
-		Syn.support = Syn.config.support;
+		Syn.helpers.extend(Syn.support, Syn.config.support);
 	}
 
 	return Syn;
@@ -2552,6 +2552,8 @@ var __m6 = (function(Syn) {
 // ## syn.js
 var __m1 = (function(Syn){
 	window.Syn = Syn;
+
+	return Syn;
 })(__m2, __m3, __m4, __m5, __m6);
 
 }(window);
