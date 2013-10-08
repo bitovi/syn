@@ -1,8 +1,8 @@
 /*
- * Syn - 3.3.0
+ * Syn - 3.3.1
  * 
  * Copyright (c) 2013 Bitovi
- * Tue, 08 Oct 2013 00:15:48 GMT
+ * Tue, 08 Oct 2013 00:20:41 GMT
  * Licensed MIT */
 
 !function(window) {
