@@ -442,7 +442,4 @@ test("focus moves on keydown to another element", function(){
 	});
 });
 
-test('configured support', function() {
-	ok(Syn.support.nonsupportedbrowserfeature === true);
-});
 })

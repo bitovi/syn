@@ -14,14 +14,7 @@
 			QUnit.config.autostart = false;
 		</script>
 		<script src="steal/steal.js"></script>
-		<script type="text/javascript"></script>
 		<script type="text/javascript">
-			Syn = {
-				support: {
-					nonsupportedbrowserfeature: true
-				}
-			};
-
 			steal('test/qunit', function() {
 				QUnit.start();
 			});
