@@ -16,4 +16,4 @@ You'd use syn to perform functional testing or simulate user actions on a JavaSc
 
 Running Syn Tests
 
-Load syn/qunit.html in any browser to run all the tests.
+Load syn/test/qunit.html in any browser to run all the tests.
