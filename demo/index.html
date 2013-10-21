@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Synthetic Demo</title>
+		<link href="../lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+
+		<style>
+			body { font-family: verdana; padding: 0px; margin: 0px; }
+
+			#app {
+				border-left: none;
+				border-right: none;
+				border-top: none;
+				border-bottom: solid 2px black;
+				overflow: hidden;
+				top: 0px;
+				width: 100%;
+			}
+
+			iframe {
+				height: 100%;
+				border: none;
+				width: 100%;
+				padding: 0px;
+				margin: 0px;
+			}
+
+			#code {
+				padding: 0px;
+				margin: 0 0 0 210px;
+				border: none;
+				overflow: auto;
+				height: 100%;
+			}
+
+			#bottom {
+				bottom: 0px;
+				height: 200px;
+				border-top: solid 2px #E7ECEE;
+			}
+
+			.controls {
+				float: left;
+				width: 200px;
+			}
+
+			.controls button {
+				display: block;
+				margin: 25px auto 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app"></div>
+		<div id="bottom">
+			<div class="controls">
+				<button type="button" id="run" class="btn btn-primary btn-lg">
+					<span class="glyphicon glyphicon-play-circle"></span> Replay
+				</button>
+
+				<br/>
+
+				<button type="button" id="clear" class="btn btn-danger btn-lg">
+					<span class="glyphicon glyphicon-remove-circle"></span> Clear
+				</button>
+			</div>
+
+			<pre id="code">Click the tabs above to create replay code.</pre>
+		</div>
+
+		<script src="../steal/steal.js?demo/record.js"></script>
+	</body>
+</html>
