@@ -1,4 +1,4 @@
-steal("synthetic.js", function(Syn){	
+steal("src/synthetic.js", function(Syn){	
 	var didSomething = false;
 	window.doSomething = function(){
 		didSomething = true;

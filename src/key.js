@@ -1,4 +1,4 @@
-steal('./synthetic','./browsers.js',function(Syn) {
+steal('src/synthetic.js','src/browsers.js',function(Syn) {
 	var h = Syn.helpers,
 
 		// gets the selection of an input or textarea

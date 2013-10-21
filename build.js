@@ -1,7 +1,7 @@
 var pluginify = require('steal').build.pluginify;
 var fs = require('fs');
 
-pluginify('syn.js', {
+pluginify('src/syn.js', {
 	ignore: [/lib/],
 	wrapper: '!function(window) {\n<%= content %>\n\n' +
 		'}(window);',

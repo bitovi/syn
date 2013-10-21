@@ -1,12 +1,12 @@
 QUnit.config.reorder = false;
 
 steal('jquery')
-.then('synthetic.js')
-.then('mouse.js')
-.then('browsers.js')
-.then('key.js')
+.then('src/synthetic.js')
+.then('src/mouse.js')
+.then('src/browsers.js')
+.then('src/key.js')
 .then('test/qunit/syn_test.js')
 .then('test/qunit/key_test.js')
-.then('drag/drag.js')
-.then('drag/test/qunit/drag_test.js')
+.then('src/drag/drag.js')
+.then('src/drag/test/qunit/drag_test.js')
 .then('test/qunit/mouse_test.js')

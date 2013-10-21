@@ -2,12 +2,12 @@
  * Syn - 3.3.1
  * 
  * Copyright (c) 2013 Bitovi
- * Tue, 08 Oct 2013 00:20:41 GMT
+ * Mon, 21 Oct 2013 04:57:44 GMT
  * Licensed MIT */
 
 !function(window) {
 
-// ## synthetic.js
+// ## src/synthetic.js
 var __m2 = (function(){
 	//allow for configuration of Syn
 	var opts = window.Syn ? window.Syn : {};
@@ -846,7 +846,7 @@ var __m2 = (function(){
 	return Syn;
 })();
 
-// ## mouse.js
+// ## src/mouse.js
 var __m3 = (function(Syn) {
 //handles mosue events
 
@@ -1134,7 +1134,7 @@ var __m3 = (function(Syn) {
 	return Syn;
 })(__m2);
 
-// ## browsers.js
+// ## src/browsers.js
 var __m4 = (function(Syn) {
 	Syn.key.browsers = {
 		webkit : {
@@ -1287,7 +1287,7 @@ var __m4 = (function(Syn) {
 	return Syn;
 })(__m2, __m3);
 
-// ## key.js
+// ## src/key.js
 var __m5 = (function(Syn) {
 	var h = Syn.helpers,
 
@@ -2225,7 +2225,7 @@ var __m5 = (function(Syn) {
 	return Syn;
 })(__m2, __m4);
 
-// ## drag/drag.js
+// ## src/drag/drag.js
 var __m6 = (function(Syn) {
 	
 	// check if elementFromPageExists
@@ -2549,8 +2549,8 @@ var __m6 = (function(Syn) {
 	return Syn;
 })(__m2);
 
-// ## syn.js
-var __m1 = (function(Syn){
+// ## src/syn.js
+var __m1 = (function(Syn) {
 	window.Syn = Syn;
 
 	return Syn;

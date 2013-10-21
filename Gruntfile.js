@@ -32,7 +32,7 @@ module.exports = function (grunt) {
 		testee: {
 			src: {
 				options: {
-					urls: ['http://localhost:8000/qunit.html'],
+					urls: ['http://localhost:8000/test/index.html'],
 					browsers: ['phantom']
 				}
 			}
