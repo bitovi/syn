@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.org/bitovi/syn.png?branch=master)](https://travis-ci.org/bitovi/syn.png?branch=master)
+
 What It Is
 
 Syn is a synthetic event library that pretty much handles typing, clicking, moving, and 
