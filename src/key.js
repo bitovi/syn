@@ -793,6 +793,7 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 
 				if ( defaultResult !== null ) {
 					setTimeout(function() {
+						Syn.trigger('input', Syn.key.options(key, 'input'), element)
 						Syn.trigger('keyup', Syn.key.options(key, 'keyup'), element)
 						callback(runDefaults, element)
 					}, 1)
