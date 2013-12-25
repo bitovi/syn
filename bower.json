@@ -19,7 +19,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "jquery": "2.0.x",
+    "jquery": "1.10.2",
     "jquerypp": "1.0.x",
     "qunit": "1.10.x",
     "canjs": "2.0.x",
