@@ -212,6 +212,7 @@ steal('src/synthetic.js',function(Syn) {
 		window.__synthTest = function() {
 			Syn.support.linkHrefJS = true;
 		}
+
 		var div = document.createElement("div"),
 			checkbox, submit, form, input, select;
 
@@ -221,6 +222,9 @@ steal('src/synthetic.js',function(Syn) {
 		checkbox = form.childNodes[0];
 		submit = form.childNodes[2];
 		select = form.getElementsByTagName('select')[0]
+
+		//trigger click for linkHrefJS support, childNodes[6] === anchor
+		Syn.trigger('click', {}, form.childNodes[6]);
 
 		checkbox.checked = false;
 		checkbox.onchange = function() {

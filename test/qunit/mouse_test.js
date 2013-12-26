@@ -1,8 +1,8 @@
-steal("src/synthetic.js", function(Syn){	
-	var didSomething = false;
-	window.doSomething = function(){
-		didSomething = true;
-	}
+steal("src/synthetic.js", function(Syn) {
+	var didSomething = 0;
+	window.doSomething = function() {
+		++didSomething;
+	};
 
 module("synthetic/mouse",{
 	setup: function() {
@@ -12,14 +12,17 @@ module("synthetic/mouse",{
 			"<input type='radio' name='radio' value='radio2' id='radio2'/>"+
 			"<a href='javascript:doSomething()' id='jsHref'>click me</a>"+
 			"<a href='#aHash' id='jsHrefHash'>click me</a>"+
-			"<input type='submit' id='submit'/></div></form>"
-			
+			"<input type='submit' id='submit'/></div></form>";
+	},
+
+	teardown: function() {
+		didSomething = 0;
 	}
 })
 
 test("Syn basics", function(){
 
-        ok(Syn,"Syn exists")
+		ok(Syn,"Syn exists")
 		
 		st.g("qunit-test-area").innerHTML = "<div id='outer'><div id='inner'></div></div>"
 		var mouseover = 0, mouseoverf = function(){
@@ -220,12 +223,10 @@ test("Click! Event Order", Syn.skipFocusTests? 3: 4, function(){
 	
 })
 
-test("Click Anchor Runs HREF JavaScript", function(){
-
-	Syn.trigger("click",{},st.g("jsHref"))
-	
-	ok( didSomething, "link href JS run" );
-})
+test("Click Anchor Runs HREF JavaScript", function() {
+	Syn.trigger("click", {}, st.g("jsHref"));
+	equal(didSomething, 1, "link href JS run");
+});
 
 test("Click! Anchor has href", function(){
 	stop();
@@ -421,7 +422,7 @@ test("focus on an element then another in another page", function(){
 	});
 	iframe.src = page1
 	st.g("qunit-test-area").appendChild(iframe);
-})
+});
 
 
 })
