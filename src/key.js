@@ -928,7 +928,7 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 			Syn.support.textareaCarriage = textarea.value.length == 4;
 
 			// IE only, oninput event.
-			Syn.support.oninput = oninput in one;
+			Syn.support.oninput = 'oninput' in one;
 			
 			document.documentElement.removeChild(div);
 

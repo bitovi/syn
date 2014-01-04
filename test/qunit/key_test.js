@@ -85,7 +85,7 @@ test("Key Event Order", 1, function(){
 	Syn.key("B","key", function(){
 		var expected = ["keydown", "keypress", "keyup"];
 		if(Syn.support.oninput) {
-			expected.push("input");
+			expected.splice(2, 0, "input");
 		}
 
 		deepEqual(order, expected, "Key order is correct");
