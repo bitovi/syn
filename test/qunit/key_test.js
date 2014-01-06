@@ -6,6 +6,7 @@ module("synthetic/key",{
 				"<input type='input' id='key' value=''/>"+
 				"<a href='#abc' id='focusLink'>click me</a>"+
 				"<textarea id='synTextArea'></textarea>"+
+				"<div id='editable' contenteditable='true'></div>" +
 				"</div></form>";
 	},
 
@@ -446,6 +447,24 @@ test("focus moves on keydown to another element", function(){
 	});
 	Syn.type("a", 'key' , function(){
 	});
+})
+
+test("typing in a number works", function() {
+  stop();
+  Syn.type(9999, 'key', function() {
+    equal( st.g('key').value, "9999", "typing in numbers works" );
+    start();
+  });
 });
 
-})
+test("typing in a contenteditable works", function(){
+	stop();
+	Syn.type("hello world", "editable", function(){
+		var editable = st.g("editable");
+		var text = editable.textContent || editable.innerText;
+		equal(text, "hello world", "Content editable was edited");
+		start();
+	});
+});
+
+});

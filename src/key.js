@@ -59,9 +59,11 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 						}
 					}
 				} catch (e) {
+					var prop = formElExp.test(el.nodeName) ? "value" : "textContent";
+
 					return {
-						start: el.value.length,
-						end: el.value.length
+						start: el[prop].length,
+						end: el[prop].length
 					};
 				}
 			}
@@ -78,9 +80,26 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 				Syn.isFocusable(els[i]) && els[i] != document.documentElement && res.push(els[i])
 			}
 			return res;
-
-
+		},
+		formElExp = /input|textarea/i,
+		// Get the text from an element.
+		getText = function(el){
+			if(formElExp.test(el.nodeName)) {
+				return el.value;
+			}
+			return el.textContent || el.innerText;
+		},
+		// Set the text of an element.
+		setText = function(el, value){
+			if(formElExp.test(el.nodeName)){
+				el.value = value;
+			} else if(el.textContent) {
+				el.textContent = value;
+			} else {
+				el.innerText = value;
+			}
 		};
+    
 	/**
 	 * @add Syn static
 	 */
@@ -247,9 +266,6 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 			'f12': 123
 		},
 
-		// what we can type in
-		typeable: /input|textarea/i,
-
 		// selects text on an element
 		selectText: function( el, start, end ) {
 			if ( el.setSelectionRange ) {
@@ -272,7 +288,7 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 		},
 		getText: function( el ) {
 			//first check if the el has anything selected ..
-			if ( Syn.typeable.test(el.nodeName) ) {
+			if ( Syn.typeable.test(el) ) {
 				var sel = getSelection(el);
 				return el.value.substring(sel.start, sel.end)
 			}
@@ -386,13 +402,13 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 					key = key.match(/\d+/)[0]
 				}
 
-				if ( force || (!Syn.support.keyCharacters && Syn.typeable.test(this.nodeName)) ) {
-					var current = this.value,
+				if ( force || (!Syn.support.keyCharacters && Syn.typeable.test(this)) ) {
+					var current = getText(this),
 						before = current.substr(0, sel.start),
 						after = current.substr(sel.end),
 						character = key;
 
-					this.value = before + character + after;
+					setText(this, before + character + after);
 					//handle IE inserting \r\n
 					var charLength = character == "\n" && Syn.support.textareaCarriage ? 2 : character.length;
 					Syn.selectText(this, before.length + charLength)
@@ -414,7 +430,7 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 			},
 			'a': function( options, scope, key, force, sel ) {
 				if ( Syn.key.ctrlKey ) {
-					Syn.selectText(this, 0, this.value.length)
+					Syn.selectText(this, 0, getText(this).length)
 				} else {
 					Syn.key.defaults.character.apply(this, arguments);
 				}
@@ -456,35 +472,34 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 			},
 			'\b': function( options, scope, key, force, sel ) {
 				//this assumes we are deleting from the end
-				if (!Syn.support.backspaceWorks && Syn.typeable.test(this.nodeName) ) {
-					var current = this.value,
+				if (!Syn.support.backspaceWorks && Syn.typeable.test(this) ) {
+					var current = getText(this),
 						before = current.substr(0, sel.start),
 						after = current.substr(sel.end);
 
 					if ( sel.start == sel.end && sel.start > 0 ) {
 						//remove a character
-						this.value = before.substring(0, before.length - 1) + after
-						Syn.selectText(this, sel.start - 1)
+						setText(this, before.substring(0, before.length - 1) + after);
+						Syn.selectText(this, sel.start - 1);
 					} else {
-						this.value = before + after;
-						Syn.selectText(this, sel.start)
+						setText(this, before + after);
+						Syn.selectText(this, sel.start);
 					}
 
 					//set back the selection
 				}
 			},
 			'delete': function( options, scope, key, force, sel ) {
-				if (!Syn.support.backspaceWorks && Syn.typeable.test(this.nodeName) ) {
-					var current = this.value,
+				if (!Syn.support.backspaceWorks && Syn.typeable.test(this) ) {
+					var current = getText(this),
 						before = current.substr(0, sel.start),
 						after = current.substr(sel.end);
-					if ( sel.start == sel.end && sel.start <= this.value.length - 1 ) {
-						this.value = before + after.substring(1)
+					if ( sel.start == sel.end && sel.start <= getText(this).length - 1 ) {
+						setText(this, before + after.substring(1));
 					} else {
-						this.value = before + after;
-
+						setText(this, before + after);
 					}
-					Syn.selectText(this, sel.start)
+					Syn.selectText(this, sel.start);
 				}
 			},
 			'\r': function( options, scope, key, force, sel ) {
@@ -583,7 +598,7 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 				return current;
 			},
 			'left': function( options, scope, key, force, sel ) {
-				if ( Syn.typeable.test(this.nodeName) ) {
+				if ( Syn.typeable.test(this) ) {
 					if ( Syn.key.shiftKey ) {
 						Syn.selectText(this, sel.start == 0 ? 0 : sel.start - 1, sel.end)
 					} else {
@@ -592,11 +607,11 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 				}
 			},
 			'right': function( options, scope, key, force, sel ) {
-				if ( Syn.typeable.test(this.nodeName) ) {
+				if ( Syn.typeable.test(this) ) {
 					if ( Syn.key.shiftKey ) {
-						Syn.selectText(this, sel.start, sel.end + 1 > this.value.length ? this.value.length : sel.end + 1)
+						Syn.selectText(this, sel.start, sel.end + 1 > getText(this).length ? getText(this).length : sel.end + 1)
 					} else {
-						Syn.selectText(this, sel.end + 1 > this.value.length ? this.value.length : sel.end + 1)
+						Syn.selectText(this, sel.end + 1 > getText(this).length ? getText(this).length : sel.end + 1)
 					}
 				}
 			},
@@ -622,7 +637,6 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 			}
 		}
 	});
-
 
 	h.extend(Syn.create, {
 		keydown: {
@@ -728,7 +742,7 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 		 * @codeend
 		 * For each character, a keydown, keypress, and keyup is triggered if
 		 * appropriate.
-		 * @param {String} options
+		 * @param {String|Number} options
 		 * @param {HTMLElement} [element]
 		 * @param {Function} [callback]
 		 * @return {HTMLElement} the element currently focused.
@@ -743,7 +757,7 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 
 			// keep reference to current activeElement
 			var activeElement = h.getWindow(element).document.activeElement,			
-				caret = Syn.typeable.test(element.nodeName) && getSelection(element),
+				caret = Syn.typeable.test(element) && getSelection(element),
 				key = convert[options] || options,
 				// should we run default events
 				runDefaults = Syn.trigger('keydown', key, element),
@@ -834,7 +848,7 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 		_type: function( options, element, callback ) {
 			//break it up into parts ...
 			//go through each type and run
-			var parts = options.match(/(\[[^\]]+\])|([^\[])/g),
+			var parts = (options+"").match(/(\[[^\]]+\])|([^\[])/g),
 				self = this,
 				runNextPart = function( runDefaults, el ) {
 					var part = parts.shift();
