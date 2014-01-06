@@ -807,6 +807,9 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 
 				if ( defaultResult !== null ) {
 					setTimeout(function() {
+						if(Syn.support.oninput) {
+							Syn.trigger('input', Syn.key.options(key, 'input'), element);
+						}
 						Syn.trigger('keyup', Syn.key.options(key, 'keyup'), element)
 						callback(runDefaults, element)
 					}, 1)
@@ -875,7 +878,7 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 
 			var div = document.createElement("div"),
 				checkbox, submit, form, input, submitted = false,
-				anchor, textarea, inputter;
+				anchor, textarea, inputter, one;
 
 			div.innerHTML = "<form id='outer'>" + 
 							"<input name='checkbox' type='checkbox'/>" + 
@@ -895,6 +898,7 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 			anchor = form.getElementsByTagName("a")[0];
 			textarea = form.getElementsByTagName("textarea")[0];
 			inputter = form.childNodes[3];
+			one = form.childNodes[4];
 
 			form.onsubmit = function( ev ) {
 				if ( ev.preventDefault ) ev.preventDefault();
@@ -936,6 +940,9 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 			Syn.trigger("keypress", "\r", anchor);
 
 			Syn.support.textareaCarriage = textarea.value.length == 4;
+
+			// IE only, oninput event.
+			Syn.support.oninput = 'oninput' in one;
 			
 			document.documentElement.removeChild(div);
 

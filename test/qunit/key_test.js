@@ -80,10 +80,16 @@ test("Key Event Order", 1, function(){
 	
 	st.binder("key","keydown", recorder );
 	st.binder("key","keypress", recorder );
+	st.binder("key","input", recorder );
 	st.binder("key","keyup", recorder );
 	stop();
 	Syn.key("B","key", function(){
-		deepEqual(order,["keydown","keypress","keyup"],"Key order is correct")
+		var expected = ["keydown", "keypress", "keyup"];
+		if(Syn.support.oninput) {
+			expected.splice(2, 0, "input");
+		}
+
+		deepEqual(order, expected, "Key order is correct");
 		start();
 	});
 	
@@ -461,6 +467,4 @@ test("typing in a contenteditable works", function(){
 	});
 });
 
-
-
-})
+});
