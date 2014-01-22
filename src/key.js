@@ -142,6 +142,12 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 		 * escape    - escape button
 		 * num-lock  - allows numbers on keypad
 		 * print     - screen capture
+		 * subtract  - subtract (keypad) -
+		 * dash      - dash -
+		 * divide    - divide (keypad) /
+		 * forward-slash - forward slash /
+		 * decimal   - decimal (keypad) .
+		 * period    - period .
 		 * @codeend
 		 */
 		keycodes: {
@@ -230,15 +236,18 @@ steal('src/synthetic.js','src/browsers.js',function(Syn) {
 			'num9': 105,
 			'*': 106,
 			'+': 107,
-			'-': 109,
-			'.': 110,
+			'subtract': 109,
+			'decimal': 110,
 			//normal-characters, others
-			'/': 111,
+			'divide': 111,
 			';': 186,
 			'=': 187,
 			',': 188,
+			'dash': 189,
 			'-': 189,
+			'period': 190,
 			'.': 190,
+			'forward-slash': 191,
 			'/': 191,
 			'`': 192,
 			'[': 219,

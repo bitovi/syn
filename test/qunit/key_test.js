@@ -435,6 +435,41 @@ test("number key codes", 2, function(){
 	});
 })
 
+test("Key codes of like-keys", function(){
+	stop();
+
+	var keys = {
+		"subtract": 109,
+		"dash": 189,
+		"divide": 111,
+		"forward-slash": 191,
+		"decimal": 110,
+		"period": 190
+	};
+
+	var cnt = 0;
+	var done = function(){
+		cnt++;
+		if(cnt === 6) {
+			start();
+		}
+	};
+
+	var testKeyCode = function(key, code){
+		st.binder("key", "keydown", function f(ev){
+			st.unbinder("key", "keydown", f);
+			ok(ev.keyCode === code);
+			ok(ev.which === ev.keyCode);
+			done();
+		});
+		Syn.type("[" + key + "]", "key");
+	};
+
+	for(var key in keys) {
+		testKeyCode(key, keys[key]);
+	}
+});
+
 test("focus moves on keydown to another element", function(){
 	stop();
 	st.binder("key","keydown",function(ev){
