@@ -1,4 +1,4 @@
-steal('jquery', 'can/control', 'syn.js', function($, Control, Syn) {
+steal('jquery', 'can/control', 'src/syn.js', function($, Control, Syn) {
 	var Resize = can.Control.extend({
 		init: function() {
 			this.resize();
