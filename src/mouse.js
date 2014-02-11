@@ -205,7 +205,7 @@ steal('src/synthetic.js',function(Syn) {
 	//do support code
 	(function() {
 		if (!document.body ) {
-			setTimeout(arguments.callee, 1)
+			Syn.schedule(arguments.callee, 1)
 			return;
 		}
 		var oldSynth = window.__synthTest;
@@ -275,7 +275,7 @@ steal('src/synthetic.js',function(Syn) {
 		Syn.trigger("mousedown", {}, div)
 		Syn.trigger("mouseup", {}, div)
 
-		//setTimeout(function(){
+		//Syn.schedule(function(){
 		//	Syn.trigger("mousedown",{},div)
 		//	Syn.trigger("mouseup",{},div)
 		//},1)

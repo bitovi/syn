@@ -5,7 +5,7 @@ steal('src/synthetic.js',function(Syn) {
 
 		// document body has to exists for this test
 		if (!document.body ) {
-			setTimeout(arguments.callee, 1)
+			Syn.schedule(arguments.callee, 1)
 			return;
 		}
 		var div = document.createElement('div')
@@ -101,7 +101,7 @@ steal('src/synthetic.js',function(Syn) {
 						top: (options.clientY + scrollOffset.top + 2) + "px"
 					})
 					current = mouseMove(options, element, current)
-					setTimeout(arguments.callee, 15)
+					Syn.schedule(arguments.callee, 15)
 				}
 				else {
 					current = mouseMove(end, element, current);

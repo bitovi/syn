@@ -815,7 +815,7 @@ steal('src/synthetic.js', 'src/typeable.js', 'src/browsers.js',function(Syn) {
 				}
 
 				if ( defaultResult !== null ) {
-					setTimeout(function() {
+					Syn.schedule(function() {
 						if(Syn.support.oninput) {
 							Syn.trigger('input', Syn.key.options(key, 'input'), element);
 						}
@@ -881,7 +881,7 @@ steal('src/synthetic.js', 'src/typeable.js', 'src/browsers.js',function(Syn) {
 		//do support code
 		!function() {
 			if (!document.body ) {
-				setTimeout(arguments.callee, 1)
+				Syn.schedule(arguments.callee, 1)
 				return;
 			}
 
