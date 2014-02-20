@@ -28,7 +28,7 @@ module.exports = function (grunt) {
 					dest: 'dist/'
 				}]
 			}
-    },
+		},
     jshint: {
 			options: {
 				jshintrc: true
@@ -36,7 +36,13 @@ module.exports = function (grunt) {
 			lib: [
 				'src/**/*.js', 'test/**/*.js'
 			]
-    },
+		},
+		jsbeautifier: {
+			files: '<%= jshint.lib %>',
+			options: {
+				config: '.jsbeautifyrc'
+			}
+		},
 		testee: {
 			src: {
 				options: {
@@ -51,9 +57,10 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-exec');
+	grunt.loadNpmTasks('grunt-jsbeautifier');
 	grunt.loadNpmTasks('testee');
 
-	grunt.registerTask('quality', ['jshint']);
+	grunt.registerTask('quality', ['jsbeautifier', 'jshint']);
 	grunt.registerTask('build', ['exec:pluginify', 'concat']);
 	grunt.registerTask('test', ['jshint', 'connect:server', 'testee']);
 

@@ -23,13 +23,12 @@
     "grunt-exec": "0.4.2",
     "steal": "https://github.com/bitovi/steal-build/tarball/master",
     "testee": "0.0.x",
-    "bower": "1.2.x"
+		"bower": "1.2.x",
+    "grunt-contrib-jshint": "^0.8.0",
+		"grunt-jsbeautifier": "^0.2.6"
   },
   "scripts": {
     "test": "grunt test",
     "postinstall": "node_modules/bower/bin/bower install"
-  },
-  "dependencies": {
-    "grunt-contrib-jshint": "^0.8.0"
   }
 }
