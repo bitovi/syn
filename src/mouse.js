@@ -208,15 +208,14 @@ steal('src/synthetic.js',function(Syn) {
 			setTimeout(arguments.callee, 1)
 			return;
 		}
-		var oldSynth = window.__synthTest;
-		window.__synthTest = function() {
+		Syn.support.linkHrefJSTest = function() {
 			Syn.support.linkHrefJS = true;
 		}
 
 		var div = document.createElement("div"),
 			checkbox, submit, form, input, select;
 
-		div.innerHTML = "<form id='outer'>" + "<input name='checkbox' type='checkbox'/>" + "<input name='radio' type='radio' />" + "<input type='submit' name='submitter'/>" + "<input type='input' name='inputter'/>" + "<input name='one'>" + "<input name='two'/>" + "<a href='javascript:__synthTest()' id='synlink'></a>" + "<select><option></option></select>" + "</form>";
+		div.innerHTML = "<form id='outer'>" + "<input name='checkbox' type='checkbox'/>" + "<input name='radio' type='radio' />" + "<input type='submit' name='submitter'/>" + "<input type='input' name='inputter'/>" + "<input name='one'>" + "<input name='two'/>" + "<a href='javascript:Syn.support.linkHrefJSTest()' id='synlink'></a>" + "<select><option></option></select>" + "</form>";
 		document.documentElement.appendChild(div);
 		form = div.firstChild
 		checkbox = form.childNodes[0];
@@ -283,7 +282,6 @@ steal('src/synthetic.js',function(Syn) {
 		document.documentElement.removeChild(div);
 
 		//check stuff
-		window.__synthTest = oldSynth;
 		Syn.support.ready++;
 	})();
 	return Syn;
