@@ -62,6 +62,6 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('quality', ['jsbeautifier', 'jshint']);
 	grunt.registerTask('build', ['exec:pluginify', 'concat']);
-	grunt.registerTask('test', ['jshint', 'connect:server', 'testee']);
+	grunt.registerTask('test', ['connect:server', 'testee']);
 
 };
