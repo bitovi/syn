@@ -28,7 +28,15 @@ module.exports = function (grunt) {
 					dest: 'dist/'
 				}]
 			}
-		},
+    },
+    jshint: {
+			options: {
+				jshintrc: true
+			},
+			lib: [
+				'src/**/*.js', 'test/**/*.js'
+			]
+    },
 		testee: {
 			src: {
 				options: {
@@ -36,15 +44,17 @@ module.exports = function (grunt) {
 					browsers: ['phantom']
 				}
 			}
-		}
+    }
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-exec');
 	grunt.loadNpmTasks('testee');
 
+	grunt.registerTask('quality', ['jshint']);
 	grunt.registerTask('build', ['exec:pluginify', 'concat']);
-	grunt.registerTask('test', ['connect:server', 'testee']);
+	grunt.registerTask('test', ['jshint', 'connect:server', 'testee']);
 
 };
