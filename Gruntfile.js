@@ -17,7 +17,7 @@ module.exports = function (grunt) {
 		},
 		concat: {
 			options: {
-				banner: '/*\n * <%= pkg.title || pkg.name %> - <%= pkg.version %>\n * <%= pkg.homepage %>\n * Copyright (c) <%= new Date().getFullYear() %> <%= pkg.author.name %>\n * <%= new Date().toUTCString() %>\n * Licensed <%= pkg.licenses[0].type %> */\n\n'
+				banner: '/**\n * <%= pkg.title || pkg.name %> - <%= pkg.version %>\n * <%= pkg.homepage %>\n * @copyright <%= new Date().getFullYear() %> <%= pkg.author.name %>\n * <%= new Date().toUTCString() %>\n * @license <%= pkg.licenses[0].type %>\n */\n\n'
 			},
 
 			dist: {
@@ -27,6 +27,18 @@ module.exports = function (grunt) {
 					src: ['*'],
 					dest: 'dist/'
 				}]
+			}
+		},
+		uglify: {
+			dist: {
+				options: {
+					preserveComments: 'some'
+				},
+				files: {
+					'dist/syn.min.js': [
+						'dist/syn.js'
+					]
+				}
 			}
 		},
 		testee: {
@@ -41,10 +53,11 @@ module.exports = function (grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-exec');
 	grunt.loadNpmTasks('testee');
 
-	grunt.registerTask('build', ['exec:pluginify', 'concat']);
+	grunt.registerTask('build', ['exec:pluginify', 'concat', 'uglify']);
 	grunt.registerTask('test', ['connect:server', 'testee']);
 
 };
