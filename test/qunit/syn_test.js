@@ -119,4 +119,27 @@ steal("src/synthetic.js", function (Syn) {
 		});
 	};
 
+	test("Syn.support effect on scroll position, #30", function() {
+		stop();
+
+		// Make sure the browser hasn't scrolled on account of feature detection.
+		// We're going to do this by opening a new page with a lot of text that might
+		// cause scroll.
+		var iframe = document.createElement("iframe");
+		iframe.setAttribute("height", "100");
+		var scroll30 = st.rootJoin("test/qunit/scroll_30/index.html");
+		iframe.src = scroll30;
+
+		st.bind(iframe, "load", function() {
+			var win = iframe.contentWindow;
+			win.synReady = function() {
+				var scrollTop = win.document.body.scrollTop;
+
+				equal(scrollTop, 0);
+				start();
+			};
+		});
+		st.g("qunit-test-area").appendChild(iframe);
+	});
+
 })
