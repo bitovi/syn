@@ -2,7 +2,7 @@
  * Syn - 0.0.2
  * 
  * Copyright (c) 2014 Bitovi
- * Fri, 24 Jan 2014 00:49:17 GMT
+ * Tue, 11 Feb 2014 19:19:06 GMT
  * Licensed MIT */
 
 !function(window) {
@@ -36,7 +36,7 @@ var __m2 = (function(){
 		data = {},
 		id = 1,
 		expando = "_synthetic" + new Date().getTime(),
-		bind, unbind, key = /keypress|keyup|keydown/,
+		bind, unbind, schedule, key = /keypress|keyup|keydown/,
 		page = /load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll/,
 		//this is maintained so we can click on html and blur the active element
 		activeElement,
@@ -171,6 +171,7 @@ var __m2 = (function(){
 		return el.addEventListener ? el.removeEventListener(ev, f, false) : el.detachEvent("on" + ev, f);
 	};
 
+	schedule = Syn.config.schedule || setTimeout;
 	/**
 	 * @Static
 	 */
@@ -372,6 +373,7 @@ var __m2 = (function(){
 		},
 		bind: bind,
 		unbind: unbind,
+		schedule: schedule,
 		browser: browser,
 		//some generic helpers
 		helpers: {
@@ -715,7 +717,7 @@ var __m2 = (function(){
 			timeout = timeout || 600;
 			var self = this;
 			this.queue.unshift(function() {
-				setTimeout(function() {
+				schedule(function() {
 					callback && callback.apply(self, [])
 					self.done.apply(self, arguments);
 				}, timeout);
@@ -761,7 +763,7 @@ var __m2 = (function(){
 			Syn.trigger("mousedown", options, element);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
-			setTimeout(function() {
+			schedule(function() {
 				Syn.trigger("mouseup", options, element);
 				if (!Syn.support.mouseDownUpClicks || force ) {
 					Syn.trigger("click", options, element);
@@ -771,7 +773,7 @@ var __m2 = (function(){
 					Syn.create.click.setup('click', options, element);
 					Syn.defaults.click.call(element);
 					//must give time for callback
-					setTimeout(function() {
+					schedule(function() {
 						callback(true);
 					}, 1);
 				}
@@ -791,7 +793,7 @@ var __m2 = (function(){
 			Syn.trigger("mousedown", mouseopts, element);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
-			setTimeout(function() {
+			schedule(function() {
 				Syn.trigger("mouseup", mouseopts, element);
 				if ( Syn.mouse.browser.right.contextmenu ) {
 					Syn.trigger("contextmenu", extend(extend({}, Syn.mouse.browser.right.contextmenu), options), element);
@@ -815,7 +817,7 @@ var __m2 = (function(){
 			Syn.helpers.addOffset(options, element);
 			var self = this;
 			this._click(options, element, function() {
-				setTimeout(function() {
+				schedule(function() {
 					self._click(options, element, function() {
 						Syn.trigger("dblclick", options, element);
 						callback(true);
@@ -1054,7 +1056,7 @@ var __m3 = (function(Syn) {
 	//do support code
 	(function() {
 		if (!document.body ) {
-			setTimeout(arguments.callee, 1)
+			Syn.schedule(arguments.callee, 1)
 			return;
 		}
 		var oldSynth = window.__synthTest;
@@ -1124,7 +1126,7 @@ var __m3 = (function(Syn) {
 		Syn.trigger("mousedown", {}, div)
 		Syn.trigger("mouseup", {}, div)
 
-		//setTimeout(function(){
+		//Syn.schedule(function(){
 		//	Syn.trigger("mousedown",{},div)
 		//	Syn.trigger("mouseup",{},div)
 		//},1)
@@ -2165,7 +2167,7 @@ var __m5 = (function(Syn) {
 				}
 
 				if ( defaultResult !== null ) {
-					setTimeout(function() {
+					Syn.schedule(function() {
 						if(Syn.support.oninput) {
 							Syn.trigger('input', Syn.key.options(key, 'input'), element);
 						}
@@ -2231,7 +2233,7 @@ var __m5 = (function(Syn) {
 		//do support code
 		!function() {
 			if (!document.body ) {
-				setTimeout(arguments.callee, 1)
+				Syn.schedule(arguments.callee, 1)
 				return;
 			}
 
@@ -2323,7 +2325,7 @@ var __m7 = (function(Syn) {
 
 		// document body has to exists for this test
 		if (!document.body ) {
-			setTimeout(arguments.callee, 1)
+			Syn.schedule(arguments.callee, 1)
 			return;
 		}
 		var div = document.createElement('div')
@@ -2419,7 +2421,7 @@ var __m7 = (function(Syn) {
 						top: (options.clientY + scrollOffset.top + 2) + "px"
 					})
 					current = mouseMove(options, element, current)
-					setTimeout(arguments.callee, 15)
+					Syn.schedule(arguments.callee, 15)
 				}
 				else {
 					current = mouseMove(end, element, current);
