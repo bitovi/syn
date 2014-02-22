@@ -11,8 +11,7 @@ steal('src/synthetic.js', function (Syn) {
 		},
 		click: function () {
 			// prevents the access denied issue in IE if the click causes the element to be destroyed
-			var element = this,
-				href, type, radioChanged, nodeName, scope;
+			var element = this, href, type, createChange, radioChanged, nodeName, scope;
 			try {
 				href = element.href;
 				type = element.type;
