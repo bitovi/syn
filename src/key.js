@@ -896,6 +896,10 @@ steal('src/synthetic.js', 'src/typeable.js', 'src/browsers.js', function (Syn) {
 				return;
 			}
 
+            // Store the current state before making any changes to focus.
+            var startPos = [ window.scrollX, window.scrollY ],
+                startNode = window.document.activeElement;
+
 			var div = document.createElement("div"),
 				checkbox, submit, form, input, submitted = false,
 				anchor, textarea, inputter, one;
@@ -961,6 +965,11 @@ steal('src/synthetic.js', 'src/typeable.js', 'src/browsers.js', function (Syn) {
 			Syn.support.oninput = 'oninput' in one;
 
 			document.documentElement.removeChild(div);
+            // Return element focus and scroll position to it's position at the start of the function.
+            if (startNode) {
+                startNode.focus();
+            }
+            window.scrollTo(startPos[0], startPos[1]);
 
 			Syn.support.ready++;
 		}();
