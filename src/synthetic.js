@@ -1,8 +1,8 @@
-steal(function(){
+steal(function () {
 	//allow for configuration of Syn
 	var opts = window.Syn ? window.Syn : {};
 
-	var extend = function( d, s ) {
+	var extend = function (d, s) {
 		var p;
 		for (p in s) {
 			d[p] = s[p];
@@ -19,13 +19,14 @@ steal(function(){
 			mobilesafari: !! navigator.userAgent.match(/Apple.*Mobile.*Safari/),
 			rhino: navigator.userAgent.match(/Rhino/) && true
 		},
-		createEventObject = function( type, options, element ) {
+		createEventObject = function (type, options, element) {
 			var event = element.ownerDocument.createEventObject();
 			return extend(event, options);
 		},
 		data = {},
 		id = 1,
-		expando = "_synthetic" + new Date().getTime(),
+		expando = "_synthetic" + new Date()
+			.getTime(),
 		bind, unbind, key = /keypress|keyup|keydown/,
 		page = /load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll/,
 		//this is maintained so we can click on html and blur the active element
@@ -148,16 +149,16 @@ steal(function(){
 		 * @param {Object} callback
 		 * @return Syn
 		 */
-		Syn = function( type, options, element, callback ) {
+		Syn = function (type, options, element, callback) {
 			return (new Syn.init(type, options, element, callback));
 		};
 
-		Syn.config = opts;
+	Syn.config = opts;
 
-	bind = function( el, ev, f ) {
+	bind = function (el, ev, f) {
 		return el.addEventListener ? el.addEventListener(ev, f, false) : el.attachEvent("on" + ev, f);
 	};
-	unbind = function( el, ev, f ) {
+	unbind = function (el, ev, f) {
 		return el.addEventListener ? el.removeEventListener(ev, f, false) : el.detachEvent("on" + ev, f);
 	};
 
@@ -173,15 +174,15 @@ steal(function(){
 		 * @param {Object} element
 		 * @param {Object} callback
 		 */
-		init: function( type, options, element, callback ) {
+		init: function (type, options, element, callback) {
 			var args = Syn.args(options, element, callback),
 				self = this;
 			this.queue = [];
 			this.element = args.element;
 
 			//run event
-			if ( typeof this[type] === "function" ) {
-				this[type](args.options, args.element, function( defaults, el ) {
+			if (typeof this[type] === "function") {
+				this[type](args.options, args.element, function (defaults, el) {
 					args.callback && args.callback.apply(self, arguments);
 					self.done.apply(self, arguments);
 				});
@@ -190,14 +191,14 @@ steal(function(){
 				args.callback && args.callback.call(this, args.element, this.result);
 			}
 		},
-		jquery: function( el, fast ) {
-			if ( window.FuncUnit && window.FuncUnit.jQuery ) {
+		jquery: function (el, fast) {
+			if (window.FuncUnit && window.FuncUnit.jQuery) {
 				return window.FuncUnit.jQuery;
 			}
-			if ( el ) {
-				return Syn.helpers.getWindow(el).jQuery || window.jQuery;
-			}
-			else {
+			if (el) {
+				return Syn.helpers.getWindow(el)
+					.jQuery || window.jQuery;
+			} else {
 				return window.jQuery;
 			}
 		},
@@ -206,47 +207,46 @@ steal(function(){
 		 * @hide
 		 * @return {Object}
 		 */
-		args: function() {
+		args: function () {
 			var res = {},
 				i = 0;
-			for ( ; i < arguments.length; i++ ) {
-				if ( typeof arguments[i] === 'function' ) {
+			for (; i < arguments.length; i++) {
+				if (typeof arguments[i] === 'function') {
 					res.callback = arguments[i];
-				} else if ( arguments[i] && arguments[i].jquery ) {
+				} else if (arguments[i] && arguments[i].jquery) {
 					res.element = arguments[i][0];
-				} else if ( arguments[i] && arguments[i].nodeName ) {
+				} else if (arguments[i] && arguments[i].nodeName) {
 					res.element = arguments[i];
-				} else if ( res.options && typeof arguments[i] === 'string' ) { //we can get by id
+				} else if (res.options && typeof arguments[i] === 'string') { //we can get by id
 					res.element = document.getElementById(arguments[i]);
-				}
-				else if ( arguments[i] ) {
+				} else if (arguments[i]) {
 					res.options = arguments[i];
 				}
 			}
 			return res;
 		},
-		click: function( options, element, callback ) {
+		click: function (options, element, callback) {
 			Syn('click!', options, element, callback);
 		},
 		/**
 		 * @attribute defaults
-		 * Default actions for events.  Each default function is called with this as its 
-		 * element.  It should return true if a timeout 
+		 * Default actions for events.  Each default function is called with this as its
+		 * element.  It should return true if a timeout
 		 * should happen after it.  If it returns an element, a timeout will happen
 		 * and the next event will happen on that element.
 		 */
 		defaults: {
-			focus: function() {
-				if (!Syn.support.focusChanges ) {
+			focus: function () {
+				if (!Syn.support.focusChanges) {
 					var element = this,
 						nodeName = element.nodeName.toLowerCase();
 					Syn.data(element, "syntheticvalue", element.value);
 
 					//TODO, this should be textarea too
 					//and this might be for only text style inputs ... hmmmmm ....
-					if ( nodeName === "input" || nodeName === "textarea" ) {
-						bind(element, "blur", function() {
-							if ( Syn.data(element, "syntheticvalue") != element.value ) {
+					if (nodeName === "input" || nodeName === "textarea") {
+						bind(element, "blur", function () {
+							if (Syn.data(element, "syntheticvalue") != element.value) {
 
 								Syn.trigger("change", {}, element);
 							}
@@ -256,19 +256,19 @@ steal(function(){
 					}
 				}
 			},
-			submit: function() {
-				Syn.onParents(this, function( el ) {
-					if ( el.nodeName.toLowerCase() === 'form' ) {
+			submit: function () {
+				Syn.onParents(this, function (el) {
+					if (el.nodeName.toLowerCase() === 'form') {
 						el.submit();
 						return false;
 					}
 				});
 			}
 		},
-		changeOnBlur: function( element, prop, value ) {
+		changeOnBlur: function (element, prop, value) {
 
-			bind(element, "blur", function() {
-				if ( value !== element[prop] ) {
+			bind(element, "blur", function () {
+				if (value !== element[prop]) {
 					Syn.trigger("change", {}, element);
 				}
 				unbind(element, "blur", arguments.callee);
@@ -281,8 +281,8 @@ steal(function(){
 		 * @param {Object} el
 		 * @param {Object} type
 		 */
-		closest: function( el, type ) {
-			while ( el && el.nodeName.toLowerCase() !== type.toLowerCase() ) {
+		closest: function (el, type) {
+			while (el && el.nodeName.toLowerCase() !== type.toLowerCase()) {
 				el = el.parentNode;
 			}
 			return el;
@@ -294,16 +294,16 @@ steal(function(){
 		 * @param {Object} key
 		 * @param {Object} value
 		 */
-		data: function( el, key, value ) {
+		data: function (el, key, value) {
 			var d;
-			if (!el[expando] ) {
+			if (!el[expando]) {
 				el[expando] = id++;
 			}
-			if (!data[el[expando]] ) {
+			if (!data[el[expando]]) {
 				data[el[expando]] = {};
 			}
 			d = data[el[expando]];
-			if ( value ) {
+			if (value) {
 				data[el[expando]][key] = value;
 			} else {
 				return data[el[expando]][key];
@@ -316,9 +316,9 @@ steal(function(){
 		 * @param {Object} el
 		 * @param {Object} func
 		 */
-		onParents: function( el, func ) {
+		onParents: function (el, func) {
 			var res;
-			while ( el && res !== false ) {
+			while (el && res !== false) {
 				res = func(el);
 				el = el.parentNode;
 			}
@@ -331,24 +331,24 @@ steal(function(){
 		 * @hide
 		 * @param {Object} elem
 		 */
-		isFocusable: function( elem ) {
+		isFocusable: function (elem) {
 			var attributeNode;
 
 			// IE8 Standards doesn't like this on some elements
-			if(elem.getAttributeNode){
+			if (elem.getAttributeNode) {
 				attributeNode = elem.getAttributeNode("tabIndex")
 			}
 
-			return this.focusable.test(elem.nodeName) || 
-				   (attributeNode && attributeNode.specified) && 
-				    Syn.isVisible(elem);
+			return this.focusable.test(elem.nodeName) ||
+				(attributeNode && attributeNode.specified) &&
+				Syn.isVisible(elem);
 		},
 		/**
 		 * Returns if an element is visible or not
 		 * @hide
 		 * @param {Object} elem
 		 */
-		isVisible: function( elem ) {
+		isVisible: function (elem) {
 			return (elem.offsetWidth && elem.offsetHeight) || (elem.clientWidth && elem.clientHeight);
 		},
 		/**
@@ -356,7 +356,7 @@ steal(function(){
 		 * @hide
 		 * @param {Object} elem
 		 */
-		tabIndex: function( elem ) {
+		tabIndex: function (elem) {
 			var attributeNode = elem.getAttributeNode("tabIndex");
 			return attributeNode && attributeNode.specified && (parseInt(elem.getAttribute('tabIndex')) || 0);
 		},
@@ -366,7 +366,7 @@ steal(function(){
 		//some generic helpers
 		helpers: {
 			createEventObject: createEventObject,
-			createBasicStandardEvent: function( type, defaults, doc ) {
+			createBasicStandardEvent: function (type, defaults, doc) {
 				var event;
 				try {
 					event = doc.createEvent("Events");
@@ -378,42 +378,42 @@ steal(function(){
 				}
 				return event;
 			},
-			inArray: function( item, array ) {
-				var i =0;
-				for ( ; i < array.length; i++ ) {
-					if ( array[i] === item ) {
+			inArray: function (item, array) {
+				var i = 0;
+				for (; i < array.length; i++) {
+					if (array[i] === item) {
 						return i;
 					}
 				}
 				return -1;
 			},
-			getWindow: function( element ) {
-				if(element.ownerDocument){
+			getWindow: function (element) {
+				if (element.ownerDocument) {
 					return element.ownerDocument.defaultView || element.ownerDocument.parentWindow;
 				}
 			},
 			extend: extend,
-			scrollOffset: function( win , set) {
+			scrollOffset: function (win, set) {
 				var doc = win.document.documentElement,
 					body = win.document.body;
-				if(set){
+				if (set) {
 					window.scrollTo(set.left, set.top);
-					
-				} else { 
+
+				} else {
 					return {
 						left: (doc && doc.scrollLeft || body && body.scrollLeft || 0) + (doc.clientLeft || 0),
 						top: (doc && doc.scrollTop || body && body.scrollTop || 0) + (doc.clientTop || 0)
 					};
 				}
-				
+
 			},
-			scrollDimensions: function(win){
+			scrollDimensions: function (win) {
 				var doc = win.document.documentElement,
 					body = win.document.body,
 					docWidth = doc.clientWidth,
 					docHeight = doc.clientHeight,
 					compat = win.document.compatMode === "CSS1Compat";
-				
+
 				return {
 					height: compat && docHeight ||
 						body.clientHeight || docHeight,
@@ -421,10 +421,10 @@ steal(function(){
 						body.clientWidth || docWidth
 				};
 			},
-			addOffset: function( options, el ) {
+			addOffset: function (options, el) {
 				var jq = Syn.jquery(el),
 					off;
-				if ( typeof options === 'object' && options.clientX === undefined && options.clientY === undefined && options.pageX === undefined && options.pageY === undefined && jq ) {
+				if (typeof options === 'object' && options.clientX === undefined && options.clientY === undefined && options.pageX === undefined && options.pageY === undefined && jq) {
 					el = jq(el);
 					off = el.offset();
 					options.pageX = off.left + el.width() / 2;
@@ -448,26 +448,25 @@ steal(function(){
 		 * @param {Object} type
 		 * @param {Object} autoPrevent
 		 */
-		dispatch: function( event, element, type, autoPrevent ) {
+		dispatch: function (event, element, type, autoPrevent) {
 
 			// dispatchEvent doesn't always work in IE (mostly in a popup)
-			if ( element.dispatchEvent && event ) {
+			if (element.dispatchEvent && event) {
 				var preventDefault = event.preventDefault,
 					prevents = autoPrevent ? -1 : 0;
 
 				//automatically prevents the default behavior for this event
 				//this is to protect agianst nasty browser freezing bug in safari
-				if ( autoPrevent ) {
-					bind(element, type, function( ev ) {
+				if (autoPrevent) {
+					bind(element, type, function (ev) {
 						ev.preventDefault();
 						unbind(this, type, arguments.callee);
 					});
 				}
 
-
-				event.preventDefault = function() {
+				event.preventDefault = function () {
 					prevents++;
-					if (++prevents > 0 ) {
+					if (++prevents > 0) {
 						preventDefault.apply(this, []);
 					}
 				};
@@ -489,48 +488,46 @@ steal(function(){
 		create: {
 			//-------- PAGE EVENTS ---------------------
 			page: {
-				event: function( type, options, element ) {
-					var doc = Syn.helpers.getWindow(element).document || document,
+				event: function (type, options, element) {
+					var doc = Syn.helpers.getWindow(element)
+						.document || document,
 						event;
-					if ( doc.createEvent ) {
+					if (doc.createEvent) {
 						event = doc.createEvent("Events");
 
 						event.initEvent(type, true, true);
 						return event;
-					}
-					else {
+					} else {
 						try {
 							event = createEventObject(type, options, element);
-						}
-						catch (e) {}
+						} catch (e) {}
 						return event;
 					}
 				}
 			},
 			// unique events
 			focus: {
-				event: function( type, options, element ) {
-					Syn.onParents(element, function( el ) {
-						if ( Syn.isFocusable(el) ) {
-							if ( el.nodeName.toLowerCase() !== 'html' ) {
+				event: function (type, options, element) {
+					Syn.onParents(element, function (el) {
+						if (Syn.isFocusable(el)) {
+							if (el.nodeName.toLowerCase() !== 'html') {
 								el.focus();
 								activeElement = el;
-							}
-							else if ( activeElement ) {
+							} else if (activeElement) {
 								// TODO: The HTML element isn't focasable in IE, but it is
 								// in FF.  We should detect this and do a true focus instead
 								// of just a blur
-								var doc = Syn.helpers.getWindow(element).document;
-								if ( doc !== window.document ) {
+								var doc = Syn.helpers.getWindow(element)
+									.document;
+								if (doc !== window.document) {
 									return false;
-								} else if ( doc.activeElement ) {
+								} else if (doc.activeElement) {
 									doc.activeElement.blur();
 									activeElement = null;
 								} else {
 									activeElement.blur();
 									activeElement = null;
 								}
-
 
 							}
 							return false;
@@ -542,10 +539,10 @@ steal(function(){
 		},
 		/**
 		 * @attribute support
-		 * 
+		 *
 		 * Feature detected properties of a browser's event system.
 		 * Support has the following properties:
-		 * 
+		 *
 		 *   - `backspaceWorks` - typing a backspace removes a character
 		 *   - `clickChanges` - clicking on an option element creates a change event.
 		 *   - `clickSubmits` - clicking on a form button submits the form.
@@ -560,8 +557,8 @@ steal(function(){
 		 *   - `radioClickChanges` - clicking a radio button changes the radio.
 		 *   - `tabKeyTabs` - A tab key changes tabs.
 		 *   - `textareaCarriage` - a new line in a textarea creates a carriage return.
-		 *   
-		 * 
+		 *
+		 *
 		 */
 		support: {
 			clickChanges: false,
@@ -580,7 +577,7 @@ steal(function(){
 			ready: 0
 		},
 		/**
-		 * Creates a synthetic event and dispatches it on the element.  
+		 * Creates a synthetic event and dispatches it on the element.
 		 * This will run any default actions for the element.
 		 * Typically you want to use Syn, but if you want the return value, use this.
 		 * @param {String} type
@@ -588,7 +585,7 @@ steal(function(){
 		 * @param {HTMLElement} element
 		 * @return {Boolean} true if default events were run, false if otherwise.
 		 */
-		trigger: function( type, options, element ) {
+		trigger: function (type, options, element) {
 			options || (options = {});
 
 			var create = Syn.create,
@@ -605,13 +602,13 @@ steal(function(){
 			//get kind
 			delete options._autoPrevent;
 
-			if ( createType.event ) {
+			if (createType.event) {
 				ret = createType.event(type, options, element);
 			} else {
 				//convert options
 				options = createKind.options ? createKind.options(type, options, element) : options;
 
-				if (!Syn.support.changeBubbles && /option/i.test(element.nodeName) ) {
+				if (!Syn.support.changeBubbles && /option/i.test(element.nodeName)) {
 					dispatchEl = element.parentNode; //jQuery expects clicks on select
 				}
 
@@ -621,16 +618,16 @@ steal(function(){
 				//send the event
 				ret = Syn.dispatch(event, dispatchEl, type, autoPrevent);
 			}
-			
+
 			ret && Syn.support.ready === 2 && Syn.defaults[type] && Syn.defaults[type].call(element, options, autoPrevent);
 			return ret;
 		},
-		eventSupported: function( eventName ) {
+		eventSupported: function (eventName) {
 			var el = document.createElement("div");
 			eventName = "on" + eventName;
 
 			var isSupported = (eventName in el);
-			if (!isSupported ) {
+			if (!isSupported) {
 				el.setAttribute(eventName, "return;");
 				isSupported = typeof el[eventName] === "function";
 			}
@@ -656,31 +653,30 @@ steal(function(){
 		 * @codestart
 		 * Syn('click',{},'age')
 		 *   .then('type','I am 12',function(){
-		 *   equals($('#age').val(),"12")  
+		 *   equals($('#age').val(),"12")
 		 * })
 		 * @codeend
 		 * If the element argument is undefined, then the last element is used.
-		 * 
+		 *
 		 * @param {String} type The type of event or action to create: "_click", "_dblclick", "_drag", "_type".
 		 * @param {Object} options Optiosn to pass to the event.
 		 * @param {String|HTMLElement} [element] A element's id or an element.  If undefined, defaults to the previous element.
 		 * @param {Function} [callback] A function to callback after the action has run, but before any future chained actions are run.
 		 */
-		then: function( type, options, element, callback ) {
-			if ( Syn.autoDelay ) {
+		then: function (type, options, element, callback) {
+			if (Syn.autoDelay) {
 				this.delay();
 			}
 			var args = Syn.args(options, element, callback),
 				self = this;
 
-
 			//if stack is empty run right away
 			//otherwise ... unshift it
-			this.queue.unshift(function( el, prevented ) {
+			this.queue.unshift(function (el, prevented) {
 
-				if ( typeof this[type] === "function" ) {
+				if (typeof this[type] === "function") {
 					this.element = args.element || el;
-					this[type](args.options, this.element, function( defaults, el ) {
+					this[type](args.options, this.element, function (defaults, el) {
 						args.callback && args.callback.apply(self, arguments);
 						self.done.apply(self, arguments);
 					});
@@ -697,32 +693,33 @@ steal(function(){
 		 * @param {Number} [timeout]
 		 * @param {Function} [callback]
 		 */
-		delay: function( timeout, callback ) {
-			if ( typeof timeout === 'function' ) {
+		delay: function (timeout, callback) {
+			if (typeof timeout === 'function') {
 				callback = timeout;
 				timeout = null;
 			}
 			timeout = timeout || 600;
 			var self = this;
-			this.queue.unshift(function() {
-				setTimeout(function() {
+			this.queue.unshift(function () {
+				setTimeout(function () {
 					callback && callback.apply(self, [])
 					self.done.apply(self, arguments);
 				}, timeout);
 			});
 			return this;
 		},
-		done: function( defaults, el ) {
+		done: function (defaults, el) {
 			el && (this.element = el);
-			if ( this.queue.length ) {
-				this.queue.pop().call(this, this.element, defaults);
+			if (this.queue.length) {
+				this.queue.pop()
+					.call(this, this.element, defaults);
 			}
 
 		},
 		/**
 		 * @function click
-		 * Clicks an element by triggering a mousedown, 
-		 * mouseup, 
+		 * Clicks an element by triggering a mousedown,
+		 * mouseup,
 		 * and a click event.
 		 * <h3>Example</h3>
 		 * @codestart
@@ -730,7 +727,7 @@ steal(function(){
 		 *   //check something
 		 * })
 		 * @codeend
-		 * You can also provide the coordinates of the click.  
+		 * You can also provide the coordinates of the click.
 		 * If jQuery is present, it will set clientX and clientY
 		 * for you.  Here's how to set it yourself:
 		 * @codestart
@@ -746,14 +743,14 @@ steal(function(){
 		 * @param {HTMLElement} element
 		 * @param {Function} callback
 		 */
-		"_click": function( options, element, callback, force ) {
+		"_click": function (options, element, callback, force) {
 			Syn.helpers.addOffset(options, element);
 			Syn.trigger("mousedown", options, element);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
-			setTimeout(function() {
+			setTimeout(function () {
 				Syn.trigger("mouseup", options, element);
-				if (!Syn.support.mouseDownUpClicks || force ) {
+				if (!Syn.support.mouseDownUpClicks || force) {
 					Syn.trigger("click", options, element);
 					callback(true);
 				} else {
@@ -761,7 +758,7 @@ steal(function(){
 					Syn.create.click.setup('click', options, element);
 					Syn.defaults.click.call(element);
 					//must give time for callback
-					setTimeout(function() {
+					setTimeout(function () {
 						callback(true);
 					}, 1);
 				}
@@ -774,16 +771,16 @@ steal(function(){
 		 * @param {Object} element
 		 * @param {Object} callback
 		 */
-		"_rightClick": function( options, element, callback ) {
+		"_rightClick": function (options, element, callback) {
 			Syn.helpers.addOffset(options, element);
 			var mouseopts = extend(extend({}, Syn.mouse.browser.right.mouseup), options);
 
 			Syn.trigger("mousedown", mouseopts, element);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
-			setTimeout(function() {
+			setTimeout(function () {
 				Syn.trigger("mouseup", mouseopts, element);
-				if ( Syn.mouse.browser.right.contextmenu ) {
+				if (Syn.mouse.browser.right.contextmenu) {
 					Syn.trigger("contextmenu", extend(extend({}, Syn.mouse.browser.right.contextmenu), options), element);
 				}
 				callback(true);
@@ -801,12 +798,12 @@ steal(function(){
 		 * @param {HTMLElement} element
 		 * @param {Function} callback
 		 */
-		"_dblclick": function( options, element, callback ) {
+		"_dblclick": function (options, element, callback) {
 			Syn.helpers.addOffset(options, element);
 			var self = this;
-			this._click(options, element, function() {
-				setTimeout(function() {
-					self._click(options, element, function() {
+			this._click(options, element, function () {
+				setTimeout(function () {
+					self._click(options, element, function () {
 						Syn.trigger("dblclick", options, element);
 						callback(true);
 					}, true);
@@ -817,21 +814,19 @@ steal(function(){
 	});
 
 	var actions = ["click", "dblclick", "move", "drag", "key", "type", 'rightClick'],
-		makeAction = function( name ) {
-			Syn[name] = function( options, element, callback ) {
+		makeAction = function (name) {
+			Syn[name] = function (options, element, callback) {
 				return Syn("_" + name, options, element, callback);
 			};
-			Syn.init.prototype[name] = function( options, element, callback ) {
+			Syn.init.prototype[name] = function (options, element, callback) {
 				return this.then("_" + name, options, element, callback);
 			};
 		},
 		i = 0;
 
-	for ( ; i < actions.length; i++ ) {
+	for (; i < actions.length; i++) {
 		makeAction(actions[i]);
 	}
-
-	
 
 	return Syn;
 })
