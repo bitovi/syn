@@ -1,3 +1,13 @@
+<!--
+
+@constructor Syn
+@group actions Actions
+@group keys Keys
+@group mouse Mouse
+@group chained Chaining
+
+-->
+
 [![Build Status](https://travis-ci.org/bitovi/syn.png?branch=master)](https://travis-ci.org/bitovi/syn.png?branch=master)
 
 __Notice 01-23-2014__

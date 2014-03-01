@@ -1,4 +1,4 @@
-steal('src/synthetic.js', 'src/mouse.js', function (Syn) {
+steal('./synthetic.js', './mouse.js', function (Syn) {
 	Syn.key.browsers = {
 		webkit: {
 			'prevent': {
