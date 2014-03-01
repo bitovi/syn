@@ -241,21 +241,28 @@ steal("src/synthetic.js", function (Syn) {
 	})
 
 	test("Click Anchor Runs HREF JavaScript", function () {
+		stop();
 		Syn.trigger("click", {}, st.g("jsHref"));
-		equal(didSomething, 1, "link href JS run");
+		// Firefox triggers href javascript async so need to
+		// wait for it to complete.
+		setTimeout(function() {
+			equal(didSomething, 1, "link href JS run");
+			start();
+		}, 50);
 	});
 
 	test("Click! Anchor has href", function () {
 		stop();
 		st.binder("jsHrefHash", "click", function (ev) {
-			ok(ev.srcElement.href.indexOf("#aHash") > -1, "got href");
+			var target = ev.target || ev.srcElement;
+			ok(target.href.indexOf("#aHash") > -1, "got href");
 		});
 
 		Syn.click({}, "jsHrefHash", function () {
-			equal(window.location.hash, "#aHash", "hash set ...")
+			equal(window.location.hash, "#aHash", "hash set ...");
 			start();
-			window.location.hash = ""
-		})
+			window.location.hash = "";
+		});
 	})
 
 	test("Click! Anchor Focuses", Syn.skipFocusTests ? 1 : 2, function () {
