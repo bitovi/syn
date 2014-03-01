@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<!--[if lt IE 7]>
+<html class="no-js ie lt-ie9 lt-ie8 lt-ie7" lang="en">
+<![endif]-->
+<!--[if IE 7]>
+<html class="no-js ie lt-ie9 lt-ie8" lang="en">
+<![endif]-->
+<!--[if IE 8]>
+<html class="no-js ie lt-ie9" lang="en">
+<![endif]-->
+<!--[if IE 9]>
+<html class="no-js ie ie9" lang="en">
+<![endif]-->
+<!--[if gt IE 9]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<title>About - Syn</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<link rel="stylesheet" type="text/css" 
+		
+			href="docs/static/production.css"
+		 />
+	<!--[if lt IE 9]>
+   <script type="text/javascript" src="scripts/static/lib/html5shiv.js"></script>
+    <!--<![endif]-->
+</head>
+
+<body class="about">
+	<header>
+		<nav class="container">
+
+			<div class="logo-menu">
+				<a class="brand funcunit" href="index.html">FuncUnit</a>
+				<ul class="dropdown-menu">
+					<li><a href="http://javascriptmvc.com">JavaScriptMVC</a></li>
+					<li><a href="http://canjs.com">CanJS</a></li>
+					<li><a href="http://jquerypp.com">jQuery++</a></li>
+					<li><a href="http://javascriptmvc.com/docs.html#!stealjs">StealJS</a></li>
+					<li class="active"><a href="index.html">FuncUnit</a></li>
+					<li><a href="http://javascriptmvc.com/docs.html#!DocumentJS">DocumentJS</a></li>
+				</ul>
+			</div>
+			<ul class="nav">
+				<li class=""><a href="docs/index.html">Api</a></li>
+				<li class=""><a href="community.html#!forums">Community</a></li>
+			</ul>
+			<div class="pull-right">
+				<div class="bitovi-menu">
+					<a href="http://bitovi.com" class="bitovi icon-bits">Bitovi</a>
+					<ul class="dropdown-menu">
+						<li><a href="http://bitovi.com">Bitovi.com</a></li>
+						<li><a href="http://bitovi.com/blog/">Blog</a></li>
+						<li><a href="http://bitovi.com/consulting/">Consulting</a></li>
+						<li><a href="http://bitovi.com/training/">Training</a></li>
+						<li><a href="http://bitovi.com/open-source/">Open Source</a></li>
+						<li><a href="http://bitovi.com/people/">People</a></li>
+						<li><a href="http://bitovi.com/contact/">Contact Us</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<div class="hero">
+	<div class="container">
+	<h1 class="page-title">Why CanJS?</h1>
+	
+<p>CanJS is a JavaScript library that makes developing complex applications simple and fast. Easy-to-learn, small, and unassuming of your application structure, but with modern features like live-binding and computed values. Creating apps is easy and maintainable.</p>
+
+<a href="guides/index.html" class="get-started-now"><button class="download">Get Started Now &raquo;</button></a>
+
+	</div>
+</div>
+
+<div class="container">
+		<ul class="benefit-tabs">
+			<li class="flexible active" data-benefit="flexible"><a href="guides/Why.html#Flexible">
+			<h3>Flexible</h3>
+			<p>Works with jQuery, Dojo, Mootools, YUI, and Zepto. Reuse your existing templates.</p>
+			</a>
+			
+			</li><li class="powerful" data-benefit="powerful"><a href="guides/Why.html#Powerful">
+			<h3>Powerful</h3>
+			<p>Live binding, restful models, observables, declarative events, and memory safety.</p>
+			</a>
+			
+			</li><li class="fast" data-benefit="fast"><a href="guides/Why.html#Fast">
+			<h3>Fast</h3>
+			<p>Fast templates, responsive widgets, and you can learn it in a day.</p>
+			</a>
+			
+		</li></ul>
+		
+		<article class="container content" id="Flexible">
+
+					<p>Your library should not break-down as your application and organization grow and technologies change. CanJS’s flexibility will keep it valuable to you far into the future.</p>
+					
+					<h3>Supports multiple libraries and frameworks</h3>
+					
+					<p>Want to share code between a Zepto mobile app and a jQuery desktop app? No problem. CanJS code (especially models) can be shared across libraries, and so can skill sets! Working on a Dojo project today and a YUI one tomorrow? Don’t throw away all of your skills.</p>
+					
+					<h3>Designed for plugins</h3>
+					
+					<p>CanJS is extracted from <a href="http://javascriptmvc.com/">JavaScriptMVC</a>, but currently supports almost all of its MVC functionality through plugins. Start small, with its basic functionality, and extend it with <a href="http://canjs.com/#plugins">plugins</a> that handle things like:</p>
+					
+					<ul>
+					<li>setters</li>
+					<li>serialization / deserialization</li>
+					<li>jQuery plugin generation</li>
+					<li>validations</li>
+					<li>calling super methods</li>
+					</ul>
+					
+					<p>These plugins have forced the core to be quite extendable, making 3rd party plugin development easy.</p>
+					
+					<h3>Engineered limber</h3>
+					
+					<p>CanJS’s tools are designed to work under almost every situation. Your server sends back XML with strange urls? That’s ok, overwrite <a href="../docs/can.Model.static.findAll.html">can.Model.findAll</a> or <a href="../docs/can.Model.static.models.html">can.Model.models</a>. Want some special teardown code for a control? Overwrite <a href="../docs/can.Control.prototype.destroy.html">can.Control:destroy</a>.</p>
+					
+					<p>But our favorite bit of flexibility is how <a href="../docs/can.Observe.html">can.Observe</a> works with nested data. It converts nested objects into observes automatically. For example:</p>
+					
+<pre><code class="lang-javascript">var person = new can.Observe({
+  name: { first: 'Justin', last: 'Meyer' },
+  hobbies: [ 'programming', 'party rocking' ]
+})
+
+person.attr( 'name.first' ) //-> 'Justin'
+person.attr( 'hobbies.0' ) //-> 'programming'</code></pre>
+
+<p>But most important, <code>change</code> events bubble, letting observes listen for when a nested property changes:</p>
+
+<pre><code class="lang-javascript">person.bind( 'change', function( ev, attr, how, newVal, oldVal ) {
+  attr   //-> 'name.last'
+  how    //-> 'set'
+  newVal //-> 'Meyer'
+  oldVal //-> 'Myer'
+});
+
+person.attr( 'name.last', 'Meyer' );</code></pre>
+
+<ul class="pager">
+	<li class="next"><a class="button" href="">Powerful &raquo;</a></li>
+</ul>
+ 		
+</article>
+ 		
+ 		
+ 		
+ 		
+<article class="container content" id="Powerful"  style="display:none;">
+			<h3>Safety</h3>
+
+<p>Memory safety is really important, especially in long-lived, dynamic pages. CanJS combats this menace in two important and unique ways:</p>
+
+<h4>Controls that unbind event handlers auto-magically</h4>
+
+<p>Using templated event binding, Controls can listen to events on objects other than their element. For example, a tooltip listening to the window looks like:</p>
+
+<pre><code class="lang-javascript">var Tooltip = can.Control.extend({
+  '{window} click': function( el, ev ) {
+    // hide only if we clicked outside the tooltip
+    if (!this.element.has( ev.target ) {
+      this.element.remove();
+    }
+  }
+})
+
+// create a Tooltip
+var tooltipElement = $( '&lt;div>INFO&lt;/div>' ).appendTo( el )
+var tooltipInstance = new Tooltip( tooltipElement );</code></pre>
+
+<p><code>window</code> now has a reference to the control which keeps the <code>tooltipInstance</code> and everything the tooltip instance might reference in memory. CanJS overwrites each library’s element remove functionality to <a href="../docs/can.Control.prototype.destroy.html">destroy</a> controls. Destroying a control unbinds all of its event handlers, removing any memory leaks auto-magically.</p>
+
+<h4>A model store that does not leak</h4>
+
+<p>It’s relatively common to load the same model instance multiple times on a single page. For example, an app might request todos due today and high-priority todos and render them like:</p>
+
+<pre><code class="lang-javascript">can.view( 'todosList.ejs', {
+  todaysTodos: Todo.findAll( { due: 'today' } ),
+  criticalTodos: Todo.findAll( { type: 'critical' } )
+}).then(function( frag ) {
+  $( '#todos' ).html( frag );
+})</code></pre>
+
+<p><code>todosList.ejs</code> might look like:</p>
+
+<pre><code class="lang-javascript">&lt;h2>Due Today&lt;/h2>
+&lt;% list( todaysTodos, function( todo ) { %>
+  &lt;li &lt;%= (el) -> el.data( 'todo', todo ) %>>
+    &lt;%= todo.attr( 'name' ) %>
+  &lt;/li>
+&lt;% } ) %>
+&lt;h2>Critical Todos</h2>
+&lt;% list( criticalTodos, function( todo ) { %>
+  &lt;li <%= (el) -> el.data( 'todo', todo ) %>>
+    &lt;%= todo.attr( 'name' ) %>
+  &lt;/li>
+&lt;% } ) %></code></pre>
+
+<p>If the result for of <code>Todo.findAll( { due: 'today' } )</code> and <code>Todo.findAll( { type: 'critical' } )</code> both share a todo instance like:</p>
+
+<pre><code class="lang-javascript">{ 
+    "id" : 5, 
+    "name" : "do dishes",
+    "due" : "today",
+    "type" : "critical"
+}</code></pre>
+
+<p><a href="Models.html">can.Model</a> knows that this data represents the same todo and only creates one instance. This means that a single model instance is in both lists. By changing the todo’s name or destroying it, both lists will be changed.</p>
+
+<p>However, model only stores these model instances while something is binding to them. Once nothing is bound to the model instance, they are removed from the store, freeing their memory for garbage collection.</p>
+
+<h3>Ease of use</h3>
+
+<p>This site highlights the most important features of CanJS. The library comes with thorough documentation and examples on the <a href="/docs">CanJS documentation page</a>. There are example apps for each library and several example for jQuery.</p>
+
+<p>CanJS is also supported by <a href="http://bitovi.com/">Bitovi</a>. We are extremely active on the <a href="https://forum.javascriptmvc.com/#Forum/canjs">forums</a>. And should the need arise, we provide support, training, and development.</p>
+ 		
+ 		
+ 		
+<ul class="pager">
+	<li class="previous"><a class="button" href="">&laquo; Flexible</a></li>
+	<li class="next"><a class="button" href="">Fast &raquo;</a></li>
+</ul>
+
+</article>
+
+
+<article class="container content" id="Fast" style="display:none;">
+<h3>Size</h3>
+
+<p>On top of jQuery, CanJS is ~11k. Here’s some other frameworks for comparison:</p>
+
+<ul>
+<li>Backbone 8.97kb (with Underscore.js)</li>
+<li>Angular 24kb</li>
+<li>Knockout 13kb</li>
+<li>Ember 37kb</li>
+<li>Batman 15kb</li>
+</ul>
+
+<p>Size is not everything. It really is what’s inside that counts. And that’s where we think CanJS really delivers a lot of bang for your buck.</p>
+
+<h3>Speed</h3>
+
+<p>The importance of performance is almost impossible to exaggerate. CanJS’s guts are highly optimized. See how:</p>
+
+<h4>Control initialization</h4>
+
+<p><a href="Controls.html">can.Control</a> pre-processes event handlers so binding is super fast. Compare <a href="http://jsperf.com/tabs-timing-test/7">initializing a can.Control, Backbone.View and Ember.View tabs</a> widget:
+<a href="http://jsperf.com/tabs-timing-test/7"><img src="http://bitovi.com/images/introducing-canjs/performance_control.png" alt="Control performance" title="" /></a></p>
+
+<h4>Tabs initialization performance</h4>
+
+<p>This makes a big difference for page initialization if your site has lots of controls.</p>
+
+<h4>Live binding</h4>
+
+<p>CanJS’s live-binding is very fast. It only updates what’s necessary when it’s necessary. Compare its <a href="http://jsperf.com/canjs-ejs-performance/5">template rendering performance with three other common MVC frameworks</a>:
+<a href="http://jsperf.com/canjs-ejs-performance/5"><img src="http://bitovi.com/images/introducing-canjs/performance_livebind.png" alt="Live binding performance" title="" /></a></p>
+
+<p>In this test, CanJS has the fastest live-binding. Backbone and YUI are not doing live-binding, but CanJS is still the fastest.</p>
+
+<p>In the <a href="http://jsfiddle.net/JMWf4/47/">popular counting circle example</a>, Knockout visually appears the fastest, followed by CanJS.</p>
+
+<p>This means that CanJS and Knockout are slightly faster at different things, but are likely tied for the fastest live-binding libraries.</p>
+
+<p><em>Note: AngularJS throttles updates, which means it doesn’t fit well with these tests.</em></p>
+
+<h4>Model and view deferred support for parallel loading</h4>
+
+<p><a href="Deferreds.html">Deferreds</a> are simply awesome for handling asynchronous behavior. <a href="Models.html">can.Model</a> produces deferreds and <a href="../docs/can.view.html">can.view</a> consumes them. With the view modifiers plugin, you can load a template and its data in parallel and render it into an element with:</p>
+
+<pre><code class="lang-javascript">$( '#todos' ).html( 'todos.ejs', Todo.findAll() );</code></pre>
+
+<p>Hot. You can do this without the view modifiers plugin like:</p>
+
+<pre><code class="lang-javascript">can.view( 'todos.ejs', Todo.findAll() ).then(function( frag ) {
+  $( '#todos' ).html( frag );
+})</code></pre>
+
+<h4>Opt-in data binding</h4>
+
+<p>Although <a href="EJS.html">can.EJS’s</a> live-binding is super fast, setting up live data binding can be too slow in certain situations (like rendering a list of 1000 items). EJS’s live binding is opt-in. It only turns on if you are using the <code>attr</code> method. If the following template binds to a <code>todo</code>'s <code>name</code> …</p>
+
+<pre><code class="lang-javascript">&lt;li> &lt;%= todo.attr('name') %> &lt;/li></code></pre>
+
+<p>… the following doesn’t setup live-binding and renders much faster …</p>
+
+<pre><code class="lang-javascript">&lt;li> &lt;%= todo.name %> &lt;/li></code></pre>
+
+
+<ul class="pager">
+	<li class="previous"><a class="button" href="">&laquo; Powerful</a></li>
+</ul>
+
+</article>
+ </div>
+
+	<footer>
+		<nav class="container">
+			<a class="brand javascriptmvc" href="index.html"></a>
+			<ul class="nav">
+				<li class=""><a href="guides/index.html">Guides</a></li>
+				<li class=""><a href="docs/index.html">Api</a></li>
+				<li class=""><a href="community.html#!forums">Community</a></li>
+			</ul>
+		</nav>
+	</footer>
+	<script type="text/javascript">
+		steal = {
+			productionId: "production.js",
+			executed: ["documentjs/site/static/build/production.css"]
+		}
+	</script>
+	<script 
+	
+		src="docs/static/steal.production.js"
+	
+		></script>
+</body>
+
+</html>

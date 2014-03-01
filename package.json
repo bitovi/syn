@@ -1,33 +1,31 @@
 {
-	"name": "Syn",
+	"name": "funcunit.com",
 	"author": {
 		"name": "Bitovi",
 		"email": "contact@bitovi.com",
 		"web": "http://bitovi.com/"
 	},
+	"description": "funcunit website",
+	"homepage": "http://funcunit.com",
+	"scripts": {
+		"postinstall": "bower install"
+	},
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:bitovi/syn.git",
-		"github": "https://github.com/bitovi/syn"
+		"url": "git@github.com:bitovi/funcunit.com.git",
+		"github": "https://github.com/bitovi/funcunit.com"
 	},
-	"licenses": [{
-		"type": "MIT",
-		"url": "http://opensource.org/licenses/mit-license.php"
-	}],
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "http://opensource.org/licenses/mit-license.php"
+		}
+	],
 	"devDependencies": {
-		"grunt": "0.4.x",
-		"grunt-contrib-connect": "0.5.x",
-		"grunt-contrib-concat": "0.3.0",
-		"grunt-contrib-uglify": "~0.3.2",
-		"grunt-exec": "0.4.2",
-		"steal": "https://github.com/bitovi/steal-build/tarball/master",
-		"testee": "0.0.x",
-		"bower": "1.2.x"
-	},
-	"scripts": {
-		"test": "grunt test",
-		"postinstall": "node_modules/bower/bin/bower install"
-	},
-	"dependencies": {
+		"bower": "~1.2.6",
+		"grunt": "~0.4.1",
+		"grunt-cli": "~0.1.7",
+		"grunt-contrib-copy": "~0.4.1",
+		"grunt-contrib-compress": "0.5.x"
 	}
 }

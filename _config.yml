@@ -1,0 +1,3 @@
+safe: true
+pygments: true
+exclude: ['Gruntfile.js', 'package.json', 'readme.md', 'node_modules']
