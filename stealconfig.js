@@ -2,14 +2,13 @@ steal.config({
 	map: {
 		"*": {
 			"jquery/jquery.js" : "jquery",
-			"jquery/": "lib/jquerypp/",
-			"can": "lib/canjs/steal/canjs"
+			"can/util/util.js": "can/util/jquery/jquery.js",
+			"jquery/": "jquerypp/"
 		}
 	},
 	paths: {
 		"jquery/": "jquerypp/",
-		"jquery": "lib/jquery/jquery.js",
-		"syn": ""
+		"jquery": "can/lib/jquery.1.9.1.js"
 	},
 	shim : {
 		jquery: {

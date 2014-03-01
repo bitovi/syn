@@ -1,0 +1,15 @@
+[submodule "steal"]
+	path = steal
+	url = https://github.com/bitovi/steal
+[submodule "can"]
+	path = can
+	url = https://github.com/bitovi/canjs
+[submodule "documentjs"]
+	path = documentjs
+	url = https://github.com/bitovi/documentjs
+[submodule "syn"]
+	path = syn
+	url = https://github.com/bitovi/syn
+[submodule "canjs"]
+	path = canjs
+	url = https://github.com/bitovi/canjs

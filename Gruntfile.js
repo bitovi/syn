@@ -1,63 +1,72 @@
 module.exports = function (grunt) {
 
 	grunt.initConfig({
-		pkg: grunt.file.readJSON('bower.json'),
-		connect: {
-			server: {
-				options: {
-					port: 8000,
-					base: '.'
-				}
-			}
-		},
-		exec: {
-			pluginify: {
-				command: 'node build.js'
-			}
-		},
-		concat: {
-			options: {
-				banner: '/**\n * <%= pkg.title || pkg.name %> - <%= pkg.version %>\n * <%= pkg.homepage %>\n * @copyright <%= new Date().getFullYear() %> <%= pkg.author.name %>\n * <%= new Date().toUTCString() %>\n * @license <%= pkg.licenses[0].type %>\n */\n\n'
+		copy: {
+			latest: {
+				files: [{
+					src: ['funcunit.js'],
+					dest: 'dist/latest/',
+					expand: true,
+					cwd: 'funcunit/dist/'
+				}]
 			},
 
-			dist: {
+			example: {
 				files: [{
+					src: ['funcunit.js'],
+					dest: 'examples/resources/',
 					expand: true,
-					cwd: 'build/',
+					cwd: 'funcunit/dist/'
+				}]
+			},
+
+			jasmine: {
+				files: [{
+					src: ['jasmine-html.js',
+						'jasmine.js',
+						'jasmine.css',
+						'lib/qunit/qunit/*',
+						'lib/jquery/jquery.js'],
+					dest: 'examples/resources/',
+					expand: true,
+					cwd: 'lib/jasmine/lib/jasmine-core/'
+				}]
+			},
+
+			qunit: {
+				files: [{
 					src: ['*'],
-					dest: 'dist/'
+					dest: 'examples/resources/',
+					expand: true,
+					cwd: 'lib/qunit/qunit/'
+				}]
+			},
+
+			jquery: {
+				files: [{
+					src: ['jquery.js'],
+					dest: 'examples/resources/',
+					expand: true,
+					cwd: 'lib/jquery/'
 				}]
 			}
 		},
-		uglify: {
-			dist: {
+
+		compress: {
+			main: {
 				options: {
-					preserveComments: 'some'
+					archive: 'dist/examples.zip'
 				},
-				files: {
-					'dist/syn.min.js': [
-						'dist/syn.js'
-					]
-				}
-			}
-		},
-		testee: {
-			src: {
-				options: {
-					urls: ['http://localhost:8000/test/index.html'],
-					browsers: ['phantom']
-				}
+				files: [{
+					src: ['examples/**'], dest: 'dist/'
+				}]
 			}
 		}
 	});
 
-	grunt.loadNpmTasks('grunt-contrib-connect');
-	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-exec');
-	grunt.loadNpmTasks('testee');
+	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-contrib-compress');
 
-	grunt.registerTask('build', ['exec:pluginify', 'concat', 'uglify']);
-	grunt.registerTask('test', ['connect:server', 'testee']);
+	grunt.registerTask('default', ['copy']);
 
 };
