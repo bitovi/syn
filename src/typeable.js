@@ -1,4 +1,4 @@
-steal("src/synthetic.js", function(Syn){
+steal("src/synthetic.js", function (Syn) {
 	// Holds functions that test for typeability
 	var typeables = [];
 
@@ -12,8 +12,8 @@ steal("src/synthetic.js", function(Syn){
 	 *
 	 * @param {Function} fn Function to register.
 	 */
-	Syn.typeable = function(fn){
-		if(typeables.indexOf(fn) == -1) {
+	Syn.typeable = function (fn) {
+		if (typeables.indexOf(fn) == -1) {
 			typeables.push(fn);
 		}
 	};
@@ -28,9 +28,9 @@ steal("src/synthetic.js", function(Syn){
 	 * @param {HTMLElement} el the element to test.
 	 * @return {Boolean} true if the element can be typed into.
 	 */
-	Syn.typeable.test = function(el){
-		for(var i = 0, len = typeables.length; i < len; i++) {
-			if(typeables[i](el)) {
+	Syn.typeable.test = function (el) {
+		for (var i = 0, len = typeables.length; i < len; i++) {
+			if (typeables[i](el)) {
 				return true;
 			}
 		}
@@ -41,12 +41,12 @@ steal("src/synthetic.js", function(Syn){
 
 	// Inputs and textareas
 	var typeableExp = /input|textarea/i;
-	type(function(el){
+	type(function (el) {
 		return typeableExp.test(el.nodeName);
 	});
 
 	// Content editable
-	type(function(el){
+	type(function (el) {
 		return ["", "true"].indexOf(el.getAttribute("contenteditable")) != -1;
 	});
 

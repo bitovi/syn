@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/bitovi/syn.png?branch=master)](https://travis-ci.org/bitovi/syn.png?branch=master)
 
-__Notice 01-23-2015__
+__Notice 01-23-2014__
 
 We've reset the version to 0.0.x as we're refactoring the project internally. No code or functionality is being removed, however we'll be following SEMVER going forward as opposed to the original REVOLUTION.MAJOR.MINOR versioning we've had in the past(the first version being 3.2.x didn't make sense).
 
