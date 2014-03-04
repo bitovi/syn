@@ -364,6 +364,24 @@ steal(function () {
 		},
 		bind: bind,
 		unbind: unbind,
+		/**
+		 * @function Syn.schedule schedule()
+		 * @param {Function} fn Function to be ran
+		 * @param {Number} ms Milliseconds to way before calling fn
+		 * @signature `Syn.schedule(fn, ms)`
+		 * @parent config
+		 *
+		 * Schedules a function to be ran later.
+		 * Must be registered prior to Syn loading, otherwise `setTimeout` will be
+		 * used as the scheduler.
+		 * @codestart
+		 * Syn = {
+		 *   schedule: function(fn, ms) {
+		 *     Platform.run.later(fn, ms);
+		 *   }
+		 * };
+		 * @codeend
+		 */
 		schedule: schedule,
 		browser: browser,
 		//some generic helpers

@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>Syn.schedule test</title>
+</head>
+<body>
+	<script src="../../steal/steal.js"></script>
+	<script>
+		Syn = {
+			schedule: function() {
+				parent.synSchedule.apply(parent, arguments);
+			}
+		};
+
+		steal('src/syn.js').then(function(){
+			var body = document.body;
+			Syn.click({}, body).delay(function(){}, 0);
+		});
+	</script>
+</body>
+</html>
