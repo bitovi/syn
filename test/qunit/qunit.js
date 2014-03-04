@@ -1,4 +1,5 @@
 QUnit.config.reorder = false;
+QUnit.config.testTimeout = 5000;
 
 steal('jquery')
 	.then('src/synthetic.js')

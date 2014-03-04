@@ -129,17 +129,16 @@ steal("src/synthetic.js", function (Syn) {
 		iframe.setAttribute("height", "100");
 		var scroll30 = st.rootJoin("test/qunit/scroll_30/index.html");
 		iframe.src = scroll30;
-
-		st.bind(iframe, "load", function() {
+		window.synReady = function() {
+			delete window.synReady;
 			var win = iframe.contentWindow;
-			win.synReady = function() {
-				var scrollTop = win.document.body.scrollTop;
+			var scrollTop = win.document.body.scrollTop;
 
-				equal(scrollTop, 0);
-				start();
-			};
-		});
+			equal(scrollTop, 0);
+			start();
+		};
+
 		st.g("qunit-test-area").appendChild(iframe);
 	});
 
-})
+});
