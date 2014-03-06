@@ -1,9 +1,10 @@
-/*
+/**
  * Syn - 0.0.2
  * 
- * Copyright (c) 2014 Bitovi
- * Fri, 21 Feb 2014 17:12:17 GMT
- * Licensed MIT */
+ * @copyright 2014 Bitovi
+ * Thu, 06 Mar 2014 14:34:40 GMT
+ * @license MIT
+ */
 
 !function(window) {
 
@@ -855,8 +856,7 @@ var __m4 = (function (Syn) {
 		},
 		click: function () {
 			// prevents the access denied issue in IE if the click causes the element to be destroyed
-			var element = this,
-				href, type, radioChanged, nodeName, scope;
+			var element = this, href, type, createChange, radioChanged, nodeName, scope;
 			try {
 				href = element.href;
 				type = element.type;
@@ -1058,7 +1058,7 @@ var __m3 = (function checkSupport(Syn) {
 			setTimeout(checkSupport, 1)
 			return;
 		}
-		Syn._oldSynth = window.__synthTest;
+
 		window.__synthTest = function () {
 			Syn.support.linkHrefJS = true;
 		};
@@ -2533,7 +2533,6 @@ var __m6 = (function (Syn) {
 				"</form>";
 
 			doc.insertBefore(div, doc.firstElementChild);
-			//doc.appendChild(div);
 			form = div.firstChild;
 			checkbox = form.childNodes[0];
 			submit = form.childNodes[2];
@@ -2919,10 +2918,6 @@ var __m9 = (function (Syn) {
 var __m1 = (function (Syn) {
 
 		window.Syn = Syn;
-
-		// Clean up 
-		window.__synthTest = Syn._oldSynth;
-		delete Syn._oldSynth;
 
 		return Syn;
 	})(__m2, __m3, __m5, __m6, __m9);

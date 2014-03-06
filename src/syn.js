@@ -6,9 +6,5 @@ steal('src/synthetic.js',
 
 		window.Syn = Syn;
 
-		// Clean up 
-		window.__synthTest = Syn._oldSynth;
-		delete Syn._oldSynth;
-
 		return Syn;
 	});
