@@ -2,7 +2,7 @@
  * Syn - 0.0.2
  * 
  * @copyright 2014 Bitovi
- * Tue, 04 Mar 2014 13:14:20 GMT
+ * Thu, 06 Mar 2014 14:34:40 GMT
  * @license MIT
  */
 
@@ -1058,7 +1058,7 @@ var __m3 = (function checkSupport(Syn) {
 			setTimeout(checkSupport, 1)
 			return;
 		}
-		Syn._oldSynth = window.__synthTest;
+
 		window.__synthTest = function () {
 			Syn.support.linkHrefJS = true;
 		};
@@ -2918,10 +2918,6 @@ var __m9 = (function (Syn) {
 var __m1 = (function (Syn) {
 
 		window.Syn = Syn;
-
-		// Clean up 
-		window.__synthTest = Syn._oldSynth;
-		delete Syn._oldSynth;
 
 		return Syn;
 	})(__m2, __m3, __m5, __m6, __m9);

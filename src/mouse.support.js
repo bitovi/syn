@@ -4,7 +4,7 @@ steal('src/synthetic.js', 'src/mouse.js', function checkSupport(Syn) {
 			setTimeout(checkSupport, 1)
 			return;
 		}
-		Syn._oldSynth = window.__synthTest;
+
 		window.__synthTest = function () {
 			Syn.support.linkHrefJS = true;
 		};
