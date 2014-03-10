@@ -825,9 +825,9 @@ steal('src/synthetic.js', 'src/typeable.js', 'src/browsers.js', function (Syn) {
 					element = defaultResult
 				}
 
-				if (defaultResult !== null) {
-					setTimeout(function () {
-						if (Syn.support.oninput) {
+				if ( defaultResult !== null ) {
+					Syn.schedule(function() {
+						if(Syn.support.oninput) {
 							Syn.trigger('input', Syn.key.options(key, 'input'), element);
 						}
 						Syn.trigger('keyup', Syn.key.options(key, 'keyup'), element)

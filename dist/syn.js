@@ -2,7 +2,7 @@
  * Syn - 0.0.2
  * 
  * @copyright 2014 Bitovi
- * Thu, 06 Mar 2014 14:34:40 GMT
+ * Mon, 10 Mar 2014 23:14:24 GMT
  * @license MIT
  */
 
@@ -36,9 +36,8 @@ var __m2 = (function () {
 		},
 		data = {},
 		id = 1,
-		expando = "_synthetic" + new Date()
-			.getTime(),
-		bind, unbind, key = /keypress|keyup|keydown/,
+		expando = "_synthetic" + new Date().getTime(),
+		bind, unbind, schedule, key = /keypress|keyup|keydown/,
 		page = /load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll/,
 		//this is maintained so we can click on html and blur the active element
 		activeElement,
@@ -173,6 +172,9 @@ var __m2 = (function () {
 		return el.addEventListener ? el.removeEventListener(ev, f, false) : el.detachEvent("on" + ev, f);
 	};
 
+	schedule = Syn.config.schedule || function() {
+		setTimeout.apply(window, arguments);	
+	};
 	/**
 	 * @Static
 	 */
@@ -373,6 +375,25 @@ var __m2 = (function () {
 		},
 		bind: bind,
 		unbind: unbind,
+		/**
+		 * @function Syn.schedule schedule()
+		 * @param {Function} fn Function to be ran
+		 * @param {Number} ms Milliseconds to way before calling fn
+		 * @signature `Syn.schedule(fn, ms)`
+		 * @parent config
+		 *
+		 * Schedules a function to be ran later.
+		 * Must be registered prior to Syn loading, otherwise `setTimeout` will be
+		 * used as the scheduler.
+		 * @codestart
+		 * Syn = {
+		 *   schedule: function(fn, ms) {
+		 *     Platform.run.later(fn, ms);
+		 *   }
+		 * };
+		 * @codeend
+		 */
+		schedule: schedule,
 		browser: browser,
 		//some generic helpers
 		helpers: {
@@ -711,8 +732,8 @@ var __m2 = (function () {
 			}
 			timeout = timeout || 600;
 			var self = this;
-			this.queue.unshift(function () {
-				setTimeout(function () {
+			this.queue.unshift(function() {
+				schedule(function() {
 					callback && callback.apply(self, [])
 					self.done.apply(self, arguments);
 				}, timeout);
@@ -759,7 +780,7 @@ var __m2 = (function () {
 			Syn.trigger("mousedown", options, element);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
-			setTimeout(function () {
+			schedule(function() {
 				Syn.trigger("mouseup", options, element);
 				if (!Syn.support.mouseDownUpClicks || force) {
 					Syn.trigger("click", options, element);
@@ -769,7 +790,7 @@ var __m2 = (function () {
 					Syn.create.click.setup('click', options, element);
 					Syn.defaults.click.call(element);
 					//must give time for callback
-					setTimeout(function () {
+					schedule(function() {
 						callback(true);
 					}, 1);
 				}
@@ -789,7 +810,7 @@ var __m2 = (function () {
 			Syn.trigger("mousedown", mouseopts, element);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
-			setTimeout(function () {
+			schedule(function() {
 				Syn.trigger("mouseup", mouseopts, element);
 				if (Syn.mouse.browser.right.contextmenu) {
 					Syn.trigger("contextmenu", extend(extend({}, Syn.mouse.browser.right.contextmenu), options), element);
@@ -812,9 +833,9 @@ var __m2 = (function () {
 		"_dblclick": function (options, element, callback) {
 			Syn.helpers.addOffset(options, element);
 			var self = this;
-			this._click(options, element, function () {
-				setTimeout(function () {
-					self._click(options, element, function () {
+			this._click(options, element, function() {
+				schedule(function() {
+					self._click(options, element, function() {
 						Syn.trigger("dblclick", options, element);
 						callback(true);
 					}, true);
@@ -1054,77 +1075,77 @@ var __m4 = (function (Syn) {
 // ## src/mouse.support.js
 var __m3 = (function checkSupport(Syn) {
 
-		if (!document.body) {
-			setTimeout(checkSupport, 1)
+	if (!document.body) {
+			Syn.schedule(checkSupport, 1);
 			return;
-		}
+	}
 
-		window.__synthTest = function () {
-			Syn.support.linkHrefJS = true;
-		};
+	window.__synthTest = function () {
+		Syn.support.linkHrefJS = true;
+	};
 
-		var div = document.createElement("div"),
-			checkbox, submit, form, input, select;
+	var div = document.createElement("div"),
+		checkbox, submit, form, input, select;
 
-		div.innerHTML = "<form id='outer'>" + "<input name='checkbox' type='checkbox'/>" + "<input name='radio' type='radio' />" + "<input type='submit' name='submitter'/>" + "<input type='input' name='inputter'/>" + "<input name='one'>" + "<input name='two'/>" + "<a href='javascript:__synthTest()' id='synlink'></a>" + "<select><option></option></select>" + "</form>";
-		document.documentElement.appendChild(div);
-		form = div.firstChild
-		checkbox = form.childNodes[0];
-		submit = form.childNodes[2];
-		select = form.getElementsByTagName('select')[0]
+	div.innerHTML = "<form id='outer'>" + "<input name='checkbox' type='checkbox'/>" + "<input name='radio' type='radio' />" + "<input type='submit' name='submitter'/>" + "<input type='input' name='inputter'/>" + "<input name='one'>" + "<input name='two'/>" + "<a href='javascript:__synthTest()' id='synlink'></a>" + "<select><option></option></select>" + "</form>";
+	document.documentElement.appendChild(div);
+	form = div.firstChild
+	checkbox = form.childNodes[0];
+	submit = form.childNodes[2];
+	select = form.getElementsByTagName('select')[0]
 
-		//trigger click for linkHrefJS support, childNodes[6] === anchor
-		Syn.trigger('click', {}, form.childNodes[6]);
+	//trigger click for linkHrefJS support, childNodes[6] === anchor
+	Syn.trigger('click', {}, form.childNodes[6]);
 
-		checkbox.checked = false;
-		checkbox.onchange = function () {
-			Syn.support.clickChanges = true;
-		}
+	checkbox.checked = false;
+	checkbox.onchange = function () {
+		Syn.support.clickChanges = true;
+	}
 
-		Syn.trigger("click", {}, checkbox)
-		Syn.support.clickChecks = checkbox.checked;
+	Syn.trigger("click", {}, checkbox)
+	Syn.support.clickChecks = checkbox.checked;
 
-		checkbox.checked = false;
+	checkbox.checked = false;
 
-		Syn.trigger("change", {}, checkbox);
+	Syn.trigger("change", {}, checkbox);
 
-		Syn.support.changeChecks = checkbox.checked;
+	Syn.support.changeChecks = checkbox.checked;
 
-		form.onsubmit = function (ev) {
-			if (ev.preventDefault) ev.preventDefault();
-			Syn.support.clickSubmits = true;
-			return false;
-		}
-		Syn.trigger("click", {}, submit)
+	form.onsubmit = function (ev) {
+		if (ev.preventDefault) ev.preventDefault();
+		Syn.support.clickSubmits = true;
+		return false;
+	}
+	Syn.trigger("click", {}, submit)
 
-		form.childNodes[1].onchange = function () {
-			Syn.support.radioClickChanges = true;
-		}
-		Syn.trigger("click", {}, form.childNodes[1])
+	form.childNodes[1].onchange = function () {
+		Syn.support.radioClickChanges = true;
+	}
+	Syn.trigger("click", {}, form.childNodes[1])
 
-		Syn.bind(div, 'click', function () {
-			Syn.support.optionClickBubbles = true;
-			Syn.unbind(div, 'click', arguments.callee)
-		})
-		Syn.trigger("click", {}, select.firstChild)
+	Syn.bind(div, 'click', function () {
+		Syn.support.optionClickBubbles = true;
+		Syn.unbind(div, 'click', arguments.callee)
+	})
+	Syn.trigger("click", {}, select.firstChild)
 
-		Syn.support.changeBubbles = Syn.eventSupported('change');
+	Syn.support.changeBubbles = Syn.eventSupported('change');
 
-		//test if mousedown followed by mouseup causes click (opera), make sure there are no clicks after this
-		var clicksCount = 0
-		div.onclick = function () {
-			Syn.support.mouseDownUpClicks = true;
-			//we should use this to check for opera potentially, but would
-			//be difficult to remove element correctly
-			//Syn.support.mouseDownUpRepeatClicks = (2 == (++clicksCount))
-		}
-		Syn.trigger("mousedown", {}, div)
-		Syn.trigger("mouseup", {}, div)
+	//test if mousedown followed by mouseup causes click (opera), make sure there are no clicks after this
+	var clicksCount = 0
+	div.onclick = function () {
+		Syn.support.mouseDownUpClicks = true;
+		//we should use this to check for opera potentially, but would
+		//be difficult to remove element correctly
+		//Syn.support.mouseDownUpRepeatClicks = (2 == (++clicksCount))
+	}
+	Syn.trigger("mousedown", {}, div)
+	Syn.trigger("mouseup", {}, div)
 
-		document.documentElement.removeChild(div);
+	document.documentElement.removeChild(div);
 
-		//check stuff
-		Syn.support.ready++;
+	//check stuff
+	Syn.support.ready++;
 })(__m2, __m4);
 
 // ## src/browsers.js
@@ -2439,9 +2460,9 @@ var __m7 = (function (Syn) {
 					element = defaultResult
 				}
 
-				if (defaultResult !== null) {
-					setTimeout(function () {
-						if (Syn.support.oninput) {
+				if ( defaultResult !== null ) {
+					Syn.schedule(function() {
+						if(Syn.support.oninput) {
 							Syn.trigger('input', Syn.key.options(key, 'input'), element);
 						}
 						Syn.trigger('keyup', Syn.key.options(key, 'keyup'), element)
@@ -2512,7 +2533,7 @@ var __m6 = (function (Syn) {
 		//do support code
 		! function checkForSupport () {
 			if (!document.body) {
-				return setTimeout(checkForSupport, 1);
+				return Syn.schedule(checkForSupport, 1);
 			}
 
 			var div = document.createElement("div"),
@@ -2599,8 +2620,8 @@ var __m9 = (function (Syn) {
 	(function () {
 
 		// document body has to exists for this test
-		if (!document.body) {
-			setTimeout(arguments.callee, 1)
+		if (!document.body ) {
+			Syn.schedule(arguments.callee, 1);
 			return;
 		}
 		var div = document.createElement('div')
@@ -2691,9 +2712,10 @@ var __m9 = (function (Syn) {
 						left: (options.clientX + scrollOffset.left + 2) + "px",
 						top: (options.clientY + scrollOffset.top + 2) + "px"
 					})
-					current = mouseMove(options, element, current)
-					setTimeout(arguments.callee, 15)
-				} else {
+					current = mouseMove(options, element, current);
+					Syn.schedule(arguments.callee, 15);
+				}
+				else {
 					current = mouseMove(end, element, current);
 					win.document.body.removeChild(cursor)
 					callback();

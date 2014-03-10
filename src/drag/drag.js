@@ -4,8 +4,8 @@ steal('src/synthetic.js', function (Syn) {
 	(function () {
 
 		// document body has to exists for this test
-		if (!document.body) {
-			setTimeout(arguments.callee, 1)
+		if (!document.body ) {
+			Syn.schedule(arguments.callee, 1);
 			return;
 		}
 		var div = document.createElement('div')
@@ -96,9 +96,10 @@ steal('src/synthetic.js', function (Syn) {
 						left: (options.clientX + scrollOffset.left + 2) + "px",
 						top: (options.clientY + scrollOffset.top + 2) + "px"
 					})
-					current = mouseMove(options, element, current)
-					setTimeout(arguments.callee, 15)
-				} else {
+					current = mouseMove(options, element, current);
+					Syn.schedule(arguments.callee, 15);
+				}
+				else {
 					current = mouseMove(end, element, current);
 					win.document.body.removeChild(cursor)
 					callback();

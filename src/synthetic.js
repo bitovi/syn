@@ -25,9 +25,8 @@ steal(function () {
 		},
 		data = {},
 		id = 1,
-		expando = "_synthetic" + new Date()
-			.getTime(),
-		bind, unbind, key = /keypress|keyup|keydown/,
+		expando = "_synthetic" + new Date().getTime(),
+		bind, unbind, schedule, key = /keypress|keyup|keydown/,
 		page = /load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll/,
 		//this is maintained so we can click on html and blur the active element
 		activeElement,
@@ -162,6 +161,9 @@ steal(function () {
 		return el.addEventListener ? el.removeEventListener(ev, f, false) : el.detachEvent("on" + ev, f);
 	};
 
+	schedule = Syn.config.schedule || function() {
+		setTimeout.apply(window, arguments);	
+	};
 	/**
 	 * @Static
 	 */
@@ -362,6 +364,25 @@ steal(function () {
 		},
 		bind: bind,
 		unbind: unbind,
+		/**
+		 * @function Syn.schedule schedule()
+		 * @param {Function} fn Function to be ran
+		 * @param {Number} ms Milliseconds to way before calling fn
+		 * @signature `Syn.schedule(fn, ms)`
+		 * @parent config
+		 *
+		 * Schedules a function to be ran later.
+		 * Must be registered prior to Syn loading, otherwise `setTimeout` will be
+		 * used as the scheduler.
+		 * @codestart
+		 * Syn = {
+		 *   schedule: function(fn, ms) {
+		 *     Platform.run.later(fn, ms);
+		 *   }
+		 * };
+		 * @codeend
+		 */
+		schedule: schedule,
 		browser: browser,
 		//some generic helpers
 		helpers: {
@@ -700,8 +721,8 @@ steal(function () {
 			}
 			timeout = timeout || 600;
 			var self = this;
-			this.queue.unshift(function () {
-				setTimeout(function () {
+			this.queue.unshift(function() {
+				schedule(function() {
 					callback && callback.apply(self, [])
 					self.done.apply(self, arguments);
 				}, timeout);
@@ -748,7 +769,7 @@ steal(function () {
 			Syn.trigger("mousedown", options, element);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
-			setTimeout(function () {
+			schedule(function() {
 				Syn.trigger("mouseup", options, element);
 				if (!Syn.support.mouseDownUpClicks || force) {
 					Syn.trigger("click", options, element);
@@ -758,7 +779,7 @@ steal(function () {
 					Syn.create.click.setup('click', options, element);
 					Syn.defaults.click.call(element);
 					//must give time for callback
-					setTimeout(function () {
+					schedule(function() {
 						callback(true);
 					}, 1);
 				}
@@ -778,7 +799,7 @@ steal(function () {
 			Syn.trigger("mousedown", mouseopts, element);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
-			setTimeout(function () {
+			schedule(function() {
 				Syn.trigger("mouseup", mouseopts, element);
 				if (Syn.mouse.browser.right.contextmenu) {
 					Syn.trigger("contextmenu", extend(extend({}, Syn.mouse.browser.right.contextmenu), options), element);
@@ -801,9 +822,9 @@ steal(function () {
 		"_dblclick": function (options, element, callback) {
 			Syn.helpers.addOffset(options, element);
 			var self = this;
-			this._click(options, element, function () {
-				setTimeout(function () {
-					self._click(options, element, function () {
+			this._click(options, element, function() {
+				schedule(function() {
+					self._click(options, element, function() {
 						Syn.trigger("dblclick", options, element);
 						callback(true);
 					}, true);

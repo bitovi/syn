@@ -4,7 +4,7 @@ steal('src/synthetic.js', 'src/key.js', function (Syn) {
 		//do support code
 		! function checkForSupport () {
 			if (!document.body) {
-				return setTimeout(checkForSupport, 1);
+				return Syn.schedule(checkForSupport, 1);
 			}
 
 			var div = document.createElement("div"),

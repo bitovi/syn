@@ -141,4 +141,21 @@ steal("src/synthetic.js", function (Syn) {
 		st.g("qunit-test-area").appendChild(iframe);
 	});
 
+	test("Syn.schedule gets called when Syn.delay is used", function() {
+		stop();
+
+		var iframe = document.createElement("iframe");
+		iframe.src = st.rootJoin("test/qunit/syn.schedule.html");
+		window.synSchedule = function(fn, ms) {
+			// fn should be a function
+			equal(typeof fn, "function");
+			// ms is a Number
+			equal(typeof ms, "number");
+
+			start();
+		};
+
+		st.g("qunit-test-area").appendChild(iframe);
+	});
+
 });
