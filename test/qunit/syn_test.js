@@ -1,51 +1,53 @@
+/* global st:true */
+
 steal("src/synthetic.js", function (Syn) {
 
-	module("syn")
+	module("syn");
 
 	st = {
 		g: function (id) {
-			return document.getElementById(id)
+			return document.getElementById(id);
 		},
 		log: function (c) {
-			if (st.g("mlog"))
+			if (st.g("mlog")) {
 				st.g("mlog")
 					.innerHTML = st.g("mlog")
-					.innerHTML + c + "<br/>"
+					.innerHTML + c + "<br/>";
+			}
 		},
 		binder: function (id, ev, f) {
-			st.bind(st.g(id), ev, f)
+			st.bind(st.g(id), ev, f);
 		},
 		unbinder: function (id, ev, f) {
-			st.unbind(st.g(id), ev, f)
+			st.unbind(st.g(id), ev, f);
 		},
 		bind: function (el, ev, f) {
 			return el.addEventListener ?
 				el.addEventListener(ev, f, false) :
-				el.attachEvent("on" + ev, f)
+				el.attachEvent("on" + ev, f);
 		},
 		unbind: function (el, ev, f) {
 			return el.addEventListener ?
 				el.removeEventListener(ev, f, false) :
-				el.detachEvent("on" + ev, f)
+				el.detachEvent("on" + ev, f);
 		},
-		rootJoin: (typeof steal == "undefined" ? function (path) {
+		rootJoin: (typeof steal === "undefined" ? function (path) {
 				return "../../" + path;
 			} :
 			function (path) {
 				return steal.config()
-					.root.join(path)
+					.root.join(path);
 			})
 	};
 
-	setTimeout(function () {
-		if (Syn.support.ready == 2) {
+	setTimeout(function supportLog() {
+		if (Syn.support.ready === 2) {
 			for (var name in Syn.support) {
-				st.log(name + ": " + Syn.support[name])
+				st.log(name + ": " + Syn.support[name]);
 			}
 		} else {
-			setTimeout(arguments.callee, 1);
+			setTimeout(supportLog, 1);
 		}
-
 	}, 1);
 
 	test("Selecting a select element", function () {
@@ -56,7 +58,7 @@ steal("src/synthetic.js", function (Syn) {
 		var change = 0,
 			changef = function () {
 				change++;
-			}
+			};
 
 		st.g("outer")
 			.select.selectedIndex = 0;
@@ -64,9 +66,9 @@ steal("src/synthetic.js", function (Syn) {
 		st.bind(st.g("outer")
 			.select, "change", changef);
 
-		stop()
+		stop();
 		Syn.click(st.g("two"), function () {
-			equal(change, 1, "change called once")
+			equal(change, 1, "change called once");
 			equal(st.g("outer")
 				.select.selectedIndex, 1, "Change Selected Index");
 
@@ -74,7 +76,7 @@ steal("src/synthetic.js", function (Syn) {
 			st.g("qunit-test-area")
 				.innerHTML = "";
 		});
-	})
+	});
 
 	test("scrollTop triggers scroll events", function () {
 		st.g("qunit-test-area")
@@ -92,11 +94,11 @@ steal("src/synthetic.js", function (Syn) {
 		stop();
 		setTimeout(function () {
 			var sc = st.g("scroller");
-			sc && (sc.scrollTop = 10);
-
-		}, 13)
-
-	})
+			if (sc) {
+				sc.scrollTop = 10;
+			}
+		}, 13);
+	});
 
 	if (!Syn.skipFocusTests) {
 		test("focus triggers focus events", function () {
@@ -113,13 +115,12 @@ steal("src/synthetic.js", function (Syn) {
 			setTimeout(function () {
 				st.g("focusme")
 					.focus();
-
-			}, 10)
+			}, 10);
 
 		});
-	};
+	}
 
-	test("Syn.support effect on scroll position, #30", function() {
+	test("Syn.support effect on scroll position, #30", function () {
 		stop();
 
 		// Make sure the browser hasn't scrolled on account of feature detection.
@@ -129,7 +130,7 @@ steal("src/synthetic.js", function (Syn) {
 		iframe.setAttribute("height", "100");
 		var scroll30 = st.rootJoin("test/qunit/scroll_30/index.html");
 		iframe.src = scroll30;
-		window.synReady = function() {
+		window.synReady = function () {
 			delete window.synReady;
 			var win = iframe.contentWindow;
 			var scrollTop = win.document.body.scrollTop;
@@ -138,15 +139,16 @@ steal("src/synthetic.js", function (Syn) {
 			start();
 		};
 
-		st.g("qunit-test-area").appendChild(iframe);
+		st.g("qunit-test-area")
+			.appendChild(iframe);
 	});
 
-	test("Syn.schedule gets called when Syn.delay is used", function() {
+	test("Syn.schedule gets called when Syn.delay is used", function () {
 		stop();
 
 		var iframe = document.createElement("iframe");
 		iframe.src = st.rootJoin("test/qunit/syn.schedule.html");
-		window.synSchedule = function(fn, ms) {
+		window.synSchedule = function (fn, ms) {
 			// fn should be a function
 			equal(typeof fn, "function");
 			// ms is a Number
@@ -155,7 +157,8 @@ steal("src/synthetic.js", function (Syn) {
 			start();
 		};
 
-		st.g("qunit-test-area").appendChild(iframe);
+		st.g("qunit-test-area")
+			.appendChild(iframe);
 	});
 
 });

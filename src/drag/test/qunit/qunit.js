@@ -1,7 +1,6 @@
 steal(
 	"funcunit/qunit",
 	"funcunit/syn",
-	"funcunit/syn/drag"
-)
+	"funcunit/syn/drag")
 	.then("jquery", "jquery/event/drag", "jquery/event/drop")
-	.then("./drag_test.js")
+	.then("./drag_test.js");

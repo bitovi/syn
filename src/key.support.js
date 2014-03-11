@@ -2,14 +2,13 @@ steal('src/synthetic.js', 'src/key.js', function (Syn) {
 
 	if (!Syn.config.support) {
 		//do support code
-		! function checkForSupport () {
+		(function checkForSupport() {
 			if (!document.body) {
 				return Syn.schedule(checkForSupport, 1);
 			}
 
 			var div = document.createElement("div"),
-				checkbox, submit, form, input, submitted = false,
-				anchor, textarea, inputter, one, doc;
+				checkbox, submit, form, anchor, textarea, inputter, one, doc;
 
 			doc = document.documentElement;
 
@@ -34,7 +33,9 @@ steal('src/synthetic.js', 'src/key.js', function (Syn) {
 			one = form.childNodes[4];
 
 			form.onsubmit = function (ev) {
-				if (ev.preventDefault) ev.preventDefault();
+				if (ev.preventDefault) {
+					ev.preventDefault();
+				}
 				Syn.support.keypressSubmits = true;
 				ev.returnValue = false;
 				return false;
@@ -44,31 +45,33 @@ steal('src/synthetic.js', 'src/key.js', function (Syn) {
 			Syn.trigger("keypress", "\r", inputter);
 
 			Syn.trigger("keypress", "a", inputter);
-			Syn.support.keyCharacters = inputter.value == "a";
+			Syn.support.keyCharacters = inputter.value === "a";
 
 			inputter.value = "a";
 			Syn.trigger("keypress", "\b", inputter);
-			Syn.support.backspaceWorks = inputter.value == "";
+			Syn.support.backspaceWorks = inputter.value === "";
 
 			inputter.onchange = function () {
 				Syn.support.focusChanges = true;
-			}
+			};
 			inputter.focus();
 			Syn.trigger("keypress", "a", inputter);
 			form.childNodes[5].focus(); // this will throw a change event
 			Syn.trigger("keypress", "b", inputter);
-			Syn.support.keysOnNotFocused = inputter.value == "ab";
+			Syn.support.keysOnNotFocused = inputter.value === "ab";
 
 			//test keypress \r on anchor submits
 			Syn.bind(anchor, "click", function (ev) {
-				if (ev.preventDefault) ev.preventDefault();
+				if (ev.preventDefault) {
+					ev.preventDefault();
+				}
 				Syn.support.keypressOnAnchorClicks = true;
 				ev.returnValue = false;
 				return false;
-			})
+			});
 			Syn.trigger("keypress", "\r", anchor);
 
-			Syn.support.textareaCarriage = textarea.value.length == 4;
+			Syn.support.textareaCarriage = textarea.value.length === 4;
 
 			// IE only, oninput event.
 			Syn.support.oninput = 'oninput' in one;
@@ -76,7 +79,7 @@ steal('src/synthetic.js', 'src/key.js', function (Syn) {
 			doc.removeChild(div);
 
 			Syn.support.ready++;
-		}();
+		})();
 	} else {
 		Syn.helpers.extend(Syn.support, Syn.config.support);
 	}

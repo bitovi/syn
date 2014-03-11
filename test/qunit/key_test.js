@@ -1,3 +1,5 @@
+/* global st */
+
 steal("src/synthetic.js", function (Syn) {
 	module("synthetic/key", {
 		setup: function () {
@@ -15,7 +17,7 @@ steal("src/synthetic.js", function (Syn) {
 			st.g("qunit-test-area")
 				.innerHTML = '';
 		}
-	})
+	});
 	test("Key Characters", function () {
 		st.g("key")
 			.value = "";
@@ -55,13 +57,13 @@ steal("src/synthetic.js", function (Syn) {
 			ev.returnValue = false;
 			return false;
 		});
-		stop()
+		stop();
 		Syn.key("\r", "key", function () {
 			equal(submit, 1, "submit on keypress");
 			equal(change, 1, "submit on keypress");
 			start();
-		})
-	})
+		});
+	});
 
 	test("Key \\r Clicks Links", 1, function () {
 		var clicked = 0;
@@ -73,17 +75,17 @@ steal("src/synthetic.js", function (Syn) {
 			ev.returnValue = false;
 			return false;
 		});
-		stop()
+		stop();
 		Syn.key("\r", "focusLink", function () {
 			equal(clicked, 1, "clicked");
 			start();
-		})
+		});
 	});
 
 	test("Key Event Order", 1, function () {
 		var order = [],
 			recorder = function (ev) {
-				order.push(ev.type)
+				order.push(ev.type);
 			};
 
 		st.binder("key", "keydown", recorder);
@@ -100,18 +102,17 @@ steal("src/synthetic.js", function (Syn) {
 			deepEqual(order, expected, "Key order is correct");
 			start();
 		});
-
-	})
+	});
 
 	test("Key \\r Adds Newline in Textarea", function () {
 		st.g('synTextArea')
 			.value = "";
-		stop()
+		stop();
 		Syn.type("ab\rcd", "synTextArea", function () {
 			equal(st.g('synTextArea')
-				.value.replace("\r", ""), "ab\ncd", "typed new line correctly")
+				.value.replace("\r", ""), "ab\ncd", "typed new line correctly");
 			start();
-		})
+		});
 	});
 
 	test("Key \\b", function () {
@@ -126,36 +127,36 @@ steal("src/synthetic.js", function (Syn) {
 				.value, "ab", "ab written (key deleted)");
 			start();
 		});
-	})
+	});
 
 	//tests when the key is inserted
 	test("Key Character Order", function () {
 
 		var upVal,
 			pressVal,
-			downVal
-			st.binder("key", "keyup", function () {
-				upVal = st.g("key")
-					.value
-			});
+			downVal;
+		st.binder("key", "keyup", function () {
+			upVal = st.g("key")
+				.value;
+		});
 		st.binder("key", "keypress", function () {
 			pressVal = st.g("key")
-				.value
+				.value;
 
 		});
 		st.binder("key", "keydown", function () {
 			downVal = st.g("key")
-				.value
+				.value;
 		});
 		stop();
 		Syn.key("J", "key", function () {
-			equal(upVal, "J", "Up Typing works")
-			equal(pressVal, "", "Press Typing works")
+			equal(upVal, "J", "Up Typing works");
+			equal(pressVal, "", "Press Typing works");
 			equal(downVal, "", "Down Typing works");
 			start();
-		})
+		});
 
-	})
+	});
 
 	test("page down, page up, home, end", function () {
 		st.g("qunit-test-area")
@@ -171,19 +172,19 @@ steal("src/synthetic.js", function (Syn) {
 		var keyTest = {
 			"page-down": function () {
 				ok(st.g("scrolldiv")
-					.scrollTop > 10, "Moved down")
+					.scrollTop > 10, "Moved down");
 			},
 			"page-up": function () {
 				ok(st.g("scrolldiv")
-					.scrollTop === 0, "Moved back up (page-up)")
+					.scrollTop === 0, "Moved back up (page-up)");
 			},
 			"end": function () {
-				var sd = st.g("scrolldiv")
-				ok(sd.scrollTop == sd.scrollHeight - sd.clientHeight, "Moved to the end")
+				var sd = st.g("scrolldiv");
+				ok(sd.scrollTop === sd.scrollHeight - sd.clientHeight, "Moved to the end");
 			},
 			"home": function () {
 				ok(st.g("scrolldiv")
-					.scrollTop === 0, "Moved back up (home)")
+					.scrollTop === 0, "Moved back up (home)");
 			}
 		},
 			order = [],
@@ -194,18 +195,18 @@ steal("src/synthetic.js", function (Syn) {
 					start();
 					return;
 				}
-				Syn.key(name, "scrolldiv")
+				Syn.key(name, "scrolldiv");
 			};
 		for (var name in keyTest) {
 			if (keyTest.hasOwnProperty(name)) {
-				order.push(name)
+				order.push(name);
 			}
 		}
 
 		st.bind(st.g("scrolldiv"), "scroll", function (ev) {
-			keyTest[order[i]]()
+			keyTest[order[i]]();
 			i++;
-			setTimeout(runNext, 1)
+			setTimeout(runNext, 1);
 
 		});
 		stop();
@@ -214,7 +215,7 @@ steal("src/synthetic.js", function (Syn) {
 			.focus();
 		runNext();
 
-	})
+	});
 	test("range tests", function () {
 		var selectText = function (el, start, end) {
 			if (el.setSelectionRange) {
@@ -234,19 +235,19 @@ steal("src/synthetic.js", function (Syn) {
 
 				r.select();
 			}
-		}
+		};
 		st.g("qunit-test-area")
 			.innerHTML = "<form id='outer'><div id='inner'><input type='input' id='key' value=''/></div></form>" +
 			"<textarea id='mytextarea' />";
 
-		var keyEl = st.g("key")
-		var textAreaEl = st.g("mytextarea")
+		var keyEl = st.g("key");
+		var textAreaEl = st.g("mytextarea");
 
 		// test delete range
 		keyEl.value = "012345";
 		selectText(keyEl, 1, 3);
 
-		Syn.key("delete", "key")
+		Syn.key("delete", "key");
 
 		equal(keyEl.value, "0345", "delete range works");
 
@@ -311,7 +312,7 @@ steal("src/synthetic.js", function (Syn) {
 
 		//st.g("qunit-test-area").innerHTML = "";
 
-	})
+	});
 
 	test("Type with tabs", function () {
 		st.g("qunit-test-area")
@@ -319,14 +320,14 @@ steal("src/synthetic.js", function (Syn) {
 			"<input tabindex='3' id='third'/>" +
 			"<a tabindex='1' id='first' href='javascript://'>First</a>" +
 			"<input tabindex='2' id='second'/>" +
-			"<input tabindex='4' id='fourth'/>"
+			"<input tabindex='4' id='fourth'/>";
 		st.g('first')
 			.focus();
 
 		var clicked = 0;
 		st.binder('first', 'click', function () {
 			clicked++;
-		})
+		});
 		stop();
 		//give ie a second to focus
 		setTimeout(function () {
@@ -339,8 +340,8 @@ steal("src/synthetic.js", function (Syn) {
 				equal(st.g('fourth')
 					.value, "Fourth", "moved to Fourth");
 				start();
-			})
-		}, 1)
+			});
+		}, 1);
 	});
 
 	test("Type with shift tabs", function () {
@@ -349,14 +350,14 @@ steal("src/synthetic.js", function (Syn) {
 			"<input tabindex='3' id='third'/>" +
 			"<a tabindex='1' id='first' href='javascript://'>First</a>" +
 			"<input tabindex='2' id='second'/>" +
-			"<input tabindex='4' id='fourth'/>"
+			"<input tabindex='4' id='fourth'/>";
 		st.g('first')
 			.focus();
 
 		var clicked = 0;
 		st.binder('first', 'click', function () {
 			clicked++;
-		})
+		});
 		stop();
 		//give ie a second to focus
 		setTimeout(function () {
@@ -369,12 +370,12 @@ steal("src/synthetic.js", function (Syn) {
 				equal(st.g('fourth')
 					.value, "4", "moved to Fourth");
 				start();
-			})
-		}, 1)
+			});
+		}, 1);
 	});
 
 	test("Type left and right", function () {
-		stop()
+		stop();
 		Syn.type("012345678[left][left][left]\b", 'key', function () {
 			equal(st.g('key')
 				.value, "01234678", "left works");
@@ -383,49 +384,49 @@ steal("src/synthetic.js", function (Syn) {
 				equal(st.g('key')
 					.value, "0123467a8", "right works");
 				start();
-			})
+			});
 
-		})
+		});
 
 	});
 	test("Type left and delete", function () {
-		stop()
+		stop();
 		Syn.type("123[left][delete]", 'key', function () {
 			equal(st.g('key')
 				.value, "12", "left delete works");
 			start();
-		})
+		});
 
 	});
 	test("Typing Shift", function () {
-		stop()
+		stop();
 
 		var shift = false;
 		st.binder('key', 'keypress', function (ev) {
-			shift = ev.shiftKey
-		})
+			shift = ev.shiftKey;
+		});
 		Syn.type("[shift]A[shift-up]", 'key', function () {
-			ok(shift, "Shift key on")
+			ok(shift, "Shift key on");
 			start();
-		})
-	})
+		});
+	});
 	test("Typing Shift then clicking", function () {
-		stop()
+		stop();
 
 		var shift = false;
 		st.binder('inner', 'click', function (ev) {
-			shift = ev.shiftKey
-		})
+			shift = ev.shiftKey;
+		});
 		Syn.type("[shift]A", 'key')
 			.click({}, 'inner')
 			.type("[shift-up]", 'key', function () {
-				ok(shift, "Shift key on click")
+				ok(shift, "Shift key on click");
 				start();
-			})
-	})
+			});
+	});
 
 	test("Typing Shift Left and Right", function () {
-		stop()
+		stop();
 
 		Syn.type("012345678[shift][left][left][left][shift-up]\b[left]\b", 'key', function () {
 			equal(st.g('key')
@@ -436,31 +437,31 @@ steal("src/synthetic.js", function (Syn) {
 				equal(st.g('key')
 					.value, "015", "shift right works");
 				start();
-			})
+			});
 
-		})
-	})
+		});
+	});
 
 	test("shift characters", function () {
-		stop()
+		stop();
 		Syn.type("@", 'key', function () {
 			equal(st.g('key')
 				.value, "@", "@ character works");
 			start();
-		})
+		});
 	});
 
 	test("number key codes", 2, function () {
-		stop()
+		stop();
 
 		st.binder("key", "keydown", function (ev) {
-			ok(ev.keyCode === 40, "key codes are numbers")
-			ok(ev.which === ev.keyCode, "which is normalized")
+			ok(ev.keyCode === 40, "key codes are numbers");
+			ok(ev.which === ev.keyCode, "which is normalized");
 			start();
 		});
 
 		Syn.type("[down]", 'key', function () {});
-	})
+	});
 
 	test("Key codes of like-keys", function () {
 		stop();
@@ -509,7 +510,7 @@ steal("src/synthetic.js", function (Syn) {
 			start();
 		});
 		Syn.type("a", 'key', function () {});
-	})
+	});
 
 	test("typing in a number works", function () {
 		stop();

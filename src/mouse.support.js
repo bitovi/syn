@@ -1,8 +1,8 @@
 steal('src/synthetic.js', 'src/mouse.js', function checkSupport(Syn) {
 
 	if (!document.body) {
-			Syn.schedule(checkSupport, 1);
-			return;
+		Syn.schedule(checkSupport, 1);
+		return;
 	}
 
 	window.__synthTest = function () {
@@ -10,14 +10,14 @@ steal('src/synthetic.js', 'src/mouse.js', function checkSupport(Syn) {
 	};
 
 	var div = document.createElement("div"),
-		checkbox, submit, form, input, select;
+		checkbox, submit, form, select;
 
 	div.innerHTML = "<form id='outer'>" + "<input name='checkbox' type='checkbox'/>" + "<input name='radio' type='radio' />" + "<input type='submit' name='submitter'/>" + "<input type='input' name='inputter'/>" + "<input name='one'>" + "<input name='two'/>" + "<a href='javascript:__synthTest()' id='synlink'></a>" + "<select><option></option></select>" + "</form>";
 	document.documentElement.appendChild(div);
-	form = div.firstChild
+	form = div.firstChild;
 	checkbox = form.childNodes[0];
 	submit = form.childNodes[2];
-	select = form.getElementsByTagName('select')[0]
+	select = form.getElementsByTagName('select')[0];
 
 	//trigger click for linkHrefJS support, childNodes[6] === anchor
 	Syn.trigger('click', {}, form.childNodes[6]);
@@ -25,9 +25,9 @@ steal('src/synthetic.js', 'src/mouse.js', function checkSupport(Syn) {
 	checkbox.checked = false;
 	checkbox.onchange = function () {
 		Syn.support.clickChanges = true;
-	}
+	};
 
-	Syn.trigger("click", {}, checkbox)
+	Syn.trigger("click", {}, checkbox);
 	Syn.support.clickChecks = checkbox.checked;
 
 	checkbox.checked = false;
@@ -37,35 +37,33 @@ steal('src/synthetic.js', 'src/mouse.js', function checkSupport(Syn) {
 	Syn.support.changeChecks = checkbox.checked;
 
 	form.onsubmit = function (ev) {
-		if (ev.preventDefault) ev.preventDefault();
+		if (ev.preventDefault) {
+			ev.preventDefault();
+		}
 		Syn.support.clickSubmits = true;
 		return false;
-	}
-	Syn.trigger("click", {}, submit)
+	};
+	Syn.trigger("click", {}, submit);
 
 	form.childNodes[1].onchange = function () {
 		Syn.support.radioClickChanges = true;
-	}
-	Syn.trigger("click", {}, form.childNodes[1])
+	};
+	Syn.trigger("click", {}, form.childNodes[1]);
 
-	Syn.bind(div, 'click', function () {
+	Syn.bind(div, 'click', function onclick() {
 		Syn.support.optionClickBubbles = true;
-		Syn.unbind(div, 'click', arguments.callee)
-	})
-	Syn.trigger("click", {}, select.firstChild)
+		Syn.unbind(div, 'click', onclick);
+	});
+	Syn.trigger("click", {}, select.firstChild);
 
 	Syn.support.changeBubbles = Syn.eventSupported('change');
 
 	//test if mousedown followed by mouseup causes click (opera), make sure there are no clicks after this
-	var clicksCount = 0
 	div.onclick = function () {
 		Syn.support.mouseDownUpClicks = true;
-		//we should use this to check for opera potentially, but would
-		//be difficult to remove element correctly
-		//Syn.support.mouseDownUpRepeatClicks = (2 == (++clicksCount))
-	}
-	Syn.trigger("mousedown", {}, div)
-	Syn.trigger("mouseup", {}, div)
+	};
+	Syn.trigger("mousedown", {}, div);
+	Syn.trigger("mouseup", {}, div);
 
 	document.documentElement.removeChild(div);
 

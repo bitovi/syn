@@ -42,8 +42,6 @@ steal("src/synthetic.js", function (Syn) {
 	// })
 
 	test("move", function () {
-
-		var drags = {}, drops = {};
 		var div = $("<div id='wrap'>" +
 			"<div id='left'></div>" +
 			"<div id='right'></div>" +
@@ -55,7 +53,7 @@ steal("src/synthetic.js", function (Syn) {
 			height: "100px",
 			position: "absolute",
 			border: "solid 1px black"
-		}
+		};
 		$('#wrap')
 			.css({
 				position: "absolute",
@@ -64,21 +62,21 @@ steal("src/synthetic.js", function (Syn) {
 				width: "200px",
 				height: "100px",
 				backgroundColor: "yellow"
-			})
+			});
 		$("#left")
 			.css(basicCss)
 			.css({
 				top: "0px",
 				left: "10px",
 				backgroundColor: "green"
-			})
+			});
 		$("#right")
 			.css(basicCss)
 			.css({
 				top: "0px",
 				left: "100px",
 				backgroundColor: "blue"
-			})
+			});
 
 		var clientX = -1,
 			clientY = -1,
@@ -86,25 +84,25 @@ steal("src/synthetic.js", function (Syn) {
 			targets = [];
 
 		var move = function (ev) {
-			if (ev.clientX == 0 && ev.clientY == 0) {
+			if (ev.clientX === 0 && ev.clientY === 0) {
 				// this happens once per run in Chrome only
 				return;
 			}
 			if (ev.clientX < clientX) {
-				ok(false, "mouse isn't moving right")
+				ok(false, "mouse isn't moving right");
 			}
 			clientX = ev.clientX;
 			if (ev.clientY < clientY) {
-				console.log('y', ev.clientY, clientY)
-				ok(false, "mouse isn't moving right")
+				console.log('y', ev.clientY, clientY);
+				ok(false, "mouse isn't moving right");
 			}
 			clientY = ev.clientY;
 			if (!targets.length || targets[targets.length - 1] !== ev.target) {
-				targets.push(ev.target)
+				targets.push(ev.target);
 			}
-		}
+		};
 		$(document.documentElement)
-			.bind('mousemove', move)
+			.bind('mousemove', move);
 
 		stop();
 		Syn.move({
@@ -119,20 +117,19 @@ steal("src/synthetic.js", function (Syn) {
 			duration: 1000
 		}, "wrap", function () {
 
-			equal(clientX, 199)
-			equal(clientY, 50)
+			equal(clientX, 199);
+			equal(clientY, 50);
 			$(document.documentElement)
-				.unbind('mousemove', move)
+				.unbind('mousemove', move);
 			for (var i = 0; i < els.length; i++) {
-				ok(els[i] == targets[i], "target is right")
+				ok(els[i] === targets[i], "target is right");
 			}
 
 			$("#qunit-test-area")
-				.html("")
+				.html("");
 			start();
-		})
-
-	})
+		});
+	});
 
 	//These rely on jquery++ events atm. TODO: remove tests as this produces a circular dependency between jQuery++ and Syn
 	// test("dragging an element with duration", function(){
@@ -224,4 +221,4 @@ steal("src/synthetic.js", function (Syn) {
 	// 		});
 	// 	})
 	// })
-})
+});

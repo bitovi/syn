@@ -25,7 +25,8 @@ steal(function () {
 		},
 		data = {},
 		id = 1,
-		expando = "_synthetic" + new Date().getTime(),
+		expando = "_synthetic" + new Date()
+			.getTime(),
 		bind, unbind, schedule, key = /keypress|keyup|keydown/,
 		page = /load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll/,
 		//this is maintained so we can click on html and blur the active element
@@ -130,7 +131,7 @@ steal(function () {
 		 * Have we missed something? We happily accept patches.  The following are 
 		 * important objects and properties of Syn:
 		 * <ul>
-		 * 	<li><code>Syn.create</code> - contains methods to setup, convert options, and create an event of a specific type.</li>
+		 * <li><code>Syn.create</code> - contains methods to setup, convert options, and create an event of a specific type.</li>
 		 *  <li><code>Syn.defaults</code> - default behavior by event type (except for keys).</li>
 		 *  <li><code>Syn.key.defaults</code> - default behavior by key.</li>
 		 *  <li><code>Syn.keycodes</code> - supported keys you can type.</li>
@@ -161,8 +162,8 @@ steal(function () {
 		return el.addEventListener ? el.removeEventListener(ev, f, false) : el.detachEvent("on" + ev, f);
 	};
 
-	schedule = Syn.config.schedule || function() {
-		setTimeout.apply(window, arguments);	
+	schedule = Syn.config.schedule || function () {
+		setTimeout.apply(window, arguments);
 	};
 	/**
 	 * @Static
@@ -185,12 +186,16 @@ steal(function () {
 			//run event
 			if (typeof this[type] === "function") {
 				this[type](args.options, args.element, function (defaults, el) {
-					args.callback && args.callback.apply(self, arguments);
+					if (args.callback) {
+						args.callback.apply(self, arguments);
+					}
 					self.done.apply(self, arguments);
 				});
 			} else {
 				this.result = Syn.trigger(type, args.options, args.element);
-				args.callback && args.callback.call(this, args.element, this.result);
+				if (args.callback) {
+					args.callback.call(this, args.element, this.result);
+				}
 			}
 		},
 		jquery: function (el, fast) {
@@ -238,7 +243,7 @@ steal(function () {
 		 * and the next event will happen on that element.
 		 */
 		defaults: {
-			focus: function () {
+			focus: function focus() {
 				if (!Syn.support.focusChanges) {
 					var element = this,
 						nodeName = element.nodeName.toLowerCase();
@@ -248,11 +253,11 @@ steal(function () {
 					//and this might be for only text style inputs ... hmmmmm ....
 					if (nodeName === "input" || nodeName === "textarea") {
 						bind(element, "blur", function () {
-							if (Syn.data(element, "syntheticvalue") != element.value) {
+							if (Syn.data(element, "syntheticvalue") !== element.value) {
 
 								Syn.trigger("change", {}, element);
 							}
-							unbind(element, "blur", arguments.callee);
+							unbind(element, "blur", focus);
 						});
 
 					}
@@ -269,11 +274,11 @@ steal(function () {
 		},
 		changeOnBlur: function (element, prop, value) {
 
-			bind(element, "blur", function () {
+			bind(element, "blur", function onblur() {
 				if (value !== element[prop]) {
 					Syn.trigger("change", {}, element);
 				}
-				unbind(element, "blur", arguments.callee);
+				unbind(element, "blur", onblur);
 			});
 
 		},
@@ -338,7 +343,7 @@ steal(function () {
 
 			// IE8 Standards doesn't like this on some elements
 			if (elem.getAttributeNode) {
-				attributeNode = elem.getAttributeNode("tabIndex")
+				attributeNode = elem.getAttributeNode("tabIndex");
 			}
 
 			return this.focusable.test(elem.nodeName) ||
@@ -479,9 +484,9 @@ steal(function () {
 				//automatically prevents the default behavior for this event
 				//this is to protect agianst nasty browser freezing bug in safari
 				if (autoPrevent) {
-					bind(element, type, function (ev) {
+					bind(element, type, function ontype(ev) {
 						ev.preventDefault();
-						unbind(this, type, arguments.callee);
+						unbind(this, type, ontype);
 					});
 				}
 
@@ -607,7 +612,9 @@ steal(function () {
 		 * @return {Boolean} true if default events were run, false if otherwise.
 		 */
 		trigger: function (type, options, element) {
-			options || (options = {});
+			if (!options) {
+				options = {};
+			}
 
 			var create = Syn.create,
 				setup = create[type] && create[type].setup,
@@ -617,7 +624,9 @@ steal(function () {
 				event, ret, autoPrevent, dispatchEl = element;
 
 			//any setup code?
-			Syn.support.ready === 2 && setup && setup(type, options, element);
+			if (Syn.support.ready === 2 && setup) {
+				setup(type, options, element);
+			}
 
 			autoPrevent = options._autoPrevent;
 			//get kind
@@ -640,7 +649,9 @@ steal(function () {
 				ret = Syn.dispatch(event, dispatchEl, type, autoPrevent);
 			}
 
-			ret && Syn.support.ready === 2 && Syn.defaults[type] && Syn.defaults[type].call(element, options, autoPrevent);
+			if (ret && Syn.support.ready === 2 && Syn.defaults[type]) {
+				Syn.defaults[type].call(element, options, autoPrevent);
+			}
 			return ret;
 		},
 		eventSupported: function (eventName) {
@@ -698,15 +709,19 @@ steal(function () {
 				if (typeof this[type] === "function") {
 					this.element = args.element || el;
 					this[type](args.options, this.element, function (defaults, el) {
-						args.callback && args.callback.apply(self, arguments);
+						if (args.callback) {
+							args.callback.apply(self, arguments);
+						}
 						self.done.apply(self, arguments);
 					});
 				} else {
 					this.result = Syn.trigger(type, args.options, args.element);
-					args.callback && args.callback.call(this, args.element, this.result);
+					if (args.callback) {
+						args.callback.call(this, args.element, this.result);
+					}
 					return this;
 				}
-			})
+			});
 			return this;
 		},
 		/**
@@ -721,16 +736,20 @@ steal(function () {
 			}
 			timeout = timeout || 600;
 			var self = this;
-			this.queue.unshift(function() {
-				schedule(function() {
-					callback && callback.apply(self, [])
+			this.queue.unshift(function () {
+				schedule(function () {
+					if (callback) {
+						callback.apply(self, []);
+					}
 					self.done.apply(self, arguments);
 				}, timeout);
 			});
 			return this;
 		},
 		done: function (defaults, el) {
-			el && (this.element = el);
+			if (el) {
+				this.element = el;
+			}
 			if (this.queue.length) {
 				this.queue.pop()
 					.call(this, this.element, defaults);
@@ -769,7 +788,7 @@ steal(function () {
 			Syn.trigger("mousedown", options, element);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
-			schedule(function() {
+			schedule(function () {
 				Syn.trigger("mouseup", options, element);
 				if (!Syn.support.mouseDownUpClicks || force) {
 					Syn.trigger("click", options, element);
@@ -779,7 +798,7 @@ steal(function () {
 					Syn.create.click.setup('click', options, element);
 					Syn.defaults.click.call(element);
 					//must give time for callback
-					schedule(function() {
+					schedule(function () {
 						callback(true);
 					}, 1);
 				}
@@ -799,7 +818,7 @@ steal(function () {
 			Syn.trigger("mousedown", mouseopts, element);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
-			schedule(function() {
+			schedule(function () {
 				Syn.trigger("mouseup", mouseopts, element);
 				if (Syn.mouse.browser.right.contextmenu) {
 					Syn.trigger("contextmenu", extend(extend({}, Syn.mouse.browser.right.contextmenu), options), element);
@@ -822,9 +841,9 @@ steal(function () {
 		"_dblclick": function (options, element, callback) {
 			Syn.helpers.addOffset(options, element);
 			var self = this;
-			this._click(options, element, function() {
-				schedule(function() {
-					self._click(options, element, function() {
+			this._click(options, element, function () {
+				schedule(function () {
+					self._click(options, element, function () {
 						Syn.trigger("dblclick", options, element);
 						callback(true);
 					}, true);
@@ -850,4 +869,4 @@ steal(function () {
 	}
 
 	return Syn;
-})
+});
