@@ -1,8 +1,10 @@
 steal('src/synthetic.js', 'src/mouse.js', function checkSupport(Syn) {
 
 	if (!document.body) {
-			Syn.schedule(checkSupport, 1);
-			return;
+		Syn.schedule(function() {
+			checkSupport(Syn);	
+		}, 1);
+		return;
 	}
 
 	window.__synthTest = function () {
