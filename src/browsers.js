@@ -394,7 +394,7 @@ steal('src/synthetic.js', 'src/mouse.support.js', function (Syn) {
 				}
 			}
 		}
-	}
+	};
 
 	//set browser
 	Syn.key.browser =
@@ -404,7 +404,7 @@ steal('src/synthetic.js', 'src/mouse.support.js', function (Syn) {
 		}
 		for (var browser in Syn.browser) {
 			if (Syn.browser[browser] && Syn.key.browsers[browser]) {
-				return Syn.key.browsers[browser]
+				return Syn.key.browsers[browser];
 			}
 		}
 		return Syn.key.browsers.gecko;
@@ -417,7 +417,7 @@ steal('src/synthetic.js', 'src/mouse.support.js', function (Syn) {
 		}
 		for (var browser in Syn.browser) {
 			if (Syn.browser[browser] && Syn.mouse.browsers[browser]) {
-				return Syn.mouse.browsers[browser]
+				return Syn.mouse.browsers[browser];
 			}
 		}
 		return Syn.mouse.browsers.gecko;

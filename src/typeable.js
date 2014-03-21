@@ -13,7 +13,7 @@ steal("src/synthetic.js", function (Syn) {
 	 * @param {Function} fn Function to register.
 	 */
 	Syn.typeable = function (fn) {
-		if (typeables.indexOf(fn) == -1) {
+		if (typeables.indexOf(fn) === -1) {
 			typeables.push(fn);
 		}
 	};
@@ -47,7 +47,7 @@ steal("src/synthetic.js", function (Syn) {
 
 	// Content editable
 	type(function (el) {
-		return ["", "true"].indexOf(el.getAttribute("contenteditable")) != -1;
+		return ["", "true"].indexOf(el.getAttribute("contenteditable")) !== -1;
 	});
 
 	return Syn;
