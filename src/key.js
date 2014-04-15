@@ -285,14 +285,14 @@ steal('src/synthetic.js', 'src/typeable.js', 'src/browsers.js', function (Syn) {
 		selectText: function (el, start, end) {
 			if (el.setSelectionRange) {
 				if (!end) {
-					el.focus();
+					Syn.__tryFocus(el);
 					el.setSelectionRange(start, start);
 				} else {
 					el.selectionStart = start;
 					el.selectionEnd = end;
 				}
 			} else if (el.createTextRange) {
-				//el.focus();
+				//Syn.__tryFocus(el);
 				var r = el.createTextRange();
 				r.moveStart('character', start);
 				end = end || start;
@@ -605,7 +605,7 @@ steal('src/synthetic.js', 'src/typeable.js', 'src/browsers.js', function (Syn) {
 				if (!current) {
 					current = firstNotIndexed;
 				} else {
-					current.focus();
+					Syn.__tryFocus(current);
 				}
 				return current;
 			},
@@ -668,7 +668,7 @@ steal('src/synthetic.js', 'src/typeable.js', 'src/browsers.js', function (Syn) {
 				// but doesn't write them if the element isn't focused
 				// focus on the element (ignored if already focused)
 				if (Syn.support.keyCharacters && !Syn.support.keysOnNotFocused) {
-					element.focus();
+					Syn.__tryFocus(element);
 				}
 			}
 		},

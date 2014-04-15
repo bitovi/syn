@@ -155,6 +155,14 @@ steal(function () {
 
 	Syn.config = opts;
 
+	// helper for supporting IE8 and below:
+	// focus will throw in some circumnstances, like element being invisible
+	Syn.__tryFocus = function tryFocus(element) {
+		try {
+			element.focus();
+		} catch (e) {}
+	};
+
 	bind = function (el, ev, f) {
 		return el.addEventListener ? el.addEventListener(ev, f, false) : el.attachEvent("on" + ev, f);
 	};
@@ -537,7 +545,7 @@ steal(function () {
 					Syn.onParents(element, function (el) {
 						if (Syn.isFocusable(el)) {
 							if (el.nodeName.toLowerCase() !== 'html') {
-								el.focus();
+								Syn.__tryFocus(el);
 								activeElement = el;
 							} else if (activeElement) {
 								// TODO: The HTML element isn't focasable in IE, but it is

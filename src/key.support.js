@@ -41,7 +41,7 @@ steal('src/synthetic.js', 'src/key.js', function (Syn) {
 				return false;
 			};
 			// Firefox 4 won't write key events if the element isn't focused
-			inputter.focus();
+			Syn.__tryFocus(inputter);
 			Syn.trigger("keypress", "\r", inputter);
 
 			Syn.trigger("keypress", "a", inputter);
@@ -54,9 +54,9 @@ steal('src/synthetic.js', 'src/key.js', function (Syn) {
 			inputter.onchange = function () {
 				Syn.support.focusChanges = true;
 			};
-			inputter.focus();
+			Syn.__tryFocus(inputter);
 			Syn.trigger("keypress", "a", inputter);
-			form.childNodes[5].focus(); // this will throw a change event
+			Syn.__tryFocus(form.childNodes[5]); // this will throw a change event
 			Syn.trigger("keypress", "b", inputter);
 			Syn.support.keysOnNotFocused = inputter.value === "ab";
 
