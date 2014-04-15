@@ -23,7 +23,7 @@ steal('src/synthetic.js', 'src/key.js', function (Syn) {
 				"<textarea>1\n2</textarea>" +
 				"</form>";
 
-			doc.insertBefore(div, doc.firstElementChild);
+			doc.insertBefore(div, doc.firstElementChild || doc.children[0]);
 			form = div.firstChild;
 			checkbox = form.childNodes[0];
 			submit = form.childNodes[2];
