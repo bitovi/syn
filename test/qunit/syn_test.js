@@ -131,7 +131,11 @@ steal("src/synthetic.js", function (Syn) {
 		var scroll30 = st.rootJoin("test/qunit/scroll_30/index.html");
 		iframe.src = scroll30;
 		window.synReady = function () {
-			delete window.synReady;
+			try {
+				delete window.synReady;
+			} catch (e) {
+				window.synReady = undefined; // IE 8 and below
+			}
 			var win = iframe.contentWindow;
 			var scrollTop = win.document.body.scrollTop;
 
