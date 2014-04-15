@@ -170,8 +170,8 @@ steal(function () {
 		return el.addEventListener ? el.removeEventListener(ev, f, false) : el.detachEvent("on" + ev, f);
 	};
 
-	schedule = Syn.config.schedule || function () {
-		setTimeout.apply(window, arguments);
+	schedule = Syn.config.schedule || function (fn, ms) {
+		setTimeout(fn, ms);
 	};
 	/**
 	 * @Static
