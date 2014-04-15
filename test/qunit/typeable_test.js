@@ -32,8 +32,7 @@ steal("src/synthetic.js", function (Syn) {
 	test("User defined typeable function", function () {
 		// We're going to define a typeable with a class of foo.
 		Syn.typeable(function (node) {
-			return node.className.split(" ")
-				.indexOf("foo") !== -1;
+			return node.className === "foo";
 		});
 
 		var div = document.createElement("div");
