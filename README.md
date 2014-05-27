@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bitovi/syn)](https://travis-ci.org/bitovi/syn)
+[![Build Status](https://travis-ci.org/bitovi/syn.svg?branch=master)](https://travis-ci.org/bitovi/syn)
 
 __Notice 01-23-2014__
 
