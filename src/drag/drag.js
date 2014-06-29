@@ -1,16 +1,16 @@
-steal('../synthetic.js', function (Syn) {
+steal('../synthetic.js', function (syn) {
 
 	// check if elementFromPageExists
 	(function dragSupport() {
 
 		// document body has to exists for this test
 		if (!document.body) {
-			Syn.schedule(dragSupport, 1);
+			syn.schedule(dragSupport, 1);
 			return;
 		}
 		var div = document.createElement('div');
 		document.body.appendChild(div);
-		Syn.helpers.extend(div.style, {
+		syn.helpers.extend(div.style, {
 			width: "100px",
 			height: "10000px",
 			backgroundColor: "blue",
@@ -25,9 +25,9 @@ steal('../synthetic.js', function (Syn) {
 		}
 		var el = document.elementFromPoint(3, 1);
 		if (el === div) {
-			Syn.support.elementFromClient = true;
+			syn.support.elementFromClient = true;
 		} else {
-			Syn.support.elementFromPage = true;
+			syn.support.elementFromPage = true;
 		}
 		document.body.removeChild(div);
 		document.body.scrollTop = 0;
@@ -37,11 +37,11 @@ steal('../synthetic.js', function (Syn) {
 	var elementFromPoint = function (point, element) {
 		var clientX = point.clientX,
 			clientY = point.clientY,
-			win = Syn.helpers.getWindow(element),
+			win = syn.helpers.getWindow(element),
 			el;
 
-		if (Syn.support.elementFromPage) {
-			var off = Syn.helpers.scrollOffset(win);
+		if (syn.support.elementFromPage) {
+			var off = syn.helpers.scrollOffset(win);
 			clientX = clientX + off.left; //convert to pageX
 			clientY = clientY + off.top; //convert to pageY
 		}
@@ -55,21 +55,21 @@ steal('../synthetic.js', function (Syn) {
 		//creates an event at a certain point
 		createEventAtPoint = function (event, point, element) {
 			var el = elementFromPoint(point, element);
-			Syn.trigger(el || element, event, point);
+			syn.trigger(el || element, event, point);
 			return el;
 		},
 		// creates a mousemove event, but first triggering mouseout / mouseover if appropriate
 		mouseMove = function (point, element, last) {
 			var el = elementFromPoint(point, element);
 			if (last !== el && el && last) {
-				var options = Syn.helpers.extend({}, point);
+				var options = syn.helpers.extend({}, point);
 				options.relatedTarget = el;
-				Syn.trigger(last, "mouseout", options);
+				syn.trigger(last, "mouseout", options);
 				options.relatedTarget = last;
-				Syn.trigger(el, "mouseover", options);
+				syn.trigger(el, "mouseover", options);
 			}
 
-			Syn.trigger(el || element, "mousemove", point);
+			syn.trigger(el || element, "mousemove", point);
 			return el;
 		},
 		// start and end are in clientX, clientY
@@ -77,7 +77,7 @@ steal('../synthetic.js', function (Syn) {
 			var startTime = new Date(),
 				distX = end.clientX - start.clientX,
 				distY = end.clientY - start.clientY,
-				win = Syn.helpers.getWindow(element),
+				win = syn.helpers.getWindow(element),
 				current = elementFromPoint(start, element),
 				cursor = win.document.createElement('div'),
 				calls = 0,
@@ -85,7 +85,7 @@ steal('../synthetic.js', function (Syn) {
 			move = function onmove() {
 				//get what fraction we are at
 				var now = new Date(),
-					scrollOffset = Syn.helpers.scrollOffset(win),
+					scrollOffset = syn.helpers.scrollOffset(win),
 					fraction = (calls === 0 ? 0 : now - startTime) / duration,
 					options = {
 						clientX: distX * fraction + start.clientX,
@@ -93,19 +93,19 @@ steal('../synthetic.js', function (Syn) {
 					};
 				calls++;
 				if (fraction < 1) {
-					Syn.helpers.extend(cursor.style, {
+					syn.helpers.extend(cursor.style, {
 						left: (options.clientX + scrollOffset.left + 2) + "px",
 						top: (options.clientY + scrollOffset.top + 2) + "px"
 					});
 					current = mouseMove(options, element, current);
-					Syn.schedule(onmove, 15);
+					syn.schedule(onmove, 15);
 				} else {
 					current = mouseMove(end, element, current);
 					win.document.body.removeChild(cursor);
 					callback();
 				}
 			};
-			Syn.helpers.extend(cursor.style, {
+			syn.helpers.extend(cursor.style, {
 				height: "5px",
 				width: "5px",
 				backgroundColor: "red",
@@ -124,7 +124,7 @@ steal('../synthetic.js', function (Syn) {
 			});
 		},
 		center = function (el) {
-			var j = Syn.jquery()(el),
+			var j = syn.jquery()(el),
 				o = j.offset();
 			return {
 				pageX: o.left + (j.outerWidth() / 2),
@@ -160,13 +160,13 @@ steal('../synthetic.js', function (Syn) {
 				};
 			}
 			if (typeof option === 'string') {
-				option = Syn.jquery()(option, win.document)[0];
+				option = syn.jquery()(option, win.document)[0];
 			}
 			if (option.nodeName) {
 				option = center(option);
 			}
 			if (option.pageX) {
-				var off = Syn.helpers.scrollOffset(win);
+				var off = syn.helpers.scrollOffset(win);
 				option = {
 					clientX: option.pageX - off.left,
 					clientY: option.pageY - off.top
@@ -177,7 +177,7 @@ steal('../synthetic.js', function (Syn) {
 		// if the client chords are not going to be visible ... scroll the page so they will be ...
 		adjust = function (from, to, win) {
 			if (from.clientY < 0) {
-				var off = Syn.helpers.scrollOffset(win);
+				var off = syn.helpers.scrollOffset(win);
 				var top = off.top + (from.clientY) - 100,
 					diff = top - off.top;
 
@@ -190,20 +190,20 @@ steal('../synthetic.js', function (Syn) {
 				}
 				from.clientY = from.clientY - diff;
 				to.clientY = to.clientY - diff;
-				Syn.helpers.scrollOffset(win, {
+				syn.helpers.scrollOffset(win, {
 					top: top,
 					left: off.left
 				});
 			}
 		};
 	/**
-	 * @add Syn prototype
+	 * @add syn prototype
 	 */
-	Syn.helpers.extend(Syn.init.prototype, {
+	syn.helpers.extend(syn.init.prototype, {
 		/**
-			 * @function Syn.move move()
+			 * @function syn.move move()
 		   * @parent mouse
-			 * @signature `Syn.move(from, options, callback)`
+			 * @signature `syn.move(from, options, callback)`
 			 * Moves the cursor from one point to another.  
 			 * 
 			 * ### Quick Example
@@ -211,7 +211,7 @@ steal('../synthetic.js', function (Syn) {
 			 * The following moves the cursor from (0,0) in
 			 * the window to (100,100) in 1 second.
 			 * 
-			 *     Syn.move(
+			 *     syn.move(
 			 *          document.document,
 			 *          {
 			 *            from: {clientX: 0, clientY: 0},
@@ -228,7 +228,7 @@ steal('../synthetic.js', function (Syn) {
 			 * If you pass pageX or pageY, these will get converted
 			 * to client coordinates.
 			 * 
-			 *     Syn.move(
+			 *     syn.move(
 			 *          document.document,
 			 *          {
 			 *            from: {pageX: 0, pageY: 0},
@@ -239,7 +239,7 @@ steal('../synthetic.js', function (Syn) {
 			 * 
 			 * You can set the pageX and pageY as strings like:
 			 * 
-			 *     Syn.move(
+			 *     syn.move(
 			 *          document.document,
 			 *          {
 			 *            from: "0x0",
@@ -251,7 +251,7 @@ steal('../synthetic.js', function (Syn) {
 			 * If jQuery is present, you can pass an element as the from or to option
 			 * and the coordinate will be set as the center of the element.
 			 
-			 *     Syn.move(
+			 *     syn.move(
 			 *          document.document,
 			 *          {
 			 *            from: $(".recipe")[0],
@@ -262,7 +262,7 @@ steal('../synthetic.js', function (Syn) {
 			 * 
 			 * If jQuery is present, you can pass a query string as the from or to option.
 			 * 
-			 * Syn.move(
+			 * syn.move(
 			 *      document.document,
 			 *      {
 			 *        from: ".recipe",
@@ -271,9 +271,9 @@ steal('../synthetic.js', function (Syn) {
 			 *    
 			 * ### No From
 			 * 
-			 * If you don't provide a from, the element argument passed to Syn is used.
+			 * If you don't provide a from, the element argument passed to syn is used.
 			 * 
-			 *     Syn.move(
+			 *     syn.move(
 			 *          'myrecipe',
 			 *          { to: "#trash" })
 			 * 
@@ -281,7 +281,7 @@ steal('../synthetic.js', function (Syn) {
 			 * 
 			 * You can move the drag relative to the center of the from element.
 			 * 
-			 *     Syn.move("myrecipe", "+20 +30");
+			 *     syn.move("myrecipe", "+20 +30");
 			 *
 			 * @param {HTMLElement} from the element to move
 			 * @param {Object} options options to configure the drag
@@ -289,7 +289,7 @@ steal('../synthetic.js', function (Syn) {
 			 */
 		_move: function (from, options, callback) {
 			//need to convert if elements
-			var win = Syn.helpers.getWindow(from),
+			var win = syn.helpers.getWindow(from),
 				fro = convertOption(options.from || from, win, from),
 				to = convertOption(options.to || options, win, from);
 
@@ -300,11 +300,11 @@ steal('../synthetic.js', function (Syn) {
 
 		},
 		/**
-		 * @function Syn.drag drag()
+		 * @function syn.drag drag()
 		 * @parent mouse
-		 * @signature `Syn.drag(from, options, callback)`
+		 * @signature `syn.drag(from, options, callback)`
 		 * Creates a mousedown and drags from one point to another.
-		 * Check out [Syn.prototype.move move] for API details.
+		 * Check out [syn.prototype.move move] for API details.
 		 *
 		 * @param {HTMLElement} from
 		 * @param {Object} options
@@ -312,7 +312,7 @@ steal('../synthetic.js', function (Syn) {
 		 */
 		_drag: function (from, options, callback) {
 			//need to convert if elements
-			var win = Syn.helpers.getWindow(from),
+			var win = syn.helpers.getWindow(from),
 				fro = convertOption(options.from || from, win, from),
 				to = convertOption(options.to || options, win, from);
 
@@ -323,5 +323,5 @@ steal('../synthetic.js', function (Syn) {
 
 		}
 	});
-	return Syn;
+	return syn;
 });

@@ -1,13 +1,13 @@
-steal('./synthetic.js', function (Syn) {
+steal('./synthetic.js', function (syn) {
 	//handles mosue events
 
-	var h = Syn.helpers,
+	var h = syn.helpers,
 		getWin = h.getWindow;
 
-	Syn.mouse = {};
-	h.extend(Syn.defaults, {
+	syn.mouse = {};
+	h.extend(syn.defaults, {
 		mousedown: function (options) {
-			Syn.trigger(this, "focus", {});
+			syn.trigger(this, "focus", {});
 		},
 		click: function () {
 			// prevents the access denied issue in IE if the click causes the element to be destroyed
@@ -16,8 +16,8 @@ steal('./synthetic.js', function (Syn) {
 			try {
 				href = element.href;
 				type = element.type;
-				createChange = Syn.data(element, "createChange");
-				radioChanged = Syn.data(element, "radioChanged");
+				createChange = syn.data(element, "createChange");
+				radioChanged = syn.data(element, "radioChanged");
 				scope = getWin(element);
 				nodeName = element.nodeName.toLowerCase();
 			} catch (e) {
@@ -26,12 +26,12 @@ steal('./synthetic.js', function (Syn) {
 			//get old values
 
 			//this code was for restoring the href attribute to prevent popup opening
-			//if ((href = Syn.data(element, "href"))) {
+			//if ((href = syn.data(element, "href"))) {
 			//	element.setAttribute('href', href)
 			//}
 
 			//run href javascript
-			if (!Syn.support.linkHrefJS && /^\s*javascript:/.test(href)) {
+			if (!syn.support.linkHrefJS && /^\s*javascript:/.test(href)) {
 				//eval js
 				var code = href.replace(/^\s*javascript:/, "");
 
@@ -46,13 +46,13 @@ steal('./synthetic.js', function (Syn) {
 			}
 
 			//submit a form
-			if (!(Syn.support.clickSubmits) && (nodeName === "input" &&
+			if (!(syn.support.clickSubmits) && (nodeName === "input" &&
 					type === "submit") ||
 				nodeName === 'button') {
 
-				var form = Syn.closest(element, "form");
+				var form = syn.closest(element, "form");
 				if (form) {
-					Syn.trigger(form, "submit", {});
+					syn.trigger(form, "submit", {});
 				}
 
 			}
@@ -65,38 +65,38 @@ steal('./synthetic.js', function (Syn) {
 			//change a checkbox
 			if (nodeName === "input" && type === "checkbox") {
 
-				//if(!Syn.support.clickChecks && !Syn.support.changeChecks){
+				//if(!syn.support.clickChecks && !syn.support.changeChecks){
 				//	element.checked = !element.checked;
 				//}
-				if (!Syn.support.clickChanges) {
-					Syn.trigger(element, "change", {});
+				if (!syn.support.clickChanges) {
+					syn.trigger(element, "change", {});
 				}
 			}
 
 			//change a radio button
 			if (nodeName === "input" && type === "radio") { // need to uncheck others if not checked
-				if (radioChanged && !Syn.support.radioClickChanges) {
-					Syn.trigger(element, "change", {});
+				if (radioChanged && !syn.support.radioClickChanges) {
+					syn.trigger(element, "change", {});
 				}
 			}
 			// change options
 			if (nodeName === "option" && createChange) {
-				Syn.trigger(element.parentNode, "change", {}); //does not bubble
-				Syn.data(element, "createChange", false);
+				syn.trigger(element.parentNode, "change", {}); //does not bubble
+				syn.data(element, "createChange", false);
 			}
 		}
 	});
 
 	//add create and setup behavior for mosue events
-	h.extend(Syn.create, {
+	h.extend(syn.create, {
 		mouse: {
 			options: function (type, options, element) {
 				var doc = document.documentElement,
 					body = document.body,
 					center = [options.pageX || 0, options.pageY || 0],
 					//browser might not be loaded yet (doing support code)
-					left = Syn.mouse.browser && Syn.mouse.browser.left[type],
-					right = Syn.mouse.browser && Syn.mouse.browser.right[type];
+					left = syn.mouse.browser && syn.mouse.browser.left[type],
+					right = syn.mouse.browser && syn.mouse.browser.right[type];
 				return h.extend({
 					bubbles: true,
 					cancelable: true,
@@ -106,10 +106,10 @@ steal('./synthetic.js', function (Syn) {
 					screenY: 1,
 					clientX: options.clientX || center[0] - (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc.clientLeft || 0),
 					clientY: options.clientY || center[1] - (doc && doc.scrollTop || body && body.scrollTop || 0) - (doc.clientTop || 0),
-					ctrlKey: !! Syn.key.ctrlKey,
-					altKey: !! Syn.key.altKey,
-					shiftKey: !! Syn.key.shiftKey,
-					metaKey: !! Syn.key.metaKey,
+					ctrlKey: !! syn.key.ctrlKey,
+					altKey: !! syn.key.altKey,
+					shiftKey: !! syn.key.shiftKey,
+					metaKey: !! syn.key.metaKey,
 					button: left && left.button !== null ? left.button : right && right.button || (type === 'contextmenu' ? 2 : 0),
 					relatedTarget: document.documentElement
 				}, options);
@@ -149,7 +149,7 @@ steal('./synthetic.js', function (Syn) {
 
 				//we need to manually 'check' in browser that can't check
 				//so checked has the right value
-				if (!Syn.support.clickChecks && !Syn.support.changeChecks && nodeName === "input") {
+				if (!syn.support.clickChecks && !syn.support.changeChecks && nodeName === "input") {
 					type = element.type.toLowerCase(); //pretty sure lowercase isn't needed
 					if (type === 'checkbox') {
 						element.checked = !element.checked;
@@ -158,7 +158,7 @@ steal('./synthetic.js', function (Syn) {
 						//do the checks manually 
 						if (!element.checked) { //do nothing, no change
 							try {
-								Syn.data(element, "radioChanged", true);
+								syn.data(element, "radioChanged", true);
 							} catch (e) {}
 							element.checked = true;
 						}
@@ -168,7 +168,7 @@ steal('./synthetic.js', function (Syn) {
 				if (nodeName === "a" && element.href && !/^\s*javascript:/.test(element.href)) {
 
 					//save href
-					Syn.data(element, "href", element.href);
+					syn.data(element, "href", element.href);
 
 					//remove b/c safari/opera will open a new tab instead of changing the page
 					// this has been removed because newer versions don't have this problem
@@ -194,7 +194,7 @@ steal('./synthetic.js', function (Syn) {
 						//shouldn't this wait on triggering
 						//change?
 						element.parentNode.selectedIndex = i;
-						Syn.data(element, "createChange", true);
+						syn.data(element, "createChange", true);
 					}
 				}
 
@@ -204,12 +204,12 @@ steal('./synthetic.js', function (Syn) {
 			setup: function (type, options, element) {
 				var nn = element.nodeName.toLowerCase();
 				//we have to auto prevent default to prevent freezing error in safari
-				if (Syn.browser.safari && (nn === "select" || nn === "option")) {
+				if (syn.browser.safari && (nn === "select" || nn === "option")) {
 					options._autoPrevent = true;
 				}
 			}
 		}
 	});
 
-	return Syn;
+	return syn;
 });
