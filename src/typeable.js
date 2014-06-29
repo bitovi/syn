@@ -2,6 +2,17 @@ steal("src/synthetic.js", function (Syn) {
 	// Holds functions that test for typeability
 	var typeables = [];
 
+	// IE <= 8 doesn't implement [].indexOf.
+	// This shim was extracted from CoffeeScript:
+	var __indexOf = [].indexOf || function (item) {
+			for (var i = 0, l = this.length; i < l; i++) {
+				if (i in this && this[i] === item) {
+					return i;
+				}
+			}
+			return -1;
+		};
+
 	/*
 	 * @function typeable
 	 * Registers a function that is used to determine if an
@@ -13,7 +24,7 @@ steal("src/synthetic.js", function (Syn) {
 	 * @param {Function} fn Function to register.
 	 */
 	Syn.typeable = function (fn) {
-		if (typeables.indexOf(fn) === -1) {
+		if (__indexOf.call(typeables, fn) === -1) {
 			typeables.push(fn);
 		}
 	};
@@ -47,7 +58,7 @@ steal("src/synthetic.js", function (Syn) {
 
 	// Content editable
 	type(function (el) {
-		return ["", "true"].indexOf(el.getAttribute("contenteditable")) !== -1;
+		return __indexOf.call(["", "true"], el.getAttribute("contenteditable")) !== -1;
 	});
 
 	return Syn;

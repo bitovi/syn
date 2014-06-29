@@ -484,7 +484,8 @@ steal("src/synthetic.js", function (Syn) {
 		};
 
 		var testKeyCode = function (key, code) {
-			st.binder("key", "keydown", function f(ev) {
+			var f;
+			st.binder("key", "keydown", f = function (ev) {
 				st.unbinder("key", "keydown", f);
 				ok(ev.keyCode === code);
 				ok(ev.which === ev.keyCode);
