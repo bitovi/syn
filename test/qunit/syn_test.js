@@ -1,6 +1,6 @@
 /* global st:true */
 
-steal("src/synthetic.js", function (Syn) {
+steal("src/synthetic.js", function (syn) {
 
 	module("syn");
 
@@ -41,9 +41,9 @@ steal("src/synthetic.js", function (Syn) {
 	};
 
 	setTimeout(function supportLog() {
-		if (Syn.support.ready === 2) {
-			for (var name in Syn.support) {
-				st.log(name + ": " + Syn.support[name]);
+		if (syn.support.ready === 2) {
+			for (var name in syn.support) {
+				st.log(name + ": " + syn.support[name]);
 			}
 		} else {
 			setTimeout(supportLog, 1);
@@ -67,7 +67,7 @@ steal("src/synthetic.js", function (Syn) {
 			.select, "change", changef);
 
 		stop();
-		Syn.click(st.g("two"), function () {
+		syn.click(st.g("two"), function () {
 			equal(change, 1, "change called once");
 			equal(st.g("outer")
 				.select.selectedIndex, 1, "Change Selected Index");
@@ -100,7 +100,7 @@ steal("src/synthetic.js", function (Syn) {
 		}, 13);
 	});
 
-	if (!Syn.skipFocusTests) {
+	if (!syn.skipFocusTests) {
 		test("focus triggers focus events", function () {
 			st.g("qunit-test-area")
 				.innerHTML = "<input type='text' id='focusme'/>";
@@ -120,7 +120,7 @@ steal("src/synthetic.js", function (Syn) {
 		});
 	}
 
-	test("Syn.support effect on scroll position, #30", function () {
+	test("syn.support effect on scroll position, #30", function () {
 		stop();
 
 		// Make sure the browser hasn't scrolled on account of feature detection.
@@ -147,7 +147,7 @@ steal("src/synthetic.js", function (Syn) {
 			.appendChild(iframe);
 	});
 
-	test("Syn.schedule gets called when Syn.delay is used", function () {
+	test("syn.schedule gets called when syn.delay is used", function () {
 		stop();
 
 		var iframe = document.createElement("iframe");

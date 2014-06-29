@@ -1,5 +1,5 @@
-steal('./synthetic.js', './mouse.js', function (Syn) {
-	Syn.key.browsers = {
+steal('./synthetic.js', './mouse.js', function (syn) {
+	syn.key.browsers = {
 		webkit: {
 			'prevent': {
 				"keyup": [],
@@ -253,7 +253,7 @@ steal('./synthetic.js', './mouse.js', function (Syn) {
 		}
 	};
 
-	Syn.mouse.browsers = {
+	syn.mouse.browsers = {
 		webkit: {
 			"right": {
 				"mousedown": {
@@ -397,30 +397,30 @@ steal('./synthetic.js', './mouse.js', function (Syn) {
 	};
 
 	//set browser
-	Syn.key.browser =
+	syn.key.browser =
 		(function () {
-		if (Syn.key.browsers[window.navigator.userAgent]) {
-			return Syn.key.browsers[window.navigator.userAgent];
+		if (syn.key.browsers[window.navigator.userAgent]) {
+			return syn.key.browsers[window.navigator.userAgent];
 		}
-		for (var browser in Syn.browser) {
-			if (Syn.browser[browser] && Syn.key.browsers[browser]) {
-				return Syn.key.browsers[browser];
+		for (var browser in syn.browser) {
+			if (syn.browser[browser] && syn.key.browsers[browser]) {
+				return syn.key.browsers[browser];
 			}
 		}
-		return Syn.key.browsers.gecko;
+		return syn.key.browsers.gecko;
 	})();
 
-	Syn.mouse.browser =
+	syn.mouse.browser =
 		(function () {
-		if (Syn.mouse.browsers[window.navigator.userAgent]) {
-			return Syn.mouse.browsers[window.navigator.userAgent];
+		if (syn.mouse.browsers[window.navigator.userAgent]) {
+			return syn.mouse.browsers[window.navigator.userAgent];
 		}
-		for (var browser in Syn.browser) {
-			if (Syn.browser[browser] && Syn.mouse.browsers[browser]) {
-				return Syn.mouse.browsers[browser];
+		for (var browser in syn.browser) {
+			if (syn.browser[browser] && syn.mouse.browsers[browser]) {
+				return syn.mouse.browsers[browser];
 			}
 		}
-		return Syn.mouse.browsers.gecko;
+		return syn.mouse.browsers.gecko;
 	})();
-	return Syn;
+	return syn;
 });

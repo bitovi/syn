@@ -1,6 +1,6 @@
 /* global st */
 
-steal("src/synthetic.js", function (Syn) {
+steal("src/synthetic.js", function (syn) {
 	module("synthetic/key", {
 		setup: function () {
 			st.g("qunit-test-area")
@@ -21,19 +21,19 @@ steal("src/synthetic.js", function (Syn) {
 	test("Key Characters", function () {
 		st.g("key")
 			.value = "";
-		Syn.key("a", "key");
+		syn.key("key", "a");
 		equal(st.g("key")
 			.value, "a", "a written");
 
 		st.g("key")
 			.value = "";
-		Syn.key("A", "key");
+		syn.key("key", "A");
 		equal(st.g("key")
 			.value, "A", "A written");
 
 		st.g("key")
 			.value = "";
-		Syn.key("1", "key");
+		syn.key("key", "1");
 		equal(st.g("key")
 			.value, "1", "1 written");
 	});
@@ -58,7 +58,7 @@ steal("src/synthetic.js", function (Syn) {
 			return false;
 		});
 		stop();
-		Syn.key("\r", "key", function () {
+		syn.key("key", "\r", function () {
 			equal(submit, 1, "submit on keypress");
 			equal(change, 1, "submit on keypress");
 			start();
@@ -76,7 +76,7 @@ steal("src/synthetic.js", function (Syn) {
 			return false;
 		});
 		stop();
-		Syn.key("\r", "focusLink", function () {
+		syn.key("focusLink", "\r", function () {
 			equal(clicked, 1, "clicked");
 			start();
 		});
@@ -93,9 +93,9 @@ steal("src/synthetic.js", function (Syn) {
 		st.binder("key", "input", recorder);
 		st.binder("key", "keyup", recorder);
 		stop();
-		Syn.key("B", "key", function () {
+		syn.key("key", "B", function () {
 			var expected = ["keydown", "keypress", "keyup"];
-			if (Syn.support.oninput) {
+			if (syn.support.oninput) {
 				expected.splice(2, 0, "input");
 			}
 
@@ -108,7 +108,7 @@ steal("src/synthetic.js", function (Syn) {
 		st.g('synTextArea')
 			.value = "";
 		stop();
-		Syn.type("ab\rcd", "synTextArea", function () {
+		syn.type("synTextArea", "ab\rcd", function () {
 			equal(st.g('synTextArea')
 				.value.replace("\r", ""), "ab\ncd", "typed new line correctly");
 			start();
@@ -119,10 +119,10 @@ steal("src/synthetic.js", function (Syn) {
 		st.g("key")
 			.value = "";
 		stop();
-		Syn.type("abc", "key", function () {
+		syn.type("key", "abc", function () {
 			equal(st.g("key")
 				.value, "abc", "abc written");
-			Syn.key("\b", "key");
+			syn.key("key", "\b");
 			equal(st.g("key")
 				.value, "ab", "ab written (key deleted)");
 			start();
@@ -149,7 +149,7 @@ steal("src/synthetic.js", function (Syn) {
 				.value;
 		});
 		stop();
-		Syn.key("J", "key", function () {
+		syn.key("key", "J", function () {
 			equal(upVal, "J", "Up Typing works");
 			equal(pressVal, "", "Press Typing works");
 			equal(downVal, "", "Down Typing works");
@@ -195,7 +195,7 @@ steal("src/synthetic.js", function (Syn) {
 					start();
 					return;
 				}
-				Syn.key(name, "scrolldiv");
+				syn.key("scrolldiv", name);
 			};
 		for (var name in keyTest) {
 			if (keyTest.hasOwnProperty(name)) {
@@ -247,7 +247,7 @@ steal("src/synthetic.js", function (Syn) {
 		keyEl.value = "012345";
 		selectText(keyEl, 1, 3);
 
-		Syn.key("delete", "key");
+		syn.key("key", "delete");
 
 		equal(keyEl.value, "0345", "delete range works");
 
@@ -255,58 +255,58 @@ steal("src/synthetic.js", function (Syn) {
 		keyEl.value = "012345";
 		selectText(keyEl, 2);
 
-		Syn.key("delete", "key");
+		syn.key("key", "delete");
 		equal(keyEl.value, "01345", "delete works");
 
 		// test character range
 		keyEl.value = "123456";
 		selectText(keyEl, 1, 3);
 
-		Syn.key("a", "key");
+		syn.key("key", "a");
 		equal(keyEl.value, "1a456", "character range works");
 
 		// test character key
 		keyEl.value = "123456";
 		selectText(keyEl, 2);
 
-		Syn.key("a", "key");
+		syn.key("key", "a");
 		equal(keyEl.value, "12a3456", "character insertion works");
 
 		// test backspace range
 		keyEl.value = "123456";
 		selectText(keyEl, 1, 3);
-		Syn.key("\b", "key");
+		syn.key("key", "\b");
 		equal(keyEl.value, "1456", "backspace range works");
 
 		// test backspace key
 		keyEl.value = "123456";
 		selectText(keyEl, 2);
-		Syn.key("\b", "key");
+		syn.key("key", "\b");
 		equal(keyEl.value, "13456", "backspace works");
 
 		// test textarea ranges
 		textAreaEl.value = "123456";
 		selectText(textAreaEl, 1, 3);
 
-		Syn.key("delete", textAreaEl);
+		syn.key(textAreaEl, "delete");
 		equal(textAreaEl.value, "1456", "delete range works in a textarea");
 
 		// test textarea ranges
 		textAreaEl.value = "123456";
 		selectText(textAreaEl, 1, 3);
-		Syn.key("a", textAreaEl);
+		syn.key(textAreaEl, "a");
 		equal(textAreaEl.value, "1a456", "character range works in a textarea");
 
 		// test textarea ranges
 		textAreaEl.value = "123456";
 		selectText(textAreaEl, 1, 3);
-		Syn.key("\b", textAreaEl);
+		syn.key(textAreaEl, "\b");
 		equal(textAreaEl.value, "1456", "backspace range works in a textarea");
 
 		// test textarea ranges
 		textAreaEl.value = "123456";
 		selectText(textAreaEl, 1, 3);
-		Syn.key("\r", textAreaEl);
+		syn.key(textAreaEl, "\r");
 
 		equal(textAreaEl.value.replace("\r", ""), "1\n456", "return range works in a textarea");
 
@@ -331,7 +331,7 @@ steal("src/synthetic.js", function (Syn) {
 		stop();
 		//give ie a second to focus
 		setTimeout(function () {
-			Syn.type('\r\tSecond\tThird\tFourth', 'first', function () {
+			syn.type('first', '\r\tSecond\tThird\tFourth', function () {
 				equal(clicked, 1, "clickd first");
 				equal(st.g('second')
 					.value, "Second", "moved to second");
@@ -361,7 +361,7 @@ steal("src/synthetic.js", function (Syn) {
 		stop();
 		//give ie a second to focus
 		setTimeout(function () {
-			Syn.type('[shift]4\t3\t2\t\r[shift-up]', 'fourth', function () {
+			syn.type('fourth', '[shift]4\t3\t2\t\r[shift-up]', function () {
 				equal(clicked, 1, "clickd first");
 				equal(st.g('second')
 					.value, "2", "moved to second");
@@ -376,11 +376,11 @@ steal("src/synthetic.js", function (Syn) {
 
 	test("Type left and right", function () {
 		stop();
-		Syn.type("012345678[left][left][left]\b", 'key', function () {
+		syn.type('key', "012345678[left][left][left]\b", function () {
 			equal(st.g('key')
 				.value, "01234678", "left works");
 
-			Syn.type("[right][right]a", 'key', function () {
+			syn.type('key', "[right][right]a", function () {
 				equal(st.g('key')
 					.value, "0123467a8", "right works");
 				start();
@@ -391,7 +391,7 @@ steal("src/synthetic.js", function (Syn) {
 	});
 	test("Type left and delete", function () {
 		stop();
-		Syn.type("123[left][delete]", 'key', function () {
+		syn.type('key', "123[left][delete]", function () {
 			equal(st.g('key')
 				.value, "12", "left delete works");
 			start();
@@ -405,7 +405,7 @@ steal("src/synthetic.js", function (Syn) {
 		st.binder('key', 'keypress', function (ev) {
 			shift = ev.shiftKey;
 		});
-		Syn.type("[shift]A[shift-up]", 'key', function () {
+		syn.type('key', "[shift]A[shift-up]", function () {
 			ok(shift, "Shift key on");
 			start();
 		});
@@ -417,9 +417,9 @@ steal("src/synthetic.js", function (Syn) {
 		st.binder('inner', 'click', function (ev) {
 			shift = ev.shiftKey;
 		});
-		Syn.type("[shift]A", 'key')
-			.click({}, 'inner')
-			.type("[shift-up]", 'key', function () {
+		syn.type('key', "[shift]A")
+			.click('inner', {})
+			.type('key', "[shift-up]", function () {
 				ok(shift, "Shift key on click");
 				start();
 			});
@@ -428,11 +428,11 @@ steal("src/synthetic.js", function (Syn) {
 	test("Typing Shift Left and Right", function () {
 		stop();
 
-		Syn.type("012345678[shift][left][left][left][shift-up]\b[left]\b", 'key', function () {
+		syn.type('key', "012345678[shift][left][left][left][shift-up]\b[left]\b", function () {
 			equal(st.g('key')
 				.value, "01235", "shift left works");
 
-			Syn.type("[left][left][shift][right][right]\b[shift-up]", 'key', function () {
+			syn.type('key', "[left][left][shift][right][right]\b[shift-up]", function () {
 
 				equal(st.g('key')
 					.value, "015", "shift right works");
@@ -444,7 +444,7 @@ steal("src/synthetic.js", function (Syn) {
 
 	test("shift characters", function () {
 		stop();
-		Syn.type("@", 'key', function () {
+		syn.type('key', "@", function () {
 			equal(st.g('key')
 				.value, "@", "@ character works");
 			start();
@@ -460,7 +460,7 @@ steal("src/synthetic.js", function (Syn) {
 			start();
 		});
 
-		Syn.type("[down]", 'key', function () {});
+		syn.type('key', "[down]", function () {});
 	});
 
 	test("Key codes of like-keys", function () {
@@ -491,7 +491,7 @@ steal("src/synthetic.js", function (Syn) {
 				ok(ev.which === ev.keyCode);
 				done();
 			});
-			Syn.type("[" + key + "]", "key");
+			syn.type("key", "[" + key + "]");
 		};
 
 		for (var key in keys) {
@@ -510,12 +510,12 @@ steal("src/synthetic.js", function (Syn) {
 			ok(true, "keypress called");
 			start();
 		});
-		Syn.type("a", 'key', function () {});
+		syn.type('key', "a", function () {});
 	});
 
 	test("typing in a number works", function () {
 		stop();
-		Syn.type(9999, 'key', function () {
+		syn.type('key', 9999, function () {
 			equal(st.g('key')
 				.value, "9999", "typing in numbers works");
 			start();
@@ -524,7 +524,7 @@ steal("src/synthetic.js", function (Syn) {
 
 	test("typing in a contenteditable works", function () {
 		stop();
-		Syn.type("hello world", "editable", function () {
+		syn.type("editable", "hello world", function () {
 			var editable = st.g("editable");
 			var text = editable.textContent || editable.innerText;
 			equal(text, "hello world", "Content editable was edited");

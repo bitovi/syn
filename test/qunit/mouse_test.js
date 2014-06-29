@@ -1,6 +1,6 @@
 /* global st */
 
-steal("src/synthetic.js", function (Syn) {
+steal("src/synthetic.js", function (syn) {
 	var didSomething = 0;
 	window.doSomething = function () {
 		++didSomething;
@@ -23,9 +23,9 @@ steal("src/synthetic.js", function (Syn) {
 		}
 	});
 
-	test("Syn basics", function () {
+	test("syn basics", function () {
 
-		ok(Syn, "Syn exists");
+		ok(syn, "syn exists");
 
 		st.g("qunit-test-area")
 			.innerHTML = "<div id='outer'><div id='inner'></div></div>";
@@ -34,11 +34,11 @@ steal("src/synthetic.js", function (Syn) {
 				mouseover++;
 			};
 		st.bind(st.g("outer"), "mouseover", mouseoverf);
-		Syn("mouseover", st.g("inner"));
+		syn("mouseover", st.g("inner"));
 
 		st.unbinder("outer", "mouseover", mouseoverf);
 		equal(mouseover, 1, "Mouseover");
-		Syn("mouseover", {}, 'inner');
+		syn("mouseover", 'inner', {});
 
 		equal(mouseover, 1, "Mouseover on no event handlers");
 		st.g("qunit-test-area")
@@ -57,8 +57,8 @@ steal("src/synthetic.js", function (Syn) {
 				return false;
 			};
 		st.bind(st.g("outer"), "submit", submitf);
-		Syn.trigger("click", {}, st.g("submit"));
-		Syn("submit", {}, "outer");
+		syn.trigger(st.g("submit"), "click", {});
+		syn("submit", "outer", {});
 
 		equal(submit, 2, "Click on submit");
 
@@ -73,7 +73,7 @@ steal("src/synthetic.js", function (Syn) {
 			};
 		st.binder("inner", "click", clickf);
 
-		Syn.trigger("click", {}, st.g("submit"));
+		syn.trigger(st.g("submit"), "click", {});
 
 		equal(submit, 2, "Submit prevented");
 		equal(click, 1, "Clicked");
@@ -91,12 +91,12 @@ steal("src/synthetic.js", function (Syn) {
 		st.g("checkbox")
 			.checked = false;
 
-		Syn.trigger("click", {}, st.g("checkbox"));
+		syn.trigger(st.g("checkbox"), "click", {});
 
 		ok(st.g("checkbox")
 			.checked, "click checks on");
 
-		Syn.trigger("click", {}, st.g("checkbox"));
+		syn.trigger(st.g("checkbox"), "click", {});
 
 		ok(!st.g("checkbox")
 			.checked, "click checks off");
@@ -111,7 +111,7 @@ steal("src/synthetic.js", function (Syn) {
 				.checked, "check is on during click");
 		});
 
-		Syn.trigger("click", {}, st.g("checkbox"));
+		syn.trigger(st.g("checkbox"), "click", {});
 	});
 
 	test("Select is changed on click", function () {
@@ -129,15 +129,15 @@ steal("src/synthetic.js", function (Syn) {
 			select2++;
 		});
 
-		Syn.trigger('click', {}, st.g('s1o2'));
+		syn.trigger(st.g('s1o2'), 'click', {});
 		equal(st.g('s1')
 			.selectedIndex, 1, "select worked");
 		equal(select1, 1, "change event");
-		Syn.trigger('click', {}, st.g('s2o2'));
+		syn.trigger(st.g('s2o2'), 'click', {});
 		equal(st.g('s2')
 			.selectedIndex, 1, "select worked");
 		equal(select2, 1, "change event");
-		Syn.trigger('click', {}, st.g('s1o1'));
+		syn.trigger(st.g('s1o1'), 'click', {});
 		equal(st.g('s1')
 			.selectedIndex, 0, "select worked");
 		equal(select1, 2, "change event");
@@ -161,10 +161,10 @@ steal("src/synthetic.js", function (Syn) {
 				ok(true, "select worked");
 			});
 
-			Syn.click(iget('s1o2'), {}, function () {
+			syn.click(iget('s1o2'), {}, function () {
 				start();
-				Syn.click(iget('s2o2'));
-				Syn.click(iget('s1o1'));
+				syn.click(iget('s2o2'));
+				syn.click(iget('s1o1'));
 			});
 
 		});
@@ -191,13 +191,13 @@ steal("src/synthetic.js", function (Syn) {
 			radio2++;
 		});
 
-		Syn.trigger("click", {}, st.g("radio1"));
+		syn.trigger(st.g("radio1"), "click", {});
 
 		equal(radio1, 1, "radio event");
 		ok(st.g("radio1")
 			.checked, "radio checked");
 
-		Syn.trigger("click", {}, st.g("radio2"));
+		syn.trigger(st.g("radio2"), "click", {});
 
 		equal(radio2, 1, "radio event");
 		ok(st.g("radio2")
@@ -208,7 +208,7 @@ steal("src/synthetic.js", function (Syn) {
 
 	});
 
-	test("Click! Event Order", Syn.skipFocusTests ? 3 : 4, function () {
+	test("Click! Event Order", syn.skipFocusTests ? 3 : 4, function () {
 		var order = 0;
 		st.g("qunit-test-area")
 			.innerHTML = "<input id='focusme'/>";
@@ -217,17 +217,17 @@ steal("src/synthetic.js", function (Syn) {
 			equal(++order, 1, "mousedown");
 		});
 
-		if (!Syn.skipFocusTests) {
+		if (!syn.skipFocusTests) {
 			st.binder("focusme", "focus", function () {
 				equal(++order, 2, "focus");
 			});
 		}
 
 		st.binder("focusme", "mouseup", function () {
-			equal(++order, Syn.skipFocusTests ? 2 : 3, "mouseup");
+			equal(++order, syn.skipFocusTests ? 2 : 3, "mouseup");
 		});
 		st.binder("focusme", "click", function (ev) {
-			equal(++order, Syn.skipFocusTests ? 3 : 4, "click");
+			equal(++order, syn.skipFocusTests ? 3 : 4, "click");
 			if (ev.preventDefault) {
 				ev.preventDefault();
 			}
@@ -235,7 +235,7 @@ steal("src/synthetic.js", function (Syn) {
 		});
 
 		stop();
-		Syn.click({}, "focusme", function () {
+		syn.click("focusme", {}, function () {
 			start();
 		});
 
@@ -243,7 +243,7 @@ steal("src/synthetic.js", function (Syn) {
 
 	test("Click Anchor Runs HREF JavaScript", function () {
 		stop();
-		Syn.trigger("click", {}, st.g("jsHref"));
+		syn.trigger(st.g("jsHref"), "click", {});
 		// Firefox triggers href javascript async so need to
 		// wait for it to complete.
 		setTimeout(function () {
@@ -259,18 +259,18 @@ steal("src/synthetic.js", function (Syn) {
 			ok(target.href.indexOf("#aHash") > -1, "got href");
 		});
 
-		Syn.click({}, "jsHrefHash", function () {
+		syn.click("jsHrefHash", {}, function () {
 			equal(window.location.hash, "#aHash", "hash set ...");
 			start();
 			window.location.hash = "";
 		});
 	});
 
-	test("Click! Anchor Focuses", Syn.skipFocusTests ? 1 : 2, function () {
+	test("Click! Anchor Focuses", syn.skipFocusTests ? 1 : 2, function () {
 		st.g("qunit-test-area")
 			.innerHTML = "<a href='#abc' id='focusme'>I am visible</a>";
 
-		if (!Syn.skipFocusTests) {
+		if (!syn.skipFocusTests) {
 			st.binder("focusme", "focus", function (ev) {
 				ok(true, "focused");
 			});
@@ -289,13 +289,13 @@ steal("src/synthetic.js", function (Syn) {
 		stop();
 		//need to give browsers a second to show element
 
-		Syn.click({}, "focusme", function () {
+		syn.click("focusme", {}, function () {
 			start();
 		});
 
 	});
 
-	if (!Syn.skipFocusTests) {
+	if (!syn.skipFocusTests) {
 		test("Click away causes Blur Change", function () {
 			st.g("qunit-test-area")
 				.innerHTML = "<input id='one'/><input id='two'/>";
@@ -311,9 +311,9 @@ steal("src/synthetic.js", function (Syn) {
 			});
 
 			stop();
-			Syn.click({}, "one")
+			syn.click("one", {})
 				.key("a")
-				.click({}, "two", function () {
+				.click("two", {}, function () {
 					start();
 					equal(change, 1, "Change called once");
 					equal(blur, 1, "Blur called once");
@@ -331,9 +331,9 @@ steal("src/synthetic.js", function (Syn) {
 			});
 
 			stop();
-			Syn.click({}, "one")
+			syn.click("one", {})
 				.key("a")
-				.click({}, document.documentElement, function () {
+				.click(document.documentElement, {}, function () {
 					start();
 					equal(change, 1, "Change called once");
 				});
@@ -348,8 +348,8 @@ steal("src/synthetic.js", function (Syn) {
 			context++;
 		});
 
-		Syn.rightClick({}, "one", function () {
-			if (Syn.mouse.browser.contextmenu) {
+		syn.rightClick("one", {}, function () {
+			if (syn.mouse.browser.contextmenu) {
 				equal(1, context, "context was called");
 			} else {
 				ok(true, "context shouldn't be called in this browser");
@@ -370,7 +370,7 @@ steal("src/synthetic.js", function (Syn) {
 			eventSequence.push('click');
 		});
 
-		Syn.dblclick({}, "dblclickme", function () {
+		syn.dblclick("dblclickme", {}, function () {
 			equal(eventSequence.join(', '), 'click, click, dblclick', 'expected event sequence for doubleclick');
 			start();
 		});
@@ -392,7 +392,7 @@ steal("src/synthetic.js", function (Syn) {
 			ok(true, "h3 was clicked");
 			
 		});
-		Syn.click( el ,{}, function(){
+		syn.click(el ,{}, function(){
 			start();
 		})
 
@@ -413,7 +413,7 @@ steal("src/synthetic.js", function (Syn) {
 			st.bind(el, "click", function () {
 				ok(true, "h3 was clicked");
 			});
-			Syn.click(el, {}, function () {
+			syn.click(el, {}, function () {
 				start();
 				popup.close();
 			});
@@ -437,12 +437,12 @@ steal("src/synthetic.js", function (Syn) {
 
 		st.bind(iframe, "load", function () {
 			if (calls === 0) {
-				Syn.click(iframe.contentWindow.document.getElementById("first"), {}, function () {
+				syn.click(iframe.contentWindow.document.getElementById("first"), {}, function () {
 					iframe.contentWindow.location = page2;
 				});
 				calls++;
 			} else {
-				Syn.click(iframe.contentWindow.document.getElementById("second"), {}, function () {
+				syn.click(iframe.contentWindow.document.getElementById("second"), {}, function () {
 					ok(iframe.contentWindow.document.getElementById("second") === iframe.contentWindow.document.activeElement);
 					start();
 				});
