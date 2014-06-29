@@ -34,7 +34,7 @@ dragging exactly how a real user would perform those actions.
 
 ## Using Syn
 
-You'd use syn to perform functional testing or simulate user actions on a JavaScript application. To add syn to your page all you need to do is add [syn.js](https://raw.github.com/bitovi/syn/master/dist/syn.js) to your page. Syn is also available via Bower:
+You'd use syn to perform functional testing or simulate user actions on a JavaScript application. To add syn to your page all you need to do is add [syn.js](https://rawgithub.com/bitovi/syn/master/dist/syn.js) to your page. Syn is also available via Bower:
 
     bower install syn
 

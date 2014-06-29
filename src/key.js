@@ -3,10 +3,13 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 
 		// gets the selection of an input or textarea
 		getSelection = function (el) {
+			var real, r, start;
+
 			// use selectionStart if we can
 			if (el.selectionStart !== undefined) {
 				// this is for opera, so we don't have to focus to type how we think we would
-				if (document.activeElement && document.activeElement != el && el.selectionStart == el.selectionEnd && el.selectionStart == 0) {
+				if (document.activeElement && document.activeElement !== el &&
+					el.selectionStart === el.selectionEnd && el.selectionStart === 0) {
 					return {
 						start: el.value.length,
 						end: el.value.length
@@ -15,49 +18,49 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 				return {
 					start: el.selectionStart,
 					end: el.selectionEnd
-				}
+				};
 			} else {
 				//check if we aren't focused
 				try {
 					//try 2 different methods that work differently (IE breaks depending on type)
-					if (el.nodeName.toLowerCase() == 'input') {
-						var real = h.getWindow(el)
-							.document.selection.createRange(),
-							r = el.createTextRange();
+					if (el.nodeName.toLowerCase() === 'input') {
+						real = h.getWindow(el)
+							.document.selection.createRange();
+						r = el.createTextRange();
 						r.setEndPoint("EndToStart", real);
 
-						var start = r.text.length
+						start = r.text.length;
 						return {
 							start: start,
 							end: start + real.text.length
-						}
+						};
 					} else {
-						var real = h.getWindow(el)
-							.document.selection.createRange(),
-							r = real.duplicate(),
-							r2 = real.duplicate(),
+						real = h.getWindow(el)
+							.document.selection.createRange();
+						r = real.duplicate();
+						var r2 = real.duplicate(),
 							r3 = real.duplicate();
 						r2.collapse();
 						r3.collapse(false);
-						r2.moveStart('character', -1)
-						r3.moveStart('character', -1)
+						r2.moveStart('character', -1);
+						r3.moveStart('character', -1);
 						//select all of our element
-						r.moveToElementText(el)
+						r.moveToElementText(el);
 						//now move our endpoint to the end of our real range
 						r.setEndPoint('EndToEnd', real);
-						var start = r.text.length - real.text.length,
-							end = r.text.length;
-						if (start != 0 && r2.text == "") {
+						start = r.text.length - real.text.length;
+						var end = r.text.length;
+						if (start !== 0 && r2.text === "") {
 							start += 2;
 						}
-						if (end != 0 && r3.text == "") {
+						if (end !== 0 && r3.text === "") {
 							end += 2;
 						}
 						//if we aren't at the start, but previous is empty, we are at start of newline
 						return {
 							start: start,
 							end: end
-						}
+						};
 					}
 				} catch (e) {
 					var prop = formElExp.test(el.nodeName) ? "value" : "textContent";
@@ -79,7 +82,9 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 				len = els.length;
 
 			for (var i = 0; i < len; i++) {
-				Syn.isFocusable(els[i]) && els[i] != document.documentElement && res.push(els[i])
+				if (Syn.isFocusable(els[i]) && els[i] !== document.documentElement) {
+					res.push(els[i]);
+				}
 			}
 			return res;
 		},
@@ -281,14 +286,14 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 		selectText: function (el, start, end) {
 			if (el.setSelectionRange) {
 				if (!end) {
-					el.focus();
+					Syn.__tryFocus(el);
 					el.setSelectionRange(start, start);
 				} else {
 					el.selectionStart = start;
 					el.selectionEnd = end;
 				}
 			} else if (el.createTextRange) {
-				//el.focus();
+				//Syn.__tryFocus(el);
 				var r = el.createTextRange();
 				r.moveStart('character', start);
 				end = end || start;
@@ -301,7 +306,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 			//first check if the el has anything selected ..
 			if (Syn.typeable.test(el)) {
 				var sel = getSelection(el);
-				return el.value.substring(sel.start, sel.end)
+				return el.value.substring(sel.start, sel.end);
 			}
 			//otherwise get from page
 			var win = Syn.helpers.getWindow(el);
@@ -310,7 +315,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 					.toString();
 			} else if (win.document.getSelection) {
 				return win.document.getSelection()
-					.toString()
+					.toString();
 			} else {
 				return win.document.selection.createRange()
 					.text;
@@ -328,17 +333,17 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 			}
 			for (var kind in Syn.key.kinds) {
 				if (h.inArray(key, Syn.key.kinds[kind]) > -1) {
-					return Syn.key.browser[kind]
+					return Syn.key.browser[kind];
 				}
 			}
-			return Syn.key.browser.character
+			return Syn.key.browser.character;
 		},
 
 		//returns the special key if special
 		isSpecial: function (keyCode) {
 			var specials = Syn.key.kinds.special;
 			for (var i = 0; i < specials.length; i++) {
-				if (Syn.keycodes[specials[i]] == keyCode) {
+				if (Syn.keycodes[specials[i]] === keyCode) {
 					return specials[i];
 				}
 			}
@@ -361,16 +366,16 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 				keyCode = keyData[event][1],
 				result = {};
 
-			if (keyCode == 'key') {
-				result.keyCode = Syn.keycodes[key]
-			} else if (keyCode == 'char') {
-				result.keyCode = key.charCodeAt(0)
+			if (keyCode === 'key') {
+				result.keyCode = Syn.keycodes[key];
+			} else if (keyCode === 'char') {
+				result.keyCode = key.charCodeAt(0);
 			} else {
 				result.keyCode = keyCode;
 			}
 
-			if (charCode == 'char') {
-				result.charCode = key.charCodeAt(0)
+			if (charCode === 'char') {
+				result.charCode = key.charCodeAt(0);
 			} else if (charCode !== null) {
 				result.charCode = charCode;
 			}
@@ -382,7 +387,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 				result.which = result.charCode;
 			}
 
-			return result
+			return result;
 		},
 		//types of event keys
 		kinds: {
@@ -404,13 +409,13 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 					return Syn.key.defaults[kind];
 				}
 			}
-			return Syn.key.defaults.character
+			return Syn.key.defaults.character;
 		},
 		// default behavior when typing
 		defaults: {
 			'character': function (options, scope, key, force, sel) {
 				if (/num\d+/.test(key)) {
-					key = key.match(/\d+/)[0]
+					key = key.match(/\d+/)[0];
 				}
 
 				if (force || (!Syn.support.keyCharacters && Syn.typeable.test(this))) {
@@ -421,13 +426,13 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 
 					setText(this, before + character + after);
 					//handle IE inserting \r\n
-					var charLength = character == "\n" && Syn.support.textareaCarriage ? 2 : character.length;
-					Syn.selectText(this, before.length + charLength)
+					var charLength = character === "\n" && Syn.support.textareaCarriage ? 2 : character.length;
+					Syn.selectText(this, before.length + charLength);
 				}
 			},
 			'c': function (options, scope, key, force, sel) {
 				if (Syn.key.ctrlKey) {
-					Syn.key.clipboard = Syn.getText(this)
+					Syn.key.clipboard = Syn.getText(this);
 				} else {
 					Syn.key.defaults.character.apply(this, arguments);
 				}
@@ -442,45 +447,45 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 			'a': function (options, scope, key, force, sel) {
 				if (Syn.key.ctrlKey) {
 					Syn.selectText(this, 0, getText(this)
-						.length)
+						.length);
 				} else {
 					Syn.key.defaults.character.apply(this, arguments);
 				}
 			},
 			'home': function () {
 				Syn.onParents(this, function (el) {
-					if (el.scrollHeight != el.clientHeight) {
+					if (el.scrollHeight !== el.clientHeight) {
 						el.scrollTop = 0;
 						return false;
 					}
-				})
+				});
 			},
 			'end': function () {
 				Syn.onParents(this, function (el) {
-					if (el.scrollHeight != el.clientHeight) {
+					if (el.scrollHeight !== el.clientHeight) {
 						el.scrollTop = el.scrollHeight;
 						return false;
 					}
-				})
+				});
 			},
 			'page-down': function () {
 				//find the first parent we can scroll
 				Syn.onParents(this, function (el) {
-					if (el.scrollHeight != el.clientHeight) {
-						var ch = el.clientHeight
+					if (el.scrollHeight !== el.clientHeight) {
+						var ch = el.clientHeight;
 						el.scrollTop += ch;
 						return false;
 					}
-				})
+				});
 			},
 			'page-up': function () {
 				Syn.onParents(this, function (el) {
-					if (el.scrollHeight != el.clientHeight) {
-						var ch = el.clientHeight
+					if (el.scrollHeight !== el.clientHeight) {
+						var ch = el.clientHeight;
 						el.scrollTop -= ch;
 						return false;
 					}
-				})
+				});
 			},
 			'\b': function (options, scope, key, force, sel) {
 				//this assumes we are deleting from the end
@@ -489,7 +494,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 						before = current.substr(0, sel.start),
 						after = current.substr(sel.end);
 
-					if (sel.start == sel.end && sel.start > 0) {
+					if (sel.start === sel.end && sel.start > 0) {
 						//remove a character
 						setText(this, before.substring(0, before.length - 1) + after);
 						Syn.selectText(this, sel.start - 1);
@@ -506,7 +511,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 					var current = getText(this),
 						before = current.substr(0, sel.start),
 						after = current.substr(sel.end);
-					if (sel.start == sel.end && sel.start <= getText(this)
+					if (sel.start === sel.end && sel.start <= getText(this)
 						.length - 1) {
 						setText(this, before + after.substring(1));
 					} else {
@@ -517,13 +522,13 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 			},
 			'\r': function (options, scope, key, force, sel) {
 
-				var nodeName = this.nodeName.toLowerCase()
+				var nodeName = this.nodeName.toLowerCase();
 				// submit a form
-				if (nodeName == 'input') {
+				if (nodeName === 'input') {
 					Syn.trigger("change", {}, this);
 				}
 
-				if (!Syn.support.keypressSubmits && nodeName == 'input') {
+				if (!Syn.support.keypressSubmits && nodeName === 'input') {
 					var form = Syn.closest(this, "form");
 					if (form) {
 						Syn.trigger("submit", {}, form);
@@ -531,11 +536,12 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 
 				}
 				//newline in textarea
-				if (!Syn.support.keyCharacters && nodeName == 'textarea') {
-					Syn.key.defaults.character.call(this, options, scope, "\n", undefined, sel)
+				if (!Syn.support.keyCharacters && nodeName === 'textarea') {
+					Syn.key.defaults.character.call(this, options, scope, "\n",
+						undefined, sel);
 				}
 				// 'click' hyperlinks
-				if (!Syn.support.keypressOnAnchorClicks && nodeName == 'a') {
+				if (!Syn.support.keypressOnAnchorClicks && nodeName === 'a') {
 					Syn.trigger("click", {}, this);
 				}
 			},
@@ -550,19 +556,13 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 			'\t': function (options, scope) {
 				// focusable elements
 				var focusEls = getFocusable(this),
-					// the current element's tabindex
-					tabIndex = Syn.tabIndex(this),
 					// will be set to our guess for the next element
 					current = null,
-					// the next index we care about
-					currentIndex = 1000000000,
-					// set to true once we found 'this' element
-					found = false,
 					i = 0,
 					el,
 					//the tabindex of the tabable element we are looking at
-					elIndex, firstNotIndexed, prev;
-				orders = [];
+					firstNotIndexed,
+					orders = [];
 				for (; i < focusEls.length; i++) {
 					orders.push([focusEls[i], i]);
 				}
@@ -571,51 +571,51 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 						el2 = order2[0],
 						tab1 = Syn.tabIndex(el1) || 0,
 						tab2 = Syn.tabIndex(el2) || 0;
-					if (tab1 == tab2) {
-						return order1[1] - order2[1]
+					if (tab1 === tab2) {
+						return order1[1] - order2[1];
 					} else {
-						if (tab1 == 0) {
+						if (tab1 === 0) {
 							return 1;
-						} else if (tab2 == 0) {
+						} else if (tab2 === 0) {
 							return -1;
 						} else {
 							return tab1 - tab2;
 						}
 					}
-				}
+				};
 				orders.sort(sort);
 				//now find current
 				for (i = 0; i < orders.length; i++) {
 					el = orders[i][0];
-					if (this == el) {
+					if (this === el) {
 						if (!Syn.key.shiftKey) {
 							current = orders[i + 1][0];
 							if (!current) {
-								current = orders[0][0]
+								current = orders[0][0];
 							}
 						} else {
 							current = orders[i - 1][0];
 							if (!current) {
-								current = orders[focusEls.length - 1][0]
+								current = orders[focusEls.length - 1][0];
 							}
 						}
-
 					}
 				}
 
 				//restart if we didn't find anything
 				if (!current) {
 					current = firstNotIndexed;
+				} else {
+					Syn.__tryFocus(current);
 				}
-				current && current.focus();
 				return current;
 			},
 			'left': function (options, scope, key, force, sel) {
 				if (Syn.typeable.test(this)) {
 					if (Syn.key.shiftKey) {
-						Syn.selectText(this, sel.start == 0 ? 0 : sel.start - 1, sel.end)
+						Syn.selectText(this, sel.start === 0 ? 0 : sel.start - 1, sel.end);
 					} else {
-						Syn.selectText(this, sel.start == 0 ? 0 : sel.start - 1)
+						Syn.selectText(this, sel.start === 0 ? 0 : sel.start - 1);
 					}
 				}
 			},
@@ -624,11 +624,11 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 					if (Syn.key.shiftKey) {
 						Syn.selectText(this, sel.start, sel.end + 1 > getText(this)
 							.length ? getText(this)
-							.length : sel.end + 1)
+							.length : sel.end + 1);
 					} else {
 						Syn.selectText(this, sel.end + 1 > getText(this)
 							.length ? getText(this)
-							.length : sel.end + 1)
+							.length : sel.end + 1);
 					}
 				}
 			},
@@ -641,7 +641,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 			},
 			'down': function () {
 				if (/select/i.test(this.nodeName)) {
-					Syn.changeOnBlur(this, "selectedIndex", this.selectedIndex)
+					Syn.changeOnBlur(this, "selectedIndex", this.selectedIndex);
 					this.selectedIndex = this.selectedIndex + 1;
 					//set this to change on blur?
 				}
@@ -658,7 +658,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 	h.extend(Syn.create, {
 		keydown: {
 			setup: function (type, options, element) {
-				if (h.inArray(options, Syn.key.kinds.special) != -1) {
+				if (h.inArray(options, Syn.key.kinds.special) !== -1) {
 					Syn.key[options + "Key"] = element;
 				}
 			}
@@ -669,13 +669,13 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 				// but doesn't write them if the element isn't focused
 				// focus on the element (ignored if already focused)
 				if (Syn.support.keyCharacters && !Syn.support.keysOnNotFocused) {
-					element.focus()
+					Syn.__tryFocus(element);
 				}
 			}
 		},
 		keyup: {
 			setup: function (type, options, element) {
-				if (h.inArray(options, Syn.key.kinds.special) != -1) {
+				if (h.inArray(options, Syn.key.kinds.special) !== -1) {
 					Syn.key[options + "Key"] = null;
 				}
 			}
@@ -684,12 +684,12 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 			// return the options for a key event
 			options: function (type, options, element) {
 				//check if options is character or has character
-				options = typeof options != "object" ? {
+				options = typeof options !== "object" ? {
 					character: options
 				} : options;
 
 				//don't change the orignial
-				options = h.extend({}, options)
+				options = h.extend({}, options);
 				if (options.character) {
 					h.extend(options, Syn.key.options(options.character, type));
 					delete options.character;
@@ -700,19 +700,17 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 					altKey: !! Syn.key.altKey,
 					shiftKey: !! Syn.key.shiftKey,
 					metaKey: !! Syn.key.metaKey
-				}, options)
+				}, options);
 
 				return options;
 			},
 			// creates a key event
 			event: function (type, options, element) { //Everyone Else
 				var doc = h.getWindow(element)
-					.document || document;
+					.document || document,
+					event;
 				if (doc.createEvent) {
-					var event;
-
 					try {
-
 						event = doc.createEvent("KeyEvents");
 						event.initKeyEvent(type, true, true, window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.keyCode, options.charCode);
 					} catch (e) {
@@ -721,10 +719,9 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 					event.synthetic = true;
 					return event;
 				} else {
-					var event;
 					try {
 						event = h.createEventObject.apply(this, arguments);
-						h.extend(event, options)
+						h.extend(event, options);
 					} catch (e) {}
 
 					return event;
@@ -738,7 +735,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 		"backspace": "\b",
 		"tab": "\t",
 		"space": " "
-	}
+	};
 
 	/**
 	 * 
@@ -766,10 +763,10 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 		 */
 		_key: function (options, element, callback) {
 			//first check if it is a special up
-			if (/-up$/.test(options) && h.inArray(options.replace("-up", ""), Syn.key.kinds.special) != -1) {
-				Syn.trigger('keyup', options.replace("-up", ""), element)
-				callback(true, element);
-				return;
+			if (/-up$/.test(options) && h.inArray(options.replace("-up", ""),
+				Syn.key.kinds.special) !== -1) {
+				Syn.trigger('keyup', options.replace("-up", ""), element);
+				return callback(true, element);
 			}
 
 			// keep reference to current activeElement
@@ -795,7 +792,8 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 				//if the browser doesn't create keypresses for this key, run default
 				if (!keypressOptions) {
 					defaultResult = getDefault(key)
-						.call(element, keypressOptions, h.getWindow(element), key, undefined, caret)
+						.call(element, keypressOptions, h.getWindow(element),
+							key, undefined, caret);
 				} else {
 					//do keypress
 					// check if activeElement changed b/c someone called focus in keydown
@@ -805,15 +803,16 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 							.document.activeElement;
 					}
 
-					runDefaults = Syn.trigger('keypress', keypressOptions, element)
+					runDefaults = Syn.trigger('keypress', keypressOptions, element);
 					if (runDefaults) {
 						defaultResult = getDefault(key)
-							.call(element, keypressOptions, h.getWindow(element), key, undefined, caret)
+							.call(element, keypressOptions, h.getWindow(element),
+								key, undefined, caret);
 					}
 				}
 			} else {
 				//canceled ... possibly don't run keypress
-				if (keypressOptions && h.inArray('keypress', prevent.keydown) == -1) {
+				if (keypressOptions && h.inArray('keypress', prevent.keydown) === -1) {
 					// check if activeElement changed b/c someone called focus in keydown
 					if (activeElement !== h.getWindow(element)
 						.document.activeElement) {
@@ -821,23 +820,23 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 							.document.activeElement;
 					}
 
-					Syn.trigger('keypress', keypressOptions, element)
+					Syn.trigger('keypress', keypressOptions, element);
 				}
 			}
 			if (defaultResult && defaultResult.nodeName) {
-				element = defaultResult
+				element = defaultResult;
 			}
 
 			if (defaultResult !== null) {
-				setTimeout(function () {
+				Syn.schedule(function () {
 					if (Syn.support.oninput) {
 						Syn.trigger('input', Syn.key.options(key, 'input'), element);
 					}
-					Syn.trigger('keyup', Syn.key.options(key, 'keyup'), element)
-					callback(runDefaults, element)
-				}, 1)
+					Syn.trigger('keyup', Syn.key.options(key, 'keyup'), element);
+					callback(runDefaults, element);
+				}, 1);
 			} else {
-				callback(runDefaults, element)
+				callback(runDefaults, element);
 			}
 
 			//do mouseup
@@ -883,95 +882,15 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 					}
 					el = el || element;
 					if (part.length > 1) {
-						part = part.substr(1, part.length - 2)
+						part = part.substr(1, part.length - 2);
 					}
-					self._key(part, el, runNextPart)
-				}
+					self._key(part, el, runNextPart);
+				};
 
 			runNextPart();
 
 		}
 	});
-
-	if (!Syn.config.support) {
-		//do support code
-		! function () {
-			if (!document.body) {
-				setTimeout(arguments.callee, 1)
-				return;
-			}
-
-			var div = document.createElement("div"),
-				checkbox, submit, form, input, submitted = false,
-				anchor, textarea, inputter, one;
-
-			div.innerHTML = "<form id='outer'>" +
-				"<input name='checkbox' type='checkbox'/>" +
-				"<input name='radio' type='radio' />" +
-				"<input type='submit' name='submitter'/>" +
-				"<input type='input' name='inputter'/>" +
-				"<input name='one'>" +
-				"<input name='two'/>" +
-				"<a href='#abc'></a>" +
-				"<textarea>1\n2</textarea>" +
-				"</form>";
-
-			document.documentElement.appendChild(div);
-			form = div.firstChild;
-			checkbox = form.childNodes[0];
-			submit = form.childNodes[2];
-			anchor = form.getElementsByTagName("a")[0];
-			textarea = form.getElementsByTagName("textarea")[0];
-			inputter = form.childNodes[3];
-			one = form.childNodes[4];
-
-			form.onsubmit = function (ev) {
-				if (ev.preventDefault) ev.preventDefault();
-				Syn.support.keypressSubmits = true;
-				ev.returnValue = false;
-				return false;
-			};
-			// Firefox 4 won't write key events if the element isn't focused
-			inputter.focus();
-			Syn.trigger("keypress", "\r", inputter);
-
-			Syn.trigger("keypress", "a", inputter);
-			Syn.support.keyCharacters = inputter.value == "a";
-
-			inputter.value = "a";
-			Syn.trigger("keypress", "\b", inputter);
-			Syn.support.backspaceWorks = inputter.value == "";
-
-			inputter.onchange = function () {
-				Syn.support.focusChanges = true;
-			}
-			inputter.focus();
-			Syn.trigger("keypress", "a", inputter);
-			form.childNodes[5].focus(); // this will throw a change event
-			Syn.trigger("keypress", "b", inputter);
-			Syn.support.keysOnNotFocused = inputter.value == "ab";
-
-			//test keypress \r on anchor submits
-			Syn.bind(anchor, "click", function (ev) {
-				if (ev.preventDefault) ev.preventDefault();
-				Syn.support.keypressOnAnchorClicks = true;
-				ev.returnValue = false;
-				return false;
-			})
-			Syn.trigger("keypress", "\r", anchor);
-
-			Syn.support.textareaCarriage = textarea.value.length == 4;
-
-			// IE only, oninput event.
-			Syn.support.oninput = 'oninput' in one;
-
-			document.documentElement.removeChild(div);
-
-			Syn.support.ready++;
-		}();
-	} else {
-		Syn.helpers.extend(Syn.support, Syn.config.support);
-	}
 
 	return Syn;
 });

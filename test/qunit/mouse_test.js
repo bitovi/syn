@@ -1,3 +1,5 @@
+/* global st */
+
 steal("src/synthetic.js", function (Syn) {
 	var didSomething = 0;
 	window.doSomething = function () {
@@ -19,30 +21,30 @@ steal("src/synthetic.js", function (Syn) {
 		teardown: function () {
 			didSomething = 0;
 		}
-	})
+	});
 
 	test("Syn basics", function () {
 
-		ok(Syn, "Syn exists")
+		ok(Syn, "Syn exists");
 
 		st.g("qunit-test-area")
-			.innerHTML = "<div id='outer'><div id='inner'></div></div>"
+			.innerHTML = "<div id='outer'><div id='inner'></div></div>";
 		var mouseover = 0,
 			mouseoverf = function () {
 				mouseover++;
 			};
 		st.bind(st.g("outer"), "mouseover", mouseoverf);
-		Syn("mouseover", st.g("inner"))
+		Syn("mouseover", st.g("inner"));
 
 		st.unbinder("outer", "mouseover", mouseoverf);
 		equal(mouseover, 1, "Mouseover");
-		Syn("mouseover", {}, 'inner')
+		Syn("mouseover", {}, 'inner');
 
 		equal(mouseover, 1, "Mouseover on no event handlers");
 		st.g("qunit-test-area")
 			.innerHTML = "";
 
-	})
+	});
 
 	test("Click Forms", function () {
 		var submit = 0,
@@ -56,7 +58,7 @@ steal("src/synthetic.js", function (Syn) {
 			};
 		st.bind(st.g("outer"), "submit", submitf);
 		Syn.trigger("click", {}, st.g("submit"));
-		Syn("submit", {}, "outer")
+		Syn("submit", {}, "outer");
 
 		equal(submit, 2, "Click on submit");
 
@@ -68,7 +70,7 @@ steal("src/synthetic.js", function (Syn) {
 					ev.preventDefault();
 				}
 				return false;
-			}
+			};
 		st.binder("inner", "click", clickf);
 
 		Syn.trigger("click", {}, st.g("submit"));
@@ -78,7 +80,7 @@ steal("src/synthetic.js", function (Syn) {
 
 		st.unbinder("outer", "submit", submitf);
 		st.unbinder("inner", "click", clickf);
-	})
+	});
 	test("Click Checkboxes", function () {
 		var checkbox = 0;
 
@@ -98,21 +100,19 @@ steal("src/synthetic.js", function (Syn) {
 
 		ok(!st.g("checkbox")
 			.checked, "click checks off");
-	})
+	});
 
 	test("Checkbox is checked on click", function () {
-		var checkbox = 0;
-
 		st.g("checkbox")
 			.checked = false;
 
 		st.binder("checkbox", "click", function (ev) {
 			ok(st.g("checkbox")
 				.checked, "check is on during click");
-		})
+		});
 
 		Syn.trigger("click", {}, st.g("checkbox"));
-	})
+	});
 
 	test("Select is changed on click", function () {
 
@@ -169,12 +169,12 @@ steal("src/synthetic.js", function (Syn) {
 
 		});
 
-		iframe.src = page3
+		iframe.src = page3;
 
 		st.g("qunit-test-area")
 			.appendChild(iframe);
 
-	})
+	});
 
 	test("Click Radio Buttons", function () {
 
@@ -214,49 +214,57 @@ steal("src/synthetic.js", function (Syn) {
 			.innerHTML = "<input id='focusme'/>";
 
 		st.binder("focusme", "mousedown", function () {
-			equal(++order, 1, "mousedown")
+			equal(++order, 1, "mousedown");
 		});
 
 		if (!Syn.skipFocusTests) {
 			st.binder("focusme", "focus", function () {
-				equal(++order, 2, "focus")
+				equal(++order, 2, "focus");
 			});
 		}
 
 		st.binder("focusme", "mouseup", function () {
-			equal(++order, Syn.skipFocusTests ? 2 : 3, "mouseup")
+			equal(++order, Syn.skipFocusTests ? 2 : 3, "mouseup");
 		});
 		st.binder("focusme", "click", function (ev) {
-			equal(++order, Syn.skipFocusTests ? 3 : 4, "click")
-			if (ev.preventDefault)
+			equal(++order, Syn.skipFocusTests ? 3 : 4, "click");
+			if (ev.preventDefault) {
 				ev.preventDefault();
+			}
 			ev.returnValue = false;
 		});
 
 		stop();
 		Syn.click({}, "focusme", function () {
 			start();
-		})
+		});
 
-	})
+	});
 
 	test("Click Anchor Runs HREF JavaScript", function () {
+		stop();
 		Syn.trigger("click", {}, st.g("jsHref"));
-		equal(didSomething, 1, "link href JS run");
+		// Firefox triggers href javascript async so need to
+		// wait for it to complete.
+		setTimeout(function () {
+			equal(didSomething, 1, "link href JS run");
+			start();
+		}, 50);
 	});
 
 	test("Click! Anchor has href", function () {
 		stop();
 		st.binder("jsHrefHash", "click", function (ev) {
-			ok(ev.srcElement.href.indexOf("#aHash") > -1, "got href");
+			var target = ev.target || ev.srcElement;
+			ok(target.href.indexOf("#aHash") > -1, "got href");
 		});
 
 		Syn.click({}, "jsHrefHash", function () {
-			equal(window.location.hash, "#aHash", "hash set ...")
+			equal(window.location.hash, "#aHash", "hash set ...");
 			start();
-			window.location.hash = ""
-		})
-	})
+			window.location.hash = "";
+		});
+	});
 
 	test("Click! Anchor Focuses", Syn.skipFocusTests ? 1 : 2, function () {
 		st.g("qunit-test-area")
@@ -272,8 +280,9 @@ steal("src/synthetic.js", function (Syn) {
 			ok(true, "clicked");
 			st.g("qunit-test-area")
 				.innerHTML = "";
-			if (ev.preventDefault)
+			if (ev.preventDefault) {
 				ev.preventDefault();
+			}
 			ev.returnValue = false;
 			return false;
 		});
@@ -282,9 +291,9 @@ steal("src/synthetic.js", function (Syn) {
 
 		Syn.click({}, "focusme", function () {
 			start();
-		})
+		});
 
-	})
+	});
 
 	if (!Syn.skipFocusTests) {
 		test("Click away causes Blur Change", function () {
@@ -305,10 +314,10 @@ steal("src/synthetic.js", function (Syn) {
 			Syn.click({}, "one")
 				.key("a")
 				.click({}, "two", function () {
-					start()
+					start();
 					equal(change, 1, "Change called once");
 					equal(blur, 1, "Blur called once");
-				})
+				});
 
 		});
 
@@ -325,15 +334,15 @@ steal("src/synthetic.js", function (Syn) {
 			Syn.click({}, "one")
 				.key("a")
 				.click({}, document.documentElement, function () {
-					start()
+					start();
 					equal(change, 1, "Change called once");
-				})
-		})
+				});
+		});
 	}
 	test("Right Click", function () {
 		st.g("qunit-test-area")
 			.innerHTML = "<div id='one'>right click me</div>";
-		stop()
+		stop();
 		var context = 0;
 		st.binder("one", "contextmenu", function () {
 			context++;
@@ -341,18 +350,18 @@ steal("src/synthetic.js", function (Syn) {
 
 		Syn.rightClick({}, "one", function () {
 			if (Syn.mouse.browser.contextmenu) {
-				equal(1, context, "context was called")
+				equal(1, context, "context was called");
 			} else {
-				ok(true, "context shouldn't be called in this browser")
+				ok(true, "context shouldn't be called in this browser");
 			}
 			start();
-		})
-	})
+		});
+	});
 
 	test("Double Click", function () {
 		st.g("qunit-test-area")
 			.innerHTML = "<div id='dblclickme'>double click me</div>";
-		stop()
+		stop();
 		var eventSequence = [];
 		st.binder("dblclickme", "dblclick", function () {
 			eventSequence.push('dblclick');
@@ -364,7 +373,7 @@ steal("src/synthetic.js", function (Syn) {
 		Syn.dblclick({}, "dblclickme", function () {
 			equal(eventSequence.join(', '), 'click, click, dblclick', 'expected event sequence for doubleclick');
 			start();
-		})
+		});
 	});
 
 	// tests against IE9's weirdness where popup windows don't have dispatchEvent
@@ -397,18 +406,17 @@ steal("src/synthetic.js", function (Syn) {
 		if (typeof steal !== 'undefined') {
 			path = st.rootJoin("test/qunit/h3.html");
 		}
-		var popup = window.open(path, "synthing")
+		var popup = window.open(path, "synthing");
 
 		setTimeout(function () {
-			var el = popup.document.getElementById('strange')
+			var el = popup.document.getElementById('strange');
 			st.bind(el, "click", function () {
 				ok(true, "h3 was clicked");
-
 			});
 			Syn.click(el, {}, function () {
 				start();
-				popup.close()
-			})
+				popup.close();
+			});
 
 		}, 500);
 	});
@@ -417,7 +425,7 @@ steal("src/synthetic.js", function (Syn) {
 		stop();
 
 		var page1 = "test/qunit/page1.html",
-			page2 = "test/qunit/page2.html"
+			page2 = "test/qunit/page2.html";
 
 		if (typeof steal !== 'undefined') {
 			page1 = st.rootJoin("test/qunit/page1.html");
@@ -428,7 +436,7 @@ steal("src/synthetic.js", function (Syn) {
 			calls = 0;
 
 		st.bind(iframe, "load", function () {
-			if (calls == 0) {
+			if (calls === 0) {
 				Syn.click(iframe.contentWindow.document.getElementById("first"), {}, function () {
 					iframe.contentWindow.location = page2;
 				});
@@ -440,9 +448,9 @@ steal("src/synthetic.js", function (Syn) {
 				});
 			}
 		});
-		iframe.src = page1
+		iframe.src = page1;
 		st.g("qunit-test-area")
 			.appendChild(iframe);
 	});
 
-})
+});

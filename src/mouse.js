@@ -7,11 +7,12 @@ steal('./synthetic.js', function (Syn) {
 	Syn.mouse = {};
 	h.extend(Syn.defaults, {
 		mousedown: function (options) {
-			Syn.trigger("focus", {}, this)
+			Syn.trigger("focus", {}, this);
 		},
 		click: function () {
 			// prevents the access denied issue in IE if the click causes the element to be destroyed
-			var element = this, href, type, createChange, radioChanged, nodeName, scope;
+			var element = this,
+				href, type, createChange, radioChanged, nodeName, scope;
 			try {
 				href = element.href;
 				type = element.type;
@@ -32,35 +33,37 @@ steal('./synthetic.js', function (Syn) {
 			//run href javascript
 			if (!Syn.support.linkHrefJS && /^\s*javascript:/.test(href)) {
 				//eval js
-				var code = href.replace(/^\s*javascript:/, "")
+				var code = href.replace(/^\s*javascript:/, "");
 
 				//try{
-				if (code != "//" && code.indexOf("void(0)") == -1) {
+				if (code !== "//" && code.indexOf("void(0)") === -1) {
 					if (window.selenium) {
-						eval("with(selenium.browserbot.getCurrentWindow()){" + code + "}")
+						eval("with(selenium.browserbot.getCurrentWindow()){" + code + "}");
 					} else {
-						eval("with(scope){" + code + "}")
+						eval("with(scope){" + code + "}");
 					}
 				}
 			}
 
 			//submit a form
-			if (!(Syn.support.clickSubmits) && (nodeName == "input" && type == "submit") || nodeName == 'button') {
+			if (!(Syn.support.clickSubmits) && (nodeName === "input" &&
+					type === "submit") ||
+				nodeName === 'button') {
 
 				var form = Syn.closest(element, "form");
 				if (form) {
-					Syn.trigger("submit", {}, form)
+					Syn.trigger("submit", {}, form);
 				}
 
 			}
 			//follow a link, probably needs to check if in an a.
-			if (nodeName == "a" && element.href && !/^\s*javascript:/.test(href)) {
+			if (nodeName === "a" && element.href && !/^\s*javascript:/.test(href)) {
 				scope.location.href = href;
 
 			}
 
 			//change a checkbox
-			if (nodeName == "input" && type == "checkbox") {
+			if (nodeName === "input" && type === "checkbox") {
 
 				//if(!Syn.support.clickChecks && !Syn.support.changeChecks){
 				//	element.checked = !element.checked;
@@ -71,18 +74,18 @@ steal('./synthetic.js', function (Syn) {
 			}
 
 			//change a radio button
-			if (nodeName == "input" && type == "radio") { // need to uncheck others if not checked
+			if (nodeName === "input" && type === "radio") { // need to uncheck others if not checked
 				if (radioChanged && !Syn.support.radioClickChanges) {
 					Syn.trigger("change", {}, element);
 				}
 			}
 			// change options
-			if (nodeName == "option" && createChange) {
+			if (nodeName === "option" && createChange) {
 				Syn.trigger("change", {}, element.parentNode); //does not bubble
-				Syn.data(element, "createChange", false)
+				Syn.data(element, "createChange", false);
 			}
 		}
-	})
+	});
 
 	//add create and setup behavior for mosue events
 	h.extend(Syn.create, {
@@ -107,28 +110,32 @@ steal('./synthetic.js', function (Syn) {
 					altKey: !! Syn.key.altKey,
 					shiftKey: !! Syn.key.shiftKey,
 					metaKey: !! Syn.key.metaKey,
-					button: left && left.button != null ? left.button : right && right.button || (type == 'contextmenu' ? 2 : 0),
+					button: left && left.button !== null ? left.button : right && right.button || (type === 'contextmenu' ? 2 : 0),
 					relatedTarget: document.documentElement
 				}, options);
 			},
 			event: function (type, defaults, element) { //Everyone Else
 				var doc = getWin(element)
-					.document || document
+					.document || document,
+					event;
 				if (doc.createEvent) {
-					var event;
-
 					try {
 						event = doc.createEvent('MouseEvents');
-						event.initMouseEvent(type, defaults.bubbles, defaults.cancelable, defaults.view, defaults.detail, defaults.screenX, defaults.screenY, defaults.clientX, defaults.clientY, defaults.ctrlKey, defaults.altKey, defaults.shiftKey, defaults.metaKey, defaults.button, defaults.relatedTarget);
+						event.initMouseEvent(type, defaults.bubbles, defaults.cancelable,
+							defaults.view, defaults.detail,
+							defaults.screenX, defaults.screenY,
+							defaults.clientX, defaults.clientY,
+							defaults.ctrlKey, defaults.altKey,
+							defaults.shiftKey, defaults.metaKey,
+							defaults.button, defaults.relatedTarget);
 					} catch (e) {
-						event = h.createBasicStandardEvent(type, defaults, doc)
+						event = h.createBasicStandardEvent(type, defaults, doc);
 					}
 					event.synthetic = true;
 					return event;
 				} else {
-					var event;
 					try {
-						event = h.createEventObject(type, defaults, element)
+						event = h.createEventObject(type, defaults, element);
 					} catch (e) {}
 
 					return event;
@@ -138,8 +145,7 @@ steal('./synthetic.js', function (Syn) {
 		},
 		click: {
 			setup: function (type, options, element) {
-				var nodeName = element.nodeName.toLowerCase(),
-					type;
+				var nodeName = element.nodeName.toLowerCase();
 
 				//we need to manually 'check' in browser that can't check
 				//so checked has the right value
@@ -159,10 +165,10 @@ steal('./synthetic.js', function (Syn) {
 					}
 				}
 
-				if (nodeName == "a" && element.href && !/^\s*javascript:/.test(element.href)) {
+				if (nodeName === "a" && element.href && !/^\s*javascript:/.test(element.href)) {
 
 					//save href
-					Syn.data(element, "href", element.href)
+					Syn.data(element, "href", element.href);
 
 					//remove b/c safari/opera will open a new tab instead of changing the page
 					// this has been removed because newer versions don't have this problem
@@ -176,9 +182,11 @@ steal('./synthetic.js', function (Syn) {
 					var child = element.parentNode.firstChild,
 						i = -1;
 					while (child) {
-						if (child.nodeType == 1) {
+						if (child.nodeType === 1) {
 							i++;
-							if (child == element) break;
+							if (child === element) {
+								break;
+							}
 						}
 						child = child.nextSibling;
 					}
@@ -186,7 +194,7 @@ steal('./synthetic.js', function (Syn) {
 						//shouldn't this wait on triggering
 						//change?
 						element.parentNode.selectedIndex = i;
-						Syn.data(element, "createChange", true)
+						Syn.data(element, "createChange", true);
 					}
 				}
 
@@ -196,91 +204,12 @@ steal('./synthetic.js', function (Syn) {
 			setup: function (type, options, element) {
 				var nn = element.nodeName.toLowerCase();
 				//we have to auto prevent default to prevent freezing error in safari
-				if (Syn.browser.safari && (nn == "select" || nn == "option")) {
+				if (Syn.browser.safari && (nn === "select" || nn === "option")) {
 					options._autoPrevent = true;
 				}
 			}
 		}
 	});
-	//do support code
-	(function () {
-		if (!document.body) {
-			setTimeout(arguments.callee, 1)
-			return;
-		}
-		var oldSynth = window.__synthTest;
-		window.__synthTest = function () {
-			Syn.support.linkHrefJS = true;
-		}
 
-		var div = document.createElement("div"),
-			checkbox, submit, form, input, select;
-
-		div.innerHTML = "<form id='outer'>" + "<input name='checkbox' type='checkbox'/>" + "<input name='radio' type='radio' />" + "<input type='submit' name='submitter'/>" + "<input type='input' name='inputter'/>" + "<input name='one'>" + "<input name='two'/>" + "<a href='javascript:__synthTest()' id='synlink'></a>" + "<select><option></option></select>" + "</form>";
-		document.documentElement.appendChild(div);
-		form = div.firstChild
-		checkbox = form.childNodes[0];
-		submit = form.childNodes[2];
-		select = form.getElementsByTagName('select')[0]
-
-		//trigger click for linkHrefJS support, childNodes[6] === anchor
-		Syn.trigger('click', {}, form.childNodes[6]);
-
-		checkbox.checked = false;
-		checkbox.onchange = function () {
-			Syn.support.clickChanges = true;
-		}
-
-		Syn.trigger("click", {}, checkbox)
-		Syn.support.clickChecks = checkbox.checked;
-
-		checkbox.checked = false;
-
-		Syn.trigger("change", {}, checkbox);
-
-		Syn.support.changeChecks = checkbox.checked;
-
-		form.onsubmit = function (ev) {
-			if (ev.preventDefault) ev.preventDefault();
-			Syn.support.clickSubmits = true;
-			return false;
-		}
-		Syn.trigger("click", {}, submit)
-
-		form.childNodes[1].onchange = function () {
-			Syn.support.radioClickChanges = true;
-		}
-		Syn.trigger("click", {}, form.childNodes[1])
-
-		Syn.bind(div, 'click', function () {
-			Syn.support.optionClickBubbles = true;
-			Syn.unbind(div, 'click', arguments.callee)
-		})
-		Syn.trigger("click", {}, select.firstChild)
-
-		Syn.support.changeBubbles = Syn.eventSupported('change');
-
-		//test if mousedown followed by mouseup causes click (opera), make sure there are no clicks after this
-		var clicksCount = 0
-		div.onclick = function () {
-			Syn.support.mouseDownUpClicks = true;
-			//we should use this to check for opera potentially, but would
-			//be difficult to remove element correctly
-			//Syn.support.mouseDownUpRepeatClicks = (2 == (++clicksCount))
-		}
-		Syn.trigger("mousedown", {}, div)
-		Syn.trigger("mouseup", {}, div)
-
-		//setTimeout(function(){
-		//	Syn.trigger("mousedown",{},div)
-		//	Syn.trigger("mouseup",{},div)
-		//},1)
-
-		document.documentElement.removeChild(div);
-
-		//check stuff
-		window.__synthTest = oldSynth;
-		Syn.support.ready++;
-	})();
 	return Syn;
 });
