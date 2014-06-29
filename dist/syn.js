@@ -2,7 +2,7 @@
  * Syn - 0.0.2
  * 
  * @copyright 2014 Bitovi
- * Fri, 21 Mar 2014 00:02:42 GMT
+ * Sun, 29 Jun 2014 16:00:00 GMT
  * @license MIT
  */
 
@@ -152,19 +152,28 @@ var __m2 = (function () {
 		 *   But, we've purposely made Syn work without any dependencies in the hopes that other frameworks or 
 		 *   testing solutions can use it as well.
 		 * </p>
-		 * @constructor 
+		 * @constructor
+		 * @signature `Syn(type, options, element, callback)`
 		 * Creates a synthetic event on the element.
 		 * @param {Object} type
 		 * @param {Object} options
 		 * @param {Object} element
 		 * @param {Object} callback
-		 * @return Syn
+		 * @return {Syn} returns the Syn object.
 		 */
 		Syn = function (type, options, element, callback) {
 			return (new Syn.init(type, options, element, callback));
 		};
 
 	Syn.config = opts;
+
+	// helper for supporting IE8 and below:
+	// focus will throw in some circumnstances, like element being invisible
+	Syn.__tryFocus = function tryFocus(element) {
+		try {
+			element.focus();
+		} catch (e) {}
+	};
 
 	bind = function (el, ev, f) {
 		return el.addEventListener ? el.addEventListener(ev, f, false) : el.attachEvent("on" + ev, f);
@@ -173,8 +182,8 @@ var __m2 = (function () {
 		return el.addEventListener ? el.removeEventListener(ev, f, false) : el.detachEvent("on" + ev, f);
 	};
 
-	schedule = Syn.config.schedule || function () {
-		setTimeout.apply(window, arguments);
+	schedule = Syn.config.schedule || function (fn, ms) {
+		setTimeout(fn, ms);
 	};
 	/**
 	 * @Static
@@ -247,6 +256,7 @@ var __m2 = (function () {
 			Syn('click!', options, element, callback);
 		},
 		/**
+		 * @hide
 		 * @attribute defaults
 		 * Default actions for events.  Each default function is called with this as its
 		 * element.  It should return true if a timeout
@@ -548,7 +558,7 @@ var __m2 = (function () {
 					Syn.onParents(element, function (el) {
 						if (Syn.isFocusable(el)) {
 							if (el.nodeName.toLowerCase() !== 'html') {
-								el.focus();
+								Syn.__tryFocus(el);
 								activeElement = el;
 							} else if (activeElement) {
 								// TODO: The HTML element isn't focasable in IE, but it is
@@ -576,6 +586,7 @@ var __m2 = (function () {
 		},
 		/**
 		 * @attribute support
+		 * @hide
 		 *
 		 * Feature detected properties of a browser's event system.
 		 * Support has the following properties:
@@ -614,6 +625,9 @@ var __m2 = (function () {
 			ready: 0
 		},
 		/**
+		 * @function Syn.trigger trigger()
+		 * @parent actions
+		 * @signature `Syn.trigger(type, options, element)`
 		 * Creates a synthetic event and dispatches it on the element.
 		 * This will run any default actions for the element.
 		 * Typically you want to use Syn, but if you want the return value, use this.
@@ -685,7 +699,8 @@ var __m2 = (function () {
 	 */
 	extend(Syn.init.prototype, {
 		/**
-		 * @function then
+		 * @function Syn.then then()
+		 * @parent chained
 		 * <p>
 		 * Then is used to chain a sequence of actions to be run one after the other.
 		 * This is useful when many asynchronous actions need to be performed before some
@@ -736,6 +751,8 @@ var __m2 = (function () {
 			return this;
 		},
 		/**
+		 * @function Syn.delay delay()
+		 * @parent chained
 		 * Delays the next command a set timeout.
 		 * @param {Number} [timeout]
 		 * @param {Function} [callback]
@@ -768,7 +785,9 @@ var __m2 = (function () {
 
 		},
 		/**
-		 * @function click
+		 * @function Syn.click click()
+		 * @parent mouse
+		 * @signature `Syn.click(options, element, callback, force)`
 		 * Clicks an element by triggering a mousedown,
 		 * mouseup,
 		 * and a click event.
@@ -817,6 +836,9 @@ var __m2 = (function () {
 			}, 1);
 		},
 		/**
+		 * @function Syn.rightClick rightClick()
+		 * @parent mouse
+		 * @signature `Syn.rightClick(options, element, callback)`
 		 * Right clicks in browsers that support it (everyone but opera).
 		 * @param {Object} options
 		 * @param {Object} element
@@ -838,8 +860,10 @@ var __m2 = (function () {
 			}, 1);
 		},
 		/**
-		 * @function dblclick
-		 * Dblclicks an element.  This runs two [Syn.prototype.click click] events followed by
+		 * @function Syn.dblclick dblclick()
+		 * @parent mouse
+		 * @signature `Syn.dblclick(options, element, callback)`
+		 * Dblclicks an element.  This runs two [Syn.click click] events followed by
 		 * a dblclick on the element.
 		 * <h3>Example</h3>
 		 * @codestart
@@ -883,7 +907,7 @@ var __m2 = (function () {
 })();
 
 // ## src/mouse.js
-var __m4 = (function (Syn) {
+var __m3 = (function (Syn) {
 	//handles mosue events
 
 	var h = Syn.helpers,
@@ -1099,84 +1123,8 @@ var __m4 = (function (Syn) {
 	return Syn;
 })(__m2);
 
-// ## src/mouse.support.js
-var __m3 = (function checkSupport(Syn) {
-
-	if (!document.body) {
-		Syn.schedule(function() {
-			checkSupport(Syn);	
-		}, 1);
-		return;
-	}
-
-	window.__synthTest = function () {
-		Syn.support.linkHrefJS = true;
-	};
-
-	var div = document.createElement("div"),
-		checkbox, submit, form, select;
-
-	div.innerHTML = "<form id='outer'>" + "<input name='checkbox' type='checkbox'/>" + "<input name='radio' type='radio' />" + "<input type='submit' name='submitter'/>" + "<input type='input' name='inputter'/>" + "<input name='one'>" + "<input name='two'/>" + "<a href='javascript:__synthTest()' id='synlink'></a>" + "<select><option></option></select>" + "</form>";
-	document.documentElement.appendChild(div);
-	form = div.firstChild;
-	checkbox = form.childNodes[0];
-	submit = form.childNodes[2];
-	select = form.getElementsByTagName('select')[0];
-
-	//trigger click for linkHrefJS support, childNodes[6] === anchor
-	Syn.trigger('click', {}, form.childNodes[6]);
-
-	checkbox.checked = false;
-	checkbox.onchange = function () {
-		Syn.support.clickChanges = true;
-	};
-
-	Syn.trigger("click", {}, checkbox);
-	Syn.support.clickChecks = checkbox.checked;
-
-	checkbox.checked = false;
-
-	Syn.trigger("change", {}, checkbox);
-
-	Syn.support.changeChecks = checkbox.checked;
-
-	form.onsubmit = function (ev) {
-		if (ev.preventDefault) {
-			ev.preventDefault();
-		}
-		Syn.support.clickSubmits = true;
-		return false;
-	};
-	Syn.trigger("click", {}, submit);
-
-	form.childNodes[1].onchange = function () {
-		Syn.support.radioClickChanges = true;
-	};
-	Syn.trigger("click", {}, form.childNodes[1]);
-
-	Syn.bind(div, 'click', function onclick() {
-		Syn.support.optionClickBubbles = true;
-		Syn.unbind(div, 'click', onclick);
-	});
-	Syn.trigger("click", {}, select.firstChild);
-
-	Syn.support.changeBubbles = Syn.eventSupported('change');
-
-	//test if mousedown followed by mouseup causes click (opera), make sure there are no clicks after this
-	div.onclick = function () {
-		Syn.support.mouseDownUpClicks = true;
-	};
-	Syn.trigger("mousedown", {}, div);
-	Syn.trigger("mouseup", {}, div);
-
-	document.documentElement.removeChild(div);
-
-	//check stuff
-	Syn.support.ready++;
-})(__m2, __m4);
-
 // ## src/browsers.js
-var __m5 = (function (Syn) {
+var __m4 = (function (Syn) {
 	Syn.key.browsers = {
 		webkit: {
 			'prevent': {
@@ -1604,9 +1552,20 @@ var __m5 = (function (Syn) {
 })(__m2, __m3);
 
 // ## src/typeable.js
-var __m8 = (function (Syn) {
+var __m6 = (function (Syn) {
 	// Holds functions that test for typeability
 	var typeables = [];
+
+	// IE <= 8 doesn't implement [].indexOf.
+	// This shim was extracted from CoffeeScript:
+	var __indexOf = [].indexOf || function (item) {
+			for (var i = 0, l = this.length; i < l; i++) {
+				if (i in this && this[i] === item) {
+					return i;
+				}
+			}
+			return -1;
+		};
 
 	/*
 	 * @function typeable
@@ -1619,7 +1578,7 @@ var __m8 = (function (Syn) {
 	 * @param {Function} fn Function to register.
 	 */
 	Syn.typeable = function (fn) {
-		if (typeables.indexOf(fn) === -1) {
+		if (__indexOf.call(typeables, fn) === -1) {
 			typeables.push(fn);
 		}
 	};
@@ -1653,14 +1612,14 @@ var __m8 = (function (Syn) {
 
 	// Content editable
 	type(function (el) {
-		return ["", "true"].indexOf(el.getAttribute("contenteditable")) !== -1;
+		return __indexOf.call(["", "true"], el.getAttribute("contenteditable")) !== -1;
 	});
 
 	return Syn;
 })(__m2);
 
 // ## src/key.js
-var __m7 = (function (Syn) {
+var __m5 = (function (Syn) {
 	var h = Syn.helpers,
 
 		// gets the selection of an input or textarea
@@ -1770,11 +1729,12 @@ var __m7 = (function (Syn) {
 		};
 
 	/**
-	 * @add Syn static
+	 *
 	 */
 	h.extend(Syn, {
 		/**
 		 * @attribute
+		 * @parent keys
 		 * A list of the keys and their keycodes codes you can type.
 		 * You can add type keys with
 		 * @codestart
@@ -1947,14 +1907,14 @@ var __m7 = (function (Syn) {
 		selectText: function (el, start, end) {
 			if (el.setSelectionRange) {
 				if (!end) {
-					el.focus();
+					Syn.__tryFocus(el);
 					el.setSelectionRange(start, start);
 				} else {
 					el.selectionStart = start;
 					el.selectionEnd = end;
 				}
 			} else if (el.createTextRange) {
-				//el.focus();
+				//Syn.__tryFocus(el);
 				var r = el.createTextRange();
 				r.moveStart('character', start);
 				end = end || start;
@@ -2267,7 +2227,7 @@ var __m7 = (function (Syn) {
 				if (!current) {
 					current = firstNotIndexed;
 				} else {
-					current.focus();
+					Syn.__tryFocus(current);
 				}
 				return current;
 			},
@@ -2330,7 +2290,7 @@ var __m7 = (function (Syn) {
 				// but doesn't write them if the element isn't focused
 				// focus on the element (ignored if already focused)
 				if (Syn.support.keyCharacters && !Syn.support.keysOnNotFocused) {
-					element.focus();
+					Syn.__tryFocus(element);
 				}
 			}
 		},
@@ -2399,11 +2359,13 @@ var __m7 = (function (Syn) {
 	};
 
 	/**
-	 * @add Syn prototype
+	 * 
 	 */
 	h.extend(Syn.init.prototype, {
 		/**
-		 * @function key
+		 * @function Syn.key key()
+		 * @parent keys
+		 * @signature `Syn.key(options, element, callback)`
 		 * Types a single key.  The key should be
 		 * a string that matches a
 		 * [Syn.static.keycodes].
@@ -2504,7 +2466,9 @@ var __m7 = (function (Syn) {
 			// yes -> did we prevent it?, if not run ...
 		},
 		/**
-		 * @function type
+		 * @function Syn.type type()
+		 * @parent keys
+		 * @signature `Syn.type(options, element, callback)`
 		 * Types sequence of [Syn.key key actions].  Each
 		 * character is typed, one at a type.
 		 * Multi-character keys like 'left' should be
@@ -2550,100 +2514,10 @@ var __m7 = (function (Syn) {
 	});
 
 	return Syn;
-})(__m2, __m8, __m5);
-
-// ## src/key.support.js
-var __m6 = (function (Syn) {
-
-	if (!Syn.config.support) {
-		//do support code
-		(function checkForSupport() {
-			if (!document.body) {
-				return Syn.schedule(checkForSupport, 1);
-			}
-
-			var div = document.createElement("div"),
-				checkbox, submit, form, anchor, textarea, inputter, one, doc;
-
-			doc = document.documentElement;
-
-			div.innerHTML = "<form id='outer'>" +
-				"<input name='checkbox' type='checkbox'/>" +
-				"<input name='radio' type='radio' />" +
-				"<input type='submit' name='submitter'/>" +
-				"<input type='input' name='inputter'/>" +
-				"<input name='one'>" +
-				"<input name='two'/>" +
-				"<a href='#abc'></a>" +
-				"<textarea>1\n2</textarea>" +
-				"</form>";
-
-			doc.insertBefore(div, doc.firstElementChild);
-			form = div.firstChild;
-			checkbox = form.childNodes[0];
-			submit = form.childNodes[2];
-			anchor = form.getElementsByTagName("a")[0];
-			textarea = form.getElementsByTagName("textarea")[0];
-			inputter = form.childNodes[3];
-			one = form.childNodes[4];
-
-			form.onsubmit = function (ev) {
-				if (ev.preventDefault) {
-					ev.preventDefault();
-				}
-				Syn.support.keypressSubmits = true;
-				ev.returnValue = false;
-				return false;
-			};
-			// Firefox 4 won't write key events if the element isn't focused
-			inputter.focus();
-			Syn.trigger("keypress", "\r", inputter);
-
-			Syn.trigger("keypress", "a", inputter);
-			Syn.support.keyCharacters = inputter.value === "a";
-
-			inputter.value = "a";
-			Syn.trigger("keypress", "\b", inputter);
-			Syn.support.backspaceWorks = inputter.value === "";
-
-			inputter.onchange = function () {
-				Syn.support.focusChanges = true;
-			};
-			inputter.focus();
-			Syn.trigger("keypress", "a", inputter);
-			form.childNodes[5].focus(); // this will throw a change event
-			Syn.trigger("keypress", "b", inputter);
-			Syn.support.keysOnNotFocused = inputter.value === "ab";
-
-			//test keypress \r on anchor submits
-			Syn.bind(anchor, "click", function (ev) {
-				if (ev.preventDefault) {
-					ev.preventDefault();
-				}
-				Syn.support.keypressOnAnchorClicks = true;
-				ev.returnValue = false;
-				return false;
-			});
-			Syn.trigger("keypress", "\r", anchor);
-
-			Syn.support.textareaCarriage = textarea.value.length === 4;
-
-			// IE only, oninput event.
-			Syn.support.oninput = 'oninput' in one;
-
-			doc.removeChild(div);
-
-			Syn.support.ready++;
-		})();
-	} else {
-		Syn.helpers.extend(Syn.support, Syn.config.support);
-	}
-
-	return Syn;
-})(__m2, __m7);
+})(__m2, __m6, __m4);
 
 // ## src/drag/drag.js
-var __m9 = (function (Syn) {
+var __m7 = (function (Syn) {
 
 	// check if elementFromPageExists
 	(function dragSupport() {
@@ -2846,7 +2720,9 @@ var __m9 = (function (Syn) {
 	 */
 	Syn.helpers.extend(Syn.init.prototype, {
 		/**
-			 * @function move
+		 	 * @function Syn.move move()
+		   * @parent mouse
+			 * @signature `Syn.move(options, from, callback)`
 			 * Moves the cursor from one point to another.  
 			 * 
 			 * ### Quick Example
@@ -2943,7 +2819,9 @@ var __m9 = (function (Syn) {
 
 		},
 		/**
-		 * @function drag
+		 * @function Syn.drag drag()
+		 * @parent mouse
+		 * @signature `Syn.drag(options, from, callback)`
 		 * Creates a mousedown and drags from one point to another.
 		 * Check out [Syn.prototype.move move] for API details.
 		 *
@@ -2969,10 +2847,9 @@ var __m9 = (function (Syn) {
 
 // ## src/syn.js
 var __m1 = (function (Syn) {
-
 		window.Syn = Syn;
 
 		return Syn;
-	})(__m2, __m3, __m5, __m6, __m9);
+	})(__m2, __m3, __m4, __m5, __m7);
 
 }(window);

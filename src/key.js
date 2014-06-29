@@ -1,4 +1,4 @@
-steal('src/synthetic.js', 'src/typeable.js', 'src/browsers.js', function (Syn) {
+steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 	var h = Syn.helpers,
 
 		// gets the selection of an input or textarea
@@ -108,11 +108,12 @@ steal('src/synthetic.js', 'src/typeable.js', 'src/browsers.js', function (Syn) {
 		};
 
 	/**
-	 * @add Syn static
+	 *
 	 */
 	h.extend(Syn, {
 		/**
 		 * @attribute
+		 * @parent keys
 		 * A list of the keys and their keycodes codes you can type.
 		 * You can add type keys with
 		 * @codestart
@@ -737,11 +738,13 @@ steal('src/synthetic.js', 'src/typeable.js', 'src/browsers.js', function (Syn) {
 	};
 
 	/**
-	 * @add Syn prototype
+	 * 
 	 */
 	h.extend(Syn.init.prototype, {
 		/**
-		 * @function key
+		 * @function Syn.key key()
+		 * @parent keys
+		 * @signature `Syn.key(options, element, callback)`
 		 * Types a single key.  The key should be
 		 * a string that matches a
 		 * [Syn.static.keycodes].
@@ -842,7 +845,9 @@ steal('src/synthetic.js', 'src/typeable.js', 'src/browsers.js', function (Syn) {
 			// yes -> did we prevent it?, if not run ...
 		},
 		/**
-		 * @function type
+		 * @function Syn.type type()
+		 * @parent keys
+		 * @signature `Syn.type(options, element, callback)`
 		 * Types sequence of [Syn.key key actions].  Each
 		 * character is typed, one at a type.
 		 * Multi-character keys like 'left' should be

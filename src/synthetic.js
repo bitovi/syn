@@ -141,13 +141,14 @@ steal(function () {
 		 *   But, we've purposely made Syn work without any dependencies in the hopes that other frameworks or 
 		 *   testing solutions can use it as well.
 		 * </p>
-		 * @constructor 
+		 * @constructor
+		 * @signature `Syn(type, options, element, callback)`
 		 * Creates a synthetic event on the element.
 		 * @param {Object} type
 		 * @param {Object} options
 		 * @param {Object} element
 		 * @param {Object} callback
-		 * @return Syn
+		 * @return {Syn} returns the Syn object.
 		 */
 		Syn = function (type, options, element, callback) {
 			return (new Syn.init(type, options, element, callback));
@@ -244,6 +245,7 @@ steal(function () {
 			Syn('click!', options, element, callback);
 		},
 		/**
+		 * @hide
 		 * @attribute defaults
 		 * Default actions for events.  Each default function is called with this as its
 		 * element.  It should return true if a timeout
@@ -573,6 +575,7 @@ steal(function () {
 		},
 		/**
 		 * @attribute support
+		 * @hide
 		 *
 		 * Feature detected properties of a browser's event system.
 		 * Support has the following properties:
@@ -611,6 +614,9 @@ steal(function () {
 			ready: 0
 		},
 		/**
+		 * @function Syn.trigger trigger()
+		 * @parent actions
+		 * @signature `Syn.trigger(type, options, element)`
 		 * Creates a synthetic event and dispatches it on the element.
 		 * This will run any default actions for the element.
 		 * Typically you want to use Syn, but if you want the return value, use this.
@@ -682,7 +688,8 @@ steal(function () {
 	 */
 	extend(Syn.init.prototype, {
 		/**
-		 * @function then
+		 * @function Syn.then then()
+		 * @parent chained
 		 * <p>
 		 * Then is used to chain a sequence of actions to be run one after the other.
 		 * This is useful when many asynchronous actions need to be performed before some
@@ -733,6 +740,8 @@ steal(function () {
 			return this;
 		},
 		/**
+		 * @function Syn.delay delay()
+		 * @parent chained
 		 * Delays the next command a set timeout.
 		 * @param {Number} [timeout]
 		 * @param {Function} [callback]
@@ -765,7 +774,9 @@ steal(function () {
 
 		},
 		/**
-		 * @function click
+		 * @function Syn.click click()
+		 * @parent mouse
+		 * @signature `Syn.click(options, element, callback, force)`
 		 * Clicks an element by triggering a mousedown,
 		 * mouseup,
 		 * and a click event.
@@ -814,6 +825,9 @@ steal(function () {
 			}, 1);
 		},
 		/**
+		 * @function Syn.rightClick rightClick()
+		 * @parent mouse
+		 * @signature `Syn.rightClick(options, element, callback)`
 		 * Right clicks in browsers that support it (everyone but opera).
 		 * @param {Object} options
 		 * @param {Object} element
@@ -835,8 +849,10 @@ steal(function () {
 			}, 1);
 		},
 		/**
-		 * @function dblclick
-		 * Dblclicks an element.  This runs two [Syn.prototype.click click] events followed by
+		 * @function Syn.dblclick dblclick()
+		 * @parent mouse
+		 * @signature `Syn.dblclick(options, element, callback)`
+		 * Dblclicks an element.  This runs two [Syn.click click] events followed by
 		 * a dblclick on the element.
 		 * <h3>Example</h3>
 		 * @codestart

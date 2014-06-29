@@ -1,4 +1,4 @@
-steal('src/synthetic.js', function (Syn) {
+steal('../synthetic.js', function (Syn) {
 
 	// check if elementFromPageExists
 	(function dragSupport() {
@@ -201,7 +201,9 @@ steal('src/synthetic.js', function (Syn) {
 	 */
 	Syn.helpers.extend(Syn.init.prototype, {
 		/**
-			 * @function move
+			 * @function Syn.move move()
+		   * @parent mouse
+			 * @signature `Syn.move(options, from, callback)`
 			 * Moves the cursor from one point to another.  
 			 * 
 			 * ### Quick Example
@@ -298,7 +300,9 @@ steal('src/synthetic.js', function (Syn) {
 
 		},
 		/**
-		 * @function drag
+		 * @function Syn.drag drag()
+		 * @parent mouse
+		 * @signature `Syn.drag(options, from, callback)`
 		 * Creates a mousedown and drags from one point to another.
 		 * Check out [Syn.prototype.move move] for API details.
 		 *
