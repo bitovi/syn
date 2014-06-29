@@ -42,22 +42,22 @@ steal('src/synthetic.js', 'src/key.js', function (Syn) {
 			};
 			// Firefox 4 won't write key events if the element isn't focused
 			Syn.__tryFocus(inputter);
-			Syn.trigger("keypress", "\r", inputter);
+			Syn.trigger(inputter, "keypress", "\r");
 
-			Syn.trigger("keypress", "a", inputter);
+			Syn.trigger(inputter, "keypress", "a");
 			Syn.support.keyCharacters = inputter.value === "a";
 
 			inputter.value = "a";
-			Syn.trigger("keypress", "\b", inputter);
+			Syn.trigger(inputter, "keypress", "\b");
 			Syn.support.backspaceWorks = inputter.value === "";
 
 			inputter.onchange = function () {
 				Syn.support.focusChanges = true;
 			};
 			Syn.__tryFocus(inputter);
-			Syn.trigger("keypress", "a", inputter);
+			Syn.trigger(inputter, "keypress", "a");
 			Syn.__tryFocus(form.childNodes[5]); // this will throw a change event
-			Syn.trigger("keypress", "b", inputter);
+			Syn.trigger(inputter, "keypress", "b");
 			Syn.support.keysOnNotFocused = inputter.value === "ab";
 
 			//test keypress \r on anchor submits
@@ -69,7 +69,7 @@ steal('src/synthetic.js', 'src/key.js', function (Syn) {
 				ev.returnValue = false;
 				return false;
 			});
-			Syn.trigger("keypress", "\r", anchor);
+			Syn.trigger(anchor, "keypress", "\r");
 
 			Syn.support.textareaCarriage = textarea.value.length === 4;
 
