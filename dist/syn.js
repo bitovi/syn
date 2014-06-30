@@ -2,7 +2,7 @@
  * Syn - 0.0.2
  * 
  * @copyright 2014 Bitovi
- * Sun, 29 Jun 2014 16:00:00 GMT
+ * Mon, 30 Jun 2014 22:44:59 GMT
  * @license MIT
  */
 
@@ -1710,21 +1710,24 @@ var __m5 = (function (Syn) {
 			return res;
 		},
 		formElExp = /input|textarea/i,
+		textProperty = (function(){
+			var el = document.createElement("span");
+			return el.textContent != null ? 'textContent' : 'innerText';
+		})(),
+
 		// Get the text from an element.
 		getText = function (el) {
 			if (formElExp.test(el.nodeName)) {
 				return el.value;
 			}
-			return el.textContent || el.innerText;
+			return el[textProperty];
 		},
 		// Set the text of an element.
 		setText = function (el, value) {
 			if (formElExp.test(el.nodeName)) {
 				el.value = value;
-			} else if (el.textContent) {
-				el.textContent = value;
 			} else {
-				el.innerText = value;
+				el[textProperty] = value;
 			}
 		};
 
@@ -2720,7 +2723,7 @@ var __m7 = (function (Syn) {
 	 */
 	Syn.helpers.extend(Syn.init.prototype, {
 		/**
-		 	 * @function Syn.move move()
+			 * @function Syn.move move()
 		   * @parent mouse
 			 * @signature `Syn.move(options, from, callback)`
 			 * Moves the cursor from one point to another.  
