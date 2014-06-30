@@ -89,21 +89,24 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 			return res;
 		},
 		formElExp = /input|textarea/i,
+		textProperty = (function(){
+			var el = document.createElement("span");
+			return el.textContent != null ? 'textContent' : 'innerText';
+		})(),
+
 		// Get the text from an element.
 		getText = function (el) {
 			if (formElExp.test(el.nodeName)) {
 				return el.value;
 			}
-			return el.textContent || el.innerText;
+			return el[textProperty];
 		},
 		// Set the text of an element.
 		setText = function (el, value) {
 			if (formElExp.test(el.nodeName)) {
 				el.value = value;
-			} else if (el.textContent) {
-				el.textContent = value;
 			} else {
-				el.innerText = value;
+				el[textProperty] = value;
 			}
 		};
 
