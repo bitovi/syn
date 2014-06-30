@@ -1,5 +1,6 @@
 {
-  "name": "Syn",
+  "name": "syn",
+  "version": "0.0.2",
   "author": {
     "name": "Bitovi",
     "email": "contact@bitovi.com",
@@ -29,7 +30,6 @@
 		"grunt-jsbeautifier": "^0.2.6"
   },
   "scripts": {
-    "test": "grunt test",
-    "postinstall": "node_modules/bower/bin/bower install"
+    "test": "grunt test"
   }
 }
