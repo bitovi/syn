@@ -1,7 +1,7 @@
-steal("src/synthetic.js", function (Syn) {
+steal("src/synthetic.js", function (syn) {
 	module("synthetic/typeable");
 
-	var isTypeable = Syn.typeable.test;
+	var isTypeable = syn.typeable.test;
 
 	test("Inputs and textareas", function () {
 		var input = document.createElement("input");
@@ -31,7 +31,7 @@ steal("src/synthetic.js", function (Syn) {
 
 	test("User defined typeable function", function () {
 		// We're going to define a typeable with a class of foo.
-		Syn.typeable(function (node) {
+		syn.typeable(function (node) {
 			return node.className === "foo";
 		});
 
