@@ -38,7 +38,7 @@ steal("src/synthetic.js", function (Syn) {
 
 		st.unbinder("outer", "mouseover", mouseoverf);
 		equal(mouseover, 1, "Mouseover");
-		Syn("mouseover", {}, 'inner');
+		Syn("mouseover", 'inner', {});
 
 		equal(mouseover, 1, "Mouseover on no event handlers");
 		st.g("qunit-test-area")
@@ -57,8 +57,8 @@ steal("src/synthetic.js", function (Syn) {
 				return false;
 			};
 		st.bind(st.g("outer"), "submit", submitf);
-		Syn.trigger("click", {}, st.g("submit"));
-		Syn("submit", {}, "outer");
+		Syn.trigger(st.g("submit"), "click", {});
+		Syn("submit", "outer", {});
 
 		equal(submit, 2, "Click on submit");
 
@@ -73,7 +73,7 @@ steal("src/synthetic.js", function (Syn) {
 			};
 		st.binder("inner", "click", clickf);
 
-		Syn.trigger("click", {}, st.g("submit"));
+		Syn.trigger(st.g("submit"), "click", {});
 
 		equal(submit, 2, "Submit prevented");
 		equal(click, 1, "Clicked");
@@ -91,12 +91,12 @@ steal("src/synthetic.js", function (Syn) {
 		st.g("checkbox")
 			.checked = false;
 
-		Syn.trigger("click", {}, st.g("checkbox"));
+		Syn.trigger(st.g("checkbox"), "click", {});
 
 		ok(st.g("checkbox")
 			.checked, "click checks on");
 
-		Syn.trigger("click", {}, st.g("checkbox"));
+		Syn.trigger(st.g("checkbox"), "click", {});
 
 		ok(!st.g("checkbox")
 			.checked, "click checks off");
@@ -111,7 +111,7 @@ steal("src/synthetic.js", function (Syn) {
 				.checked, "check is on during click");
 		});
 
-		Syn.trigger("click", {}, st.g("checkbox"));
+		Syn.trigger(st.g("checkbox"), "click", {});
 	});
 
 	test("Select is changed on click", function () {
@@ -129,15 +129,15 @@ steal("src/synthetic.js", function (Syn) {
 			select2++;
 		});
 
-		Syn.trigger('click', {}, st.g('s1o2'));
+		Syn.trigger(st.g('s1o2'), 'click', {});
 		equal(st.g('s1')
 			.selectedIndex, 1, "select worked");
 		equal(select1, 1, "change event");
-		Syn.trigger('click', {}, st.g('s2o2'));
+		Syn.trigger(st.g('s2o2'), 'click', {});
 		equal(st.g('s2')
 			.selectedIndex, 1, "select worked");
 		equal(select2, 1, "change event");
-		Syn.trigger('click', {}, st.g('s1o1'));
+		Syn.trigger(st.g('s1o1'), 'click', {});
 		equal(st.g('s1')
 			.selectedIndex, 0, "select worked");
 		equal(select1, 2, "change event");
@@ -191,13 +191,13 @@ steal("src/synthetic.js", function (Syn) {
 			radio2++;
 		});
 
-		Syn.trigger("click", {}, st.g("radio1"));
+		Syn.trigger(st.g("radio1"), "click", {});
 
 		equal(radio1, 1, "radio event");
 		ok(st.g("radio1")
 			.checked, "radio checked");
 
-		Syn.trigger("click", {}, st.g("radio2"));
+		Syn.trigger(st.g("radio2"), "click", {});
 
 		equal(radio2, 1, "radio event");
 		ok(st.g("radio2")
@@ -235,7 +235,7 @@ steal("src/synthetic.js", function (Syn) {
 		});
 
 		stop();
-		Syn.click({}, "focusme", function () {
+		Syn.click("focusme", {}, function () {
 			start();
 		});
 
@@ -243,7 +243,7 @@ steal("src/synthetic.js", function (Syn) {
 
 	test("Click Anchor Runs HREF JavaScript", function () {
 		stop();
-		Syn.trigger("click", {}, st.g("jsHref"));
+		Syn.trigger(st.g("jsHref"), "click", {});
 		// Firefox triggers href javascript async so need to
 		// wait for it to complete.
 		setTimeout(function () {
@@ -259,7 +259,7 @@ steal("src/synthetic.js", function (Syn) {
 			ok(target.href.indexOf("#aHash") > -1, "got href");
 		});
 
-		Syn.click({}, "jsHrefHash", function () {
+		Syn.click("jsHrefHash", {}, function () {
 			equal(window.location.hash, "#aHash", "hash set ...");
 			start();
 			window.location.hash = "";
@@ -289,7 +289,7 @@ steal("src/synthetic.js", function (Syn) {
 		stop();
 		//need to give browsers a second to show element
 
-		Syn.click({}, "focusme", function () {
+		Syn.click("focusme", {}, function () {
 			start();
 		});
 
@@ -311,9 +311,9 @@ steal("src/synthetic.js", function (Syn) {
 			});
 
 			stop();
-			Syn.click({}, "one")
+			Syn.click("one", {})
 				.key("a")
-				.click({}, "two", function () {
+				.click("two", {}, function () {
 					start();
 					equal(change, 1, "Change called once");
 					equal(blur, 1, "Blur called once");
@@ -331,9 +331,9 @@ steal("src/synthetic.js", function (Syn) {
 			});
 
 			stop();
-			Syn.click({}, "one")
+			Syn.click("one", {})
 				.key("a")
-				.click({}, document.documentElement, function () {
+				.click(document.documentElement, {}, function () {
 					start();
 					equal(change, 1, "Change called once");
 				});
@@ -348,7 +348,7 @@ steal("src/synthetic.js", function (Syn) {
 			context++;
 		});
 
-		Syn.rightClick({}, "one", function () {
+		Syn.rightClick("one", {}, function () {
 			if (Syn.mouse.browser.contextmenu) {
 				equal(1, context, "context was called");
 			} else {
@@ -370,7 +370,7 @@ steal("src/synthetic.js", function (Syn) {
 			eventSequence.push('click');
 		});
 
-		Syn.dblclick({}, "dblclickme", function () {
+		Syn.dblclick("dblclickme", {}, function () {
 			equal(eventSequence.join(', '), 'click, click, dblclick', 'expected event sequence for doubleclick');
 			start();
 		});
@@ -392,7 +392,7 @@ steal("src/synthetic.js", function (Syn) {
 			ok(true, "h3 was clicked");
 			
 		});
-		Syn.click( el ,{}, function(){
+		Syn.click(el ,{}, function(){
 			start();
 		})
 

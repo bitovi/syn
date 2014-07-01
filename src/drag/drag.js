@@ -55,7 +55,7 @@ steal('../synthetic.js', function (Syn) {
 		//creates an event at a certain point
 		createEventAtPoint = function (event, point, element) {
 			var el = elementFromPoint(point, element);
-			Syn.trigger(event, point, el || element);
+			Syn.trigger(el || element, event, point);
 			return el;
 		},
 		// creates a mousemove event, but first triggering mouseout / mouseover if appropriate
@@ -64,12 +64,12 @@ steal('../synthetic.js', function (Syn) {
 			if (last !== el && el && last) {
 				var options = Syn.helpers.extend({}, point);
 				options.relatedTarget = el;
-				Syn.trigger("mouseout", options, last);
+				Syn.trigger(last, "mouseout", options);
 				options.relatedTarget = last;
-				Syn.trigger("mouseover", options, el);
+				Syn.trigger(el, "mouseover", options);
 			}
 
-			Syn.trigger("mousemove", point, el || element);
+			Syn.trigger(el || element, "mousemove", point);
 			return el;
 		},
 		// start and end are in clientX, clientY
@@ -203,7 +203,7 @@ steal('../synthetic.js', function (Syn) {
 		/**
 			 * @function Syn.move move()
 		   * @parent mouse
-			 * @signature `Syn.move(options, from, callback)`
+			 * @signature `Syn.move(from, options, callback)`
 			 * Moves the cursor from one point to another.  
 			 * 
 			 * ### Quick Example
@@ -212,12 +212,12 @@ steal('../synthetic.js', function (Syn) {
 			 * the window to (100,100) in 1 second.
 			 * 
 			 *     Syn.move(
+			 *          document.document,
 			 *          {
 			 *            from: {clientX: 0, clientY: 0},
 			 *            to: {clientX: 100, clientY: 100},
 			 *            duration: 1000
-			 *          },
-			 *          document.document)
+			 *          })
 			 * 
 			 * ## Options
 			 * 
@@ -229,22 +229,22 @@ steal('../synthetic.js', function (Syn) {
 			 * to client coordinates.
 			 * 
 			 *     Syn.move(
+			 *          document.document,
 			 *          {
 			 *            from: {pageX: 0, pageY: 0},
 			 *            to: {pageX: 100, pageY: 100}
-			 *          },
-			 *          document.document)
+			 *          })
 			 * 
 			 * ### String Coordinates
 			 * 
 			 * You can set the pageX and pageY as strings like:
 			 * 
 			 *     Syn.move(
+			 *          document.document,
 			 *          {
 			 *            from: "0x0",
 			 *            to: "100x100"
-			 *          },
-			 *          document.document)
+			 *          })
 			 * 
 			 * ### Element Coordinates
 			 * 
@@ -252,42 +252,42 @@ steal('../synthetic.js', function (Syn) {
 			 * and the coordinate will be set as the center of the element.
 			 
 			 *     Syn.move(
+			 *          document.document,
 			 *          {
 			 *            from: $(".recipe")[0],
 			 *            to: $("#trash")[0]
-			 *          },
-			 *          document.document)
+			 *          })
 			 * 
 			 * ### Query Strings
 			 * 
 			 * If jQuery is present, you can pass a query string as the from or to option.
 			 * 
 			 * Syn.move(
+			 *      document.document,
 			 *      {
 			 *        from: ".recipe",
 			 *        to: "#trash"
-			 *      },
-			 *      document.document)
+			 *      })
 			 *    
 			 * ### No From
 			 * 
 			 * If you don't provide a from, the element argument passed to Syn is used.
 			 * 
 			 *     Syn.move(
-			 *          { to: "#trash" },
-			 *          'myrecipe')
+			 *          'myrecipe',
+			 *          { to: "#trash" })
 			 * 
 			 * ### Relative
 			 * 
 			 * You can move the drag relative to the center of the from element.
 			 * 
-			 *     Syn.move("+20 +30", "myrecipe");
-			 * 
-			 * @param {Object} options options to configure the drag
+			 *     Syn.move("myrecipe", "+20 +30");
+			 *
 			 * @param {HTMLElement} from the element to move
+			 * @param {Object} options options to configure the drag
 			 * @param {Function} callback a callback that happens after the drag motion has completed
 			 */
-		_move: function (options, from, callback) {
+		_move: function (from, options, callback) {
 			//need to convert if elements
 			var win = Syn.helpers.getWindow(from),
 				fro = convertOption(options.from || from, win, from),
@@ -302,15 +302,15 @@ steal('../synthetic.js', function (Syn) {
 		/**
 		 * @function Syn.drag drag()
 		 * @parent mouse
-		 * @signature `Syn.drag(options, from, callback)`
+		 * @signature `Syn.drag(from, options, callback)`
 		 * Creates a mousedown and drags from one point to another.
 		 * Check out [Syn.prototype.move move] for API details.
 		 *
+		 * @param {HTMLElement} from
 		 * @param {Object} options
-		 * @param {Object} from
 		 * @param {Object} callback
 		 */
-		_drag: function (options, from, callback) {
+		_drag: function (from, options, callback) {
 			//need to convert if elements
 			var win = Syn.helpers.getWindow(from),
 				fro = convertOption(options.from || from, win, from),
