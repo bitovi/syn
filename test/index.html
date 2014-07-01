@@ -13,10 +13,15 @@
 		<script type="text/javascript">
 			QUnit.config.autostart = false;
 		</script>
-		<script src="../steal/steal.js"></script>
+		<script src="../lib/steal/steal.js"
+					  data-config="../stealconfig.js"></script>
 		<script type="text/javascript">
-			steal('test/qunit', function() {
+			QUnit.config.autostart = false;
+
+			System.import("test/qunit/qunit").then(function() {
 				QUnit.start();
+			}, function(err) {
+				throw err;
 			});
 		</script>
 	</body>

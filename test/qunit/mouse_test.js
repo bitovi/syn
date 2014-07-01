@@ -6,7 +6,7 @@ steal("src/synthetic.js", function (syn) {
 		++didSomething;
 	};
 
-	module("synthetic/mouse", {
+	QUnit.module("synthetic/mouse", {
 		setup: function () {
 			st.g("qunit-test-area")
 				.innerHTML = "<form id='outer'><div id='inner'>" +

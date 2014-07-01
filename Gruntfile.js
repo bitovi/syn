@@ -10,9 +10,18 @@ module.exports = function (grunt) {
 				}
 			}
 		},
-		exec: {
-			pluginify: {
-				command: 'node build.js'
+		stealPluginify: {
+			src: {
+				options: {
+					system: {
+						config: __dirname + "/stealconfig.js",
+						main: 'src/syn'
+					},
+					ignore: []
+				},
+				files: [{
+					dest: __dirname + "/build/syn.js"
+				}]
 			}
 		},
 		concat: {
@@ -69,11 +78,11 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-exec');
 	grunt.loadNpmTasks('grunt-jsbeautifier');
 	grunt.loadNpmTasks('testee');
+	grunt.loadNpmTasks('steal-tools');
 
 	grunt.registerTask('quality', ['jsbeautifier', 'jshint']);
-	grunt.registerTask('build', ['exec:pluginify', 'concat', 'uglify']);
+	grunt.registerTask('build', ['stealPluginify', 'concat', 'uglify']);
 	grunt.registerTask('test', ['connect:server', 'testee']);
 };

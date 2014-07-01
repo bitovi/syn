@@ -2,7 +2,7 @@
 
 steal("src/synthetic.js", function (syn) {
 
-	module("syn");
+	QUnit.module("syn");
 
 	st = {
 		g: function (id) {
@@ -35,8 +35,8 @@ steal("src/synthetic.js", function (syn) {
 				return "../../" + path;
 			} :
 			function (path) {
-				return steal.config()
-					.root.join(path);
+				var base = System.baseURL;
+				return steal.joinURIs(base, path);
 			})
 	};
 
