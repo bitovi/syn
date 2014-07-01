@@ -1,5 +1,5 @@
 steal("src/synthetic.js", function (syn) {
-	module("synthetic/typeable");
+	QUnit.module("synthetic/typeable");
 
 	var isTypeable = syn.typeable.test;
 

@@ -1,4 +1,4 @@
-steal('../synthetic.js', function (syn) {
+steal('src/synthetic.js', function (syn) {
 
 	// check if elementFromPageExists
 	(function dragSupport() {
