@@ -120,11 +120,11 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 		 * A list of the keys and their keycodes codes you can type.
 		 * You can add type keys with
 		 * @codestart
-		 * Syn('key','delete','title');
+		 * Syn('key', 'title', 'delete');
 		 *
 		 * //or
 		 *
-		 * Syn('type','One Two Three[left][left][delete]','title')
+		 * Syn('type', 'title', 'One Two Three[left][left][delete]');
 		 * @codeend
 		 *
 		 * The following are a list of keys you can type:
@@ -528,13 +528,13 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 				var nodeName = this.nodeName.toLowerCase();
 				// submit a form
 				if (nodeName === 'input') {
-					Syn.trigger("change", {}, this);
+					Syn.trigger(this, "change", {});
 				}
 
 				if (!Syn.support.keypressSubmits && nodeName === 'input') {
 					var form = Syn.closest(this, "form");
 					if (form) {
-						Syn.trigger("submit", {}, form);
+						Syn.trigger(form, "submit", {});
 					}
 
 				}
@@ -545,7 +545,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 				}
 				// 'click' hyperlinks
 				if (!Syn.support.keypressOnAnchorClicks && nodeName === 'a') {
-					Syn.trigger("click", {}, this);
+					Syn.trigger(this, "click", {});
 				}
 			},
 			// 
@@ -747,7 +747,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 		/**
 		 * @function Syn.key key()
 		 * @parent keys
-		 * @signature `Syn.key(options, element, callback)`
+		 * @signature `Syn.key(element, options, callback)`
 		 * Types a single key.  The key should be
 		 * a string that matches a
 		 * [Syn.static.keycodes].
@@ -755,20 +755,20 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 		 * The following sends a carridge return
 		 * to the 'name' element.
 		 * @codestart
-		 * Syn.key('\r','name')
+		 * Syn.key('name', '\r')
 		 * @codeend
 		 * For each character, a keydown, keypress, and keyup is triggered if
 		 * appropriate.
-		 * @param {String|Number} options
 		 * @param {HTMLElement} [element]
+		 * @param {String|Number} options
 		 * @param {Function} [callback]
 		 * @return {HTMLElement} the element currently focused.
 		 */
-		_key: function (options, element, callback) {
+		_key: function (element, options, callback) {
 			//first check if it is a special up
 			if (/-up$/.test(options) && h.inArray(options.replace("-up", ""),
 				Syn.key.kinds.special) !== -1) {
-				Syn.trigger('keyup', options.replace("-up", ""), element);
+				Syn.trigger(element, 'keyup', options.replace("-up", ""));
 				return callback(true, element);
 			}
 
@@ -778,7 +778,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 				caret = Syn.typeable.test(element) && getSelection(element),
 				key = convert[options] || options,
 				// should we run default events
-				runDefaults = Syn.trigger('keydown', key, element),
+				runDefaults = Syn.trigger(element, 'keydown', key),
 
 				// a function that gets the default behavior for a key
 				getDefault = Syn.key.getDefault,
@@ -806,7 +806,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 							.document.activeElement;
 					}
 
-					runDefaults = Syn.trigger('keypress', keypressOptions, element);
+					runDefaults = Syn.trigger(element, 'keypress', keypressOptions);
 					if (runDefaults) {
 						defaultResult = getDefault(key)
 							.call(element, keypressOptions, h.getWindow(element),
@@ -823,7 +823,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 							.document.activeElement;
 					}
 
-					Syn.trigger('keypress', keypressOptions, element);
+					Syn.trigger(element, 'keypress', keypressOptions);
 				}
 			}
 			if (defaultResult && defaultResult.nodeName) {
@@ -833,9 +833,9 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 			if (defaultResult !== null) {
 				Syn.schedule(function () {
 					if (Syn.support.oninput) {
-						Syn.trigger('input', Syn.key.options(key, 'input'), element);
+						Syn.trigger(element, 'input', Syn.key.options(key, 'input'));
 					}
-					Syn.trigger('keyup', Syn.key.options(key, 'keyup'), element);
+					Syn.trigger(element, 'keyup', Syn.key.options(key, 'keyup'));
 					callback(runDefaults, element);
 				}, 1);
 			} else {
@@ -850,7 +850,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 		/**
 		 * @function Syn.type type()
 		 * @parent keys
-		 * @signature `Syn.type(options, element, callback)`
+		 * @signature `Syn.type(element, options, callback)`
 		 * Types sequence of [Syn.key key actions].  Each
 		 * character is typed, one at a type.
 		 * Multi-character keys like 'left' should be
@@ -858,7 +858,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 		 *
 		 * The following types 'JavaScript MVC' then deletes the space.
 		 * @codestart
-		 * Syn.type('JavaScript MVC[left][left][left]\b','name')
+		 * Syn.type('name', 'JavaScript MVC[left][left][left]\b')
 		 * @codeend
 		 *
 		 * Type is able to handle (and move with) tabs (\t).
@@ -867,11 +867,11 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 		 * @codestart
 		 * Syn.type("Justin\tMeyer\t27\tjustinbmeyer@gmail.com\r")
 		 * @codeend
-		 * @param {String} options the text to type
 		 * @param {HTMLElement} [element] an element or an id of an element
+		 * @param {String} options the text to type
 		 * @param {Function} [callback] a function to callback
 		 */
-		_type: function (options, element, callback) {
+		_type: function (element, options, callback) {
 			//break it up into parts ...
 			//go through each type and run
 			var parts = (options + "")
@@ -887,7 +887,7 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 					if (part.length > 1) {
 						part = part.substr(1, part.length - 2);
 					}
-					self._key(part, el, runNextPart);
+					self._key(el, part, runNextPart);
 				};
 
 			runNextPart();

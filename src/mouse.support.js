@@ -22,19 +22,19 @@ steal('src/synthetic.js', 'src/mouse.js', function checkSupport(Syn) {
 	select = form.getElementsByTagName('select')[0];
 
 	//trigger click for linkHrefJS support, childNodes[6] === anchor
-	Syn.trigger('click', {}, form.childNodes[6]);
+	Syn.trigger(form.childNodes[6], 'click', {});
 
 	checkbox.checked = false;
 	checkbox.onchange = function () {
 		Syn.support.clickChanges = true;
 	};
 
-	Syn.trigger("click", {}, checkbox);
+	Syn.trigger(checkbox, "click", {});
 	Syn.support.clickChecks = checkbox.checked;
 
 	checkbox.checked = false;
 
-	Syn.trigger("change", {}, checkbox);
+	Syn.trigger(checkbox, "change", {});
 
 	Syn.support.changeChecks = checkbox.checked;
 
@@ -45,18 +45,18 @@ steal('src/synthetic.js', 'src/mouse.js', function checkSupport(Syn) {
 		Syn.support.clickSubmits = true;
 		return false;
 	};
-	Syn.trigger("click", {}, submit);
+	Syn.trigger(submit, "click", {});
 
 	form.childNodes[1].onchange = function () {
 		Syn.support.radioClickChanges = true;
 	};
-	Syn.trigger("click", {}, form.childNodes[1]);
+	Syn.trigger(form.childNodes[1], "click", {});
 
 	Syn.bind(div, 'click', function onclick() {
 		Syn.support.optionClickBubbles = true;
 		Syn.unbind(div, 'click', onclick);
 	});
-	Syn.trigger("click", {}, select.firstChild);
+	Syn.trigger(select.firstChild, "click", {});
 
 	Syn.support.changeBubbles = Syn.eventSupported('change');
 
@@ -64,8 +64,8 @@ steal('src/synthetic.js', 'src/mouse.js', function checkSupport(Syn) {
 	div.onclick = function () {
 		Syn.support.mouseDownUpClicks = true;
 	};
-	Syn.trigger("mousedown", {}, div);
-	Syn.trigger("mouseup", {}, div);
+	Syn.trigger(div, "mousedown", {});
+	Syn.trigger(div, "mouseup", {});
 
 	document.documentElement.removeChild(div);
 

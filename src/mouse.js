@@ -7,7 +7,7 @@ steal('./synthetic.js', function (Syn) {
 	Syn.mouse = {};
 	h.extend(Syn.defaults, {
 		mousedown: function (options) {
-			Syn.trigger("focus", {}, this);
+			Syn.trigger(this, "focus", {});
 		},
 		click: function () {
 			// prevents the access denied issue in IE if the click causes the element to be destroyed
@@ -52,7 +52,7 @@ steal('./synthetic.js', function (Syn) {
 
 				var form = Syn.closest(element, "form");
 				if (form) {
-					Syn.trigger("submit", {}, form);
+					Syn.trigger(form, "submit", {});
 				}
 
 			}
@@ -69,19 +69,19 @@ steal('./synthetic.js', function (Syn) {
 				//	element.checked = !element.checked;
 				//}
 				if (!Syn.support.clickChanges) {
-					Syn.trigger("change", {}, element);
+					Syn.trigger(element, "change", {});
 				}
 			}
 
 			//change a radio button
 			if (nodeName === "input" && type === "radio") { // need to uncheck others if not checked
 				if (radioChanged && !Syn.support.radioClickChanges) {
-					Syn.trigger("change", {}, element);
+					Syn.trigger(element, "change", {});
 				}
 			}
 			// change options
 			if (nodeName === "option" && createChange) {
-				Syn.trigger("change", {}, element.parentNode); //does not bubble
+				Syn.trigger(element.parentNode, "change", {}); //does not bubble
 				Syn.data(element, "createChange", false);
 			}
 		}

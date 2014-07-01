@@ -44,7 +44,7 @@ steal(function () {
 		 * and then types <code>'Hello World'</code>.
 		 * 
 		 @codestart
-		 Syn.click({},'description')
+		 Syn.click('description', {})
 		 .type("Hello World")
 		 @codeend
 		 * <h2>User Actions and Events</h2>
@@ -75,7 +75,7 @@ steal(function () {
 		 * be called after the action is completed.
 		 * <br/>The following checks that "Hello World" was entered correctly: 
 		 @codestart
-		 Syn.click({},'description')
+		 Syn.click('description', {})
 		 .type("Hello World", function(){
 		 
 		 ok("Hello World" == document.getElementById('description').value)  
@@ -89,10 +89,10 @@ steal(function () {
 		 </p>
 		 The following does a lot of stuff before checking the result:
 		 @codestart
-		 Syn.type('ice water','title')
-		 .type('ice and water','description')
-		 .click({},'create')
-		 .drag({to: 'favorites'},'newRecipe',
+		 Syn.type('title', 'ice water')
+		 .type('description', 'ice and water')
+		 .click('create', {})
+		 .drag('newRecipe', {to: 'favorites'},
 		 function(){
 		 ok($('#newRecipe').parents('#favorites').length);
 		 })
@@ -142,16 +142,16 @@ steal(function () {
 		 *   testing solutions can use it as well.
 		 * </p>
 		 * @constructor
-		 * @signature `Syn(type, options, element, callback)`
+		 * @signature `Syn(type, element, options, callback)`
 		 * Creates a synthetic event on the element.
 		 * @param {Object} type
+		 * @param {HTMLElement} element
 		 * @param {Object} options
-		 * @param {Object} element
-		 * @param {Object} callback
+		 * @param {Function} callback
 		 * @return {Syn} returns the Syn object.
 		 */
-		Syn = function (type, options, element, callback) {
-			return (new Syn.init(type, options, element, callback));
+		Syn = function (type, element, options, callback) {
+			return (new Syn.init(type, element, options, callback));
 		};
 
 	Syn.config = opts;
@@ -181,12 +181,12 @@ steal(function () {
 		/**
 		 * Creates a new synthetic event instance
 		 * @hide
-		 * @param {Object} type
+		 * @param {String} type
+		 * @param {HTMLElement} element
 		 * @param {Object} options
-		 * @param {Object} element
-		 * @param {Object} callback
+		 * @param {Function} callback
 		 */
-		init: function (type, options, element, callback) {
+		init: function (type, element, options, callback) {
 			var args = Syn.args(options, element, callback),
 				self = this;
 			this.queue = [];
@@ -194,14 +194,14 @@ steal(function () {
 
 			//run event
 			if (typeof this[type] === "function") {
-				this[type](args.options, args.element, function (defaults, el) {
+				this[type](args.element, args.options, function (defaults, el) {
 					if (args.callback) {
 						args.callback.apply(self, arguments);
 					}
 					self.done.apply(self, arguments);
 				});
 			} else {
-				this.result = Syn.trigger(type, args.options, args.element);
+				this.result = Syn.trigger(args.element, type, args.options);
 				if (args.callback) {
 					args.callback.call(this, args.element, this.result);
 				}
@@ -241,8 +241,8 @@ steal(function () {
 			}
 			return res;
 		},
-		click: function (options, element, callback) {
-			Syn('click!', options, element, callback);
+		click: function (element, options, callback) {
+			Syn('click!', element, options, callback);
 		},
 		/**
 		 * @hide
@@ -265,7 +265,7 @@ steal(function () {
 						bind(element, "blur", function () {
 							if (Syn.data(element, "syntheticvalue") !== element.value) {
 
-								Syn.trigger("change", {}, element);
+								Syn.trigger(element, "change", {});
 							}
 							unbind(element, "blur", focus);
 						});
@@ -286,7 +286,7 @@ steal(function () {
 
 			bind(element, "blur", function onblur() {
 				if (value !== element[prop]) {
-					Syn.trigger("change", {}, element);
+					Syn.trigger(element, "change", {});
 				}
 				unbind(element, "blur", onblur);
 			});
@@ -616,16 +616,16 @@ steal(function () {
 		/**
 		 * @function Syn.trigger trigger()
 		 * @parent actions
-		 * @signature `Syn.trigger(type, options, element)`
+		 * @signature `Syn.trigger(element, type, options)`
 		 * Creates a synthetic event and dispatches it on the element.
 		 * This will run any default actions for the element.
 		 * Typically you want to use Syn, but if you want the return value, use this.
+		 * @param {HTMLElement} element
 		 * @param {String} type
 		 * @param {Object} options
-		 * @param {HTMLElement} element
 		 * @return {Boolean} true if default events were run, false if otherwise.
 		 */
-		trigger: function (type, options, element) {
+		trigger: function (element, type, options) {
 			if (!options) {
 				options = {};
 			}
@@ -698,7 +698,7 @@ steal(function () {
 		 * <p>The following clicks and types into the <code>id='age'</code> element and then checks that only numeric characters can be entered.</p>
 		 * <h3>Example</h3>
 		 * @codestart
-		 * Syn('click',{},'age')
+		 * Syn('click', 'age', {})
 		 *   .then('type','I am 12',function(){
 		 *   equals($('#age').val(),"12")
 		 * })
@@ -706,11 +706,12 @@ steal(function () {
 		 * If the element argument is undefined, then the last element is used.
 		 *
 		 * @param {String} type The type of event or action to create: "_click", "_dblclick", "_drag", "_type".
-		 * @param {Object} options Optiosn to pass to the event.
 		 * @param {String|HTMLElement} [element] A element's id or an element.  If undefined, defaults to the previous element.
+		 * @param {Object} options Optiosn to pass to the event.
+		 
 		 * @param {Function} [callback] A function to callback after the action has run, but before any future chained actions are run.
 		 */
-		then: function (type, options, element, callback) {
+		then: function (type, element, options, callback) {
 			if (Syn.autoDelay) {
 				this.delay();
 			}
@@ -723,14 +724,14 @@ steal(function () {
 
 				if (typeof this[type] === "function") {
 					this.element = args.element || el;
-					this[type](args.options, this.element, function (defaults, el) {
+					this[type](this.element, args.options, function (defaults, el) {
 						if (args.callback) {
 							args.callback.apply(self, arguments);
 						}
 						self.done.apply(self, arguments);
 					});
 				} else {
-					this.result = Syn.trigger(type, args.options, args.element);
+					this.result = Syn.trigger(args.element, type, args.options);
 					if (args.callback) {
 						args.callback.call(this, args.element, this.result);
 					}
@@ -776,13 +777,13 @@ steal(function () {
 		/**
 		 * @function Syn.click click()
 		 * @parent mouse
-		 * @signature `Syn.click(options, element, callback, force)`
+		 * @signature `Syn.click(element, options, callback, force)`
 		 * Clicks an element by triggering a mousedown,
 		 * mouseup,
 		 * and a click event.
 		 * <h3>Example</h3>
 		 * @codestart
-		 * Syn.click({},'create',function(){
+		 * Syn.click('create', {}, function(){
 		 *   //check something
 		 * })
 		 * @codeend
@@ -791,26 +792,26 @@ steal(function () {
 		 * for you.  Here's how to set it yourself:
 		 * @codestart
 		 * Syn.click(
-		 *     {clientX: 20, clientY: 100},
 		 *     'create',
+		 *     {clientX: 20, clientY: 100},
 		 *     function(){
 		 *       //check something
 		 *     })
 		 * @codeend
 		 * You can also provide pageX and pageY and Syn will convert it for you.
-		 * @param {Object} options
 		 * @param {HTMLElement} element
+		 * @param {Object} options
 		 * @param {Function} callback
 		 */
-		"_click": function (options, element, callback, force) {
+		"_click": function (element, options, callback, force) {
 			Syn.helpers.addOffset(options, element);
-			Syn.trigger("mousedown", options, element);
+			Syn.trigger(element, "mousedown", options);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
 			schedule(function () {
-				Syn.trigger("mouseup", options, element);
+				Syn.trigger(element, "mouseup", options);
 				if (!Syn.support.mouseDownUpClicks || force) {
-					Syn.trigger("click", options, element);
+					Syn.trigger(element, "click", options);
 					callback(true);
 				} else {
 					//we still have to run the default (presumably)
@@ -827,23 +828,23 @@ steal(function () {
 		/**
 		 * @function Syn.rightClick rightClick()
 		 * @parent mouse
-		 * @signature `Syn.rightClick(options, element, callback)`
+		 * @signature `Syn.rightClick(element, options, callback)`
 		 * Right clicks in browsers that support it (everyone but opera).
-		 * @param {Object} options
 		 * @param {Object} element
+		 * @param {Object} options
 		 * @param {Object} callback
 		 */
-		"_rightClick": function (options, element, callback) {
+		"_rightClick": function (element, options, callback) {
 			Syn.helpers.addOffset(options, element);
 			var mouseopts = extend(extend({}, Syn.mouse.browser.right.mouseup), options);
 
-			Syn.trigger("mousedown", mouseopts, element);
+			Syn.trigger(element, "mousedown", mouseopts);
 
 			//timeout is b/c IE is stupid and won't call focus handlers
 			schedule(function () {
-				Syn.trigger("mouseup", mouseopts, element);
+				Syn.trigger(element, "mouseup", mouseopts);
 				if (Syn.mouse.browser.right.contextmenu) {
-					Syn.trigger("contextmenu", extend(extend({}, Syn.mouse.browser.right.contextmenu), options), element);
+					Syn.trigger(element, "contextmenu", extend(extend({}, Syn.mouse.browser.right.contextmenu), options));
 				}
 				callback(true);
 			}, 1);
@@ -851,24 +852,24 @@ steal(function () {
 		/**
 		 * @function Syn.dblclick dblclick()
 		 * @parent mouse
-		 * @signature `Syn.dblclick(options, element, callback)`
+		 * @signature `Syn.dblclick(element, options, callback)`
 		 * Dblclicks an element.  This runs two [Syn.click click] events followed by
 		 * a dblclick on the element.
 		 * <h3>Example</h3>
 		 * @codestart
-		 * Syn.dblclick({},'open')
+		 * Syn.dblclick('open', {});
 		 * @codeend
 		 * @param {Object} options
 		 * @param {HTMLElement} element
 		 * @param {Function} callback
 		 */
-		"_dblclick": function (options, element, callback) {
+		"_dblclick": function (element, options, callback) {
 			Syn.helpers.addOffset(options, element);
 			var self = this;
-			this._click(options, element, function () {
+			this._click(element, options, function () {
 				schedule(function () {
-					self._click(options, element, function () {
-						Syn.trigger("dblclick", options, element);
+					self._click(element, options, function () {
+						Syn.trigger(element, "dblclick", options);
 						callback(true);
 					}, true);
 				}, 2);
@@ -879,11 +880,11 @@ steal(function () {
 
 	var actions = ["click", "dblclick", "move", "drag", "key", "type", 'rightClick'],
 		makeAction = function (name) {
-			Syn[name] = function (options, element, callback) {
-				return Syn("_" + name, options, element, callback);
+			Syn[name] = function (element, options, callback) {
+				return Syn("_" + name, element, options, callback);
 			};
-			Syn.init.prototype[name] = function (options, element, callback) {
-				return this.then("_" + name, options, element, callback);
+			Syn.init.prototype[name] = function (element, options, callback) {
+				return this.then("_" + name, element, options, callback);
 			};
 		},
 		i = 0;
