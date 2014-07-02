@@ -24,7 +24,7 @@
     "qunit": "1.10.x",
     "canjs": "2.0.x",
     "bootstrap": "3.0.x",
-    "steal": "~0.2.2"
+    "steal": "~0.3.0"
   },
   "ignore": [
     "stealconfig.js",

@@ -10,6 +10,11 @@ module.exports = function (grunt) {
 				}
 			}
 		},
+		exec: {
+			pluginifyTests: {
+				command: "node build_tests.js"
+			}
+		},
 		stealPluginify: {
 			src: {
 				options: {
@@ -21,6 +26,18 @@ module.exports = function (grunt) {
 				},
 				files: [{
 					dest: __dirname + "/build/syn.js"
+				}]
+			},
+			tests: {
+				options: {
+					system: {
+						config: __dirname + "/stealconfig.js",
+						main: "test/qunit/qunit"
+					},
+					ignore: []
+				},
+				files: [{
+					dest: __dirname + "/build/tests.js"
 				}]
 			}
 		},
@@ -70,6 +87,19 @@ module.exports = function (grunt) {
 					urls: ['http://localhost:8000/test/index.html'],
 					browsers: ['phantom']
 				}
+			},
+			built: {
+				options: {
+					urls: ['http://localhost:8000/test/built.html'],
+					browsers: ['phantom']
+				}
+			},
+			both: {
+				options: {
+					urls: ['http://localhost:8000/test/index.html',
+								 'http://localhost:8000/test/built.html'],
+					browsers: ['phantom']
+				}
 			}
     }
 	});
@@ -78,11 +108,16 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-exec');
 	grunt.loadNpmTasks('grunt-jsbeautifier');
 	grunt.loadNpmTasks('testee');
 	grunt.loadNpmTasks('steal-tools');
 
 	grunt.registerTask('quality', ['jsbeautifier', 'jshint']);
-	grunt.registerTask('build', ['stealPluginify', 'concat', 'uglify']);
-	grunt.registerTask('test', ['connect:server', 'testee']);
+	grunt.registerTask('build', ['stealPluginify:src', 'concat', 'uglify']);
+
+	// Test tasks
+	grunt.registerTask('test', ['connect:server', 'testee:src']);
+	grunt.registerTask('testbuild', ['build', 'exec:pluginifyTests',
+										 'connect:server', 'testee:built']);
 };

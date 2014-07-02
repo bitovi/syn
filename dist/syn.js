@@ -2,7 +2,7 @@
  * Syn - 0.0.2
  * 
  * @copyright 2014 Bitovi
- * Wed, 02 Jul 2014 11:55:04 GMT
+ * Fri, 25 Jul 2014 14:34:48 GMT
  * @license MIT
  */
 
@@ -649,6 +649,63 @@ define('src/mouse', ['src/synthetic'], function (syn) {
         }
     });
     return syn;
+});
+/*src/mouse.support*/
+define('src/mouse.support', [
+    'src/synthetic',
+    'src/mouse'
+], function checkSupport(syn) {
+    if (!document.body) {
+        syn.schedule(function () {
+            checkSupport(syn);
+        }, 1);
+        return;
+    }
+    window.__synthTest = function () {
+        syn.support.linkHrefJS = true;
+    };
+    var div = document.createElement('div'), checkbox, submit, form, select;
+    div.innerHTML = '<form id=\'outer\'>' + '<input name=\'checkbox\' type=\'checkbox\'/>' + '<input name=\'radio\' type=\'radio\' />' + '<input type=\'submit\' name=\'submitter\'/>' + '<input type=\'input\' name=\'inputter\'/>' + '<input name=\'one\'>' + '<input name=\'two\'/>' + '<a href=\'javascript:__synthTest()\' id=\'synlink\'></a>' + '<select><option></option></select>' + '</form>';
+    document.documentElement.appendChild(div);
+    form = div.firstChild;
+    checkbox = form.childNodes[0];
+    submit = form.childNodes[2];
+    select = form.getElementsByTagName('select')[0];
+    syn.trigger(form.childNodes[6], 'click', {});
+    checkbox.checked = false;
+    checkbox.onchange = function () {
+        syn.support.clickChanges = true;
+    };
+    syn.trigger(checkbox, 'click', {});
+    syn.support.clickChecks = checkbox.checked;
+    checkbox.checked = false;
+    syn.trigger(checkbox, 'change', {});
+    syn.support.changeChecks = checkbox.checked;
+    form.onsubmit = function (ev) {
+        if (ev.preventDefault) {
+            ev.preventDefault();
+        }
+        syn.support.clickSubmits = true;
+        return false;
+    };
+    syn.trigger(submit, 'click', {});
+    form.childNodes[1].onchange = function () {
+        syn.support.radioClickChanges = true;
+    };
+    syn.trigger(form.childNodes[1], 'click', {});
+    syn.bind(div, 'click', function onclick() {
+        syn.support.optionClickBubbles = true;
+        syn.unbind(div, 'click', onclick);
+    });
+    syn.trigger(select.firstChild, 'click', {});
+    syn.support.changeBubbles = syn.eventSupported('change');
+    div.onclick = function () {
+        syn.support.mouseDownUpClicks = true;
+    };
+    syn.trigger(div, 'mousedown', {});
+    syn.trigger(div, 'mouseup', {});
+    document.documentElement.removeChild(div);
+    syn.support.ready++;
 });
 /*src/browsers*/
 define('src/browsers', [
@@ -2098,6 +2155,69 @@ define('src/key', [
     });
     return syn;
 });
+/*src/key.support*/
+define('src/key.support', [
+    'src/synthetic',
+    'src/key'
+], function (syn) {
+    if (!syn.config.support) {
+        (function checkForSupport() {
+            if (!document.body) {
+                return syn.schedule(checkForSupport, 1);
+            }
+            var div = document.createElement('div'), checkbox, submit, form, anchor, textarea, inputter, one, doc;
+            doc = document.documentElement;
+            div.innerHTML = '<form id=\'outer\'>' + '<input name=\'checkbox\' type=\'checkbox\'/>' + '<input name=\'radio\' type=\'radio\' />' + '<input type=\'submit\' name=\'submitter\'/>' + '<input type=\'input\' name=\'inputter\'/>' + '<input name=\'one\'>' + '<input name=\'two\'/>' + '<a href=\'#abc\'></a>' + '<textarea>1\n2</textarea>' + '</form>';
+            doc.insertBefore(div, doc.firstElementChild || doc.children[0]);
+            form = div.firstChild;
+            checkbox = form.childNodes[0];
+            submit = form.childNodes[2];
+            anchor = form.getElementsByTagName('a')[0];
+            textarea = form.getElementsByTagName('textarea')[0];
+            inputter = form.childNodes[3];
+            one = form.childNodes[4];
+            form.onsubmit = function (ev) {
+                if (ev.preventDefault) {
+                    ev.preventDefault();
+                }
+                syn.support.keypressSubmits = true;
+                ev.returnValue = false;
+                return false;
+            };
+            syn.__tryFocus(inputter);
+            syn.trigger(inputter, 'keypress', '\r');
+            syn.trigger(inputter, 'keypress', 'a');
+            syn.support.keyCharacters = inputter.value === 'a';
+            inputter.value = 'a';
+            syn.trigger(inputter, 'keypress', '\b');
+            syn.support.backspaceWorks = inputter.value === '';
+            inputter.onchange = function () {
+                syn.support.focusChanges = true;
+            };
+            syn.__tryFocus(inputter);
+            syn.trigger(inputter, 'keypress', 'a');
+            syn.__tryFocus(form.childNodes[5]);
+            syn.trigger(inputter, 'keypress', 'b');
+            syn.support.keysOnNotFocused = inputter.value === 'ab';
+            syn.bind(anchor, 'click', function (ev) {
+                if (ev.preventDefault) {
+                    ev.preventDefault();
+                }
+                syn.support.keypressOnAnchorClicks = true;
+                ev.returnValue = false;
+                return false;
+            });
+            syn.trigger(anchor, 'keypress', '\r');
+            syn.support.textareaCarriage = textarea.value.length === 4;
+            syn.support.oninput = 'oninput' in one;
+            doc.removeChild(div);
+            syn.support.ready++;
+        }());
+    } else {
+        syn.helpers.extend(syn.support, syn.config.support);
+    }
+    return syn;
+});
 /*src/drag/drag*/
 define('src/drag/drag', ['src/synthetic'], function (syn) {
     (function dragSupport() {
@@ -2276,9 +2396,9 @@ define('src/drag/drag', ['src/synthetic'], function (syn) {
 /*src/syn*/
 define('src/syn', [
     'src/synthetic',
-    'src/mouse',
+    'src/mouse.support',
     'src/browsers',
-    'src/key',
+    'src/key.support',
     'src/drag/drag'
 ], function (syn) {
     window.syn = syn;

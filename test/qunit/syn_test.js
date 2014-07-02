@@ -32,7 +32,7 @@ steal("src/synthetic.js", function (syn) {
 				el.detachEvent("on" + ev, f);
 		},
 		rootJoin: (typeof steal === "undefined" ? function (path) {
-				return "../../" + path;
+				return "../" + path;
 			} :
 			function (path) {
 				var base = System.baseURL;

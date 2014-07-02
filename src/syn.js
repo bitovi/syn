@@ -1,7 +1,7 @@
 steal('src/synthetic.js',
-	'src/mouse.js',
+	'src/mouse.support.js',
 	'src/browsers.js',
-	'src/key.js',
+	'src/key.support.js',
 	'src/drag', function (syn) {
 		window.syn = syn;
 
