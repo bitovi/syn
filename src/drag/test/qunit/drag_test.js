@@ -1,6 +1,6 @@
 steal("src/synthetic.js", function (syn) {
 
-	module("drag");
+	QUnit.module("drag");
 
 	// test("dragging off the page", function(){
 	// var drags = ( {}),

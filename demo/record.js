@@ -1,4 +1,4 @@
-steal('jquery', 'can/control', 'src/syn.js', function($, Control, Syn) {
+steal('jquery', 'can/control', 'src/syn.js', function($, Control, syn) {
 	var Resize = can.Control.extend({
 		init: function() {
 			this.resize();
@@ -17,7 +17,7 @@ steal('jquery', 'can/control', 'src/syn.js', function($, Control, Syn) {
 
 	//Safari doesn't send mouse/click on option
 	$(function() {
-		Syn.autoDelay = true;
+		syn.autoDelay = true;
 		REPLAY = false;
 		ADD = true;
 
@@ -61,7 +61,7 @@ steal('jquery', 'can/control', 'src/syn.js', function($, Control, Syn) {
 						func && args.push('Recorder.cb('+i+')');
 
 						text.push(func ? '':'<div>',
-							i > 0 ? '   .' : 'Syn.',
+							i > 0 ? '   .' : 'syn.',
 							command.type,
 							'(',
 							args.join(', '),
@@ -95,8 +95,8 @@ steal('jquery', 'can/control', 'src/syn.js', function($, Control, Syn) {
 				},
 
 				getKey: function(code) {
-					for(var key in Syn.keycodes) {
-						if(Syn.keycodes[key] === code) {
+					for(var key in syn.keycodes) {
+						if(syn.keycodes[key] === code) {
 							return key;
 						}
 					}
@@ -136,7 +136,7 @@ steal('jquery', 'can/control', 'src/syn.js', function($, Control, Syn) {
 
 				keyup: function(ev) {
 					var key = h.getKey(ev.keyCode);
-					if(Syn.key.isSpecial(ev.keyCode)) {
+					if(syn.key.isSpecial(ev.keyCode)) {
 						h.showChar(key+'-up', ev.target);
 					}
 
@@ -170,7 +170,7 @@ steal('jquery', 'can/control', 'src/syn.js', function($, Control, Syn) {
 						selector += '.'+target.className.split(' ')[0];
 					}
 
-					var others = jQuery(selector, Syn.helpers.getWindow(target).document);
+					var others = jQuery(selector, syn.helpers.getWindow(target).document);
 
 					if(others.length > 1) {
 						return selector+':eq('+others.index(target)+')';
