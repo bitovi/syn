@@ -3,7 +3,8 @@
 <title>Syn.schedule test</title>
 </head>
 <body>
-	<script src="../../steal/steal.js"></script>
+	<script src="../../lib/steal/steal.js"
+					data-config="../../stealconfig.js"></script>
 	<script>
 		syn = {
 			schedule: function() {
@@ -11,7 +12,7 @@
 			}
 		};
 
-		steal('src/syn.js').then(function(){
+		steal('src/syn.js', function(){
 			var body = document.body;
 			syn.click(body, {}).delay(function(){}, 0);
 		});

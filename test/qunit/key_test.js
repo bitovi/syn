@@ -1,7 +1,7 @@
 /* global st */
 
 steal("src/synthetic.js", function (syn) {
-	module("synthetic/key", {
+	QUnit.module("synthetic/key", {
 		setup: function () {
 			st.g("qunit-test-area")
 				.innerHTML = "<form id='outer'>" +

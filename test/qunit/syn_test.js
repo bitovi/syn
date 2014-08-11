@@ -2,7 +2,7 @@
 
 steal("src/synthetic.js", function (syn) {
 
-	module("syn");
+	QUnit.module("syn");
 
 	st = {
 		g: function (id) {
@@ -32,11 +32,11 @@ steal("src/synthetic.js", function (syn) {
 				el.detachEvent("on" + ev, f);
 		},
 		rootJoin: (typeof steal === "undefined" ? function (path) {
-				return "../../" + path;
+				return "../" + path;
 			} :
 			function (path) {
-				return steal.config()
-					.root.join(path);
+				var base = System.baseURL;
+				return steal.joinURIs(base, path);
 			})
 	};
 

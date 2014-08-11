@@ -6,7 +6,7 @@ steal("src/synthetic.js", function (syn) {
 		++didSomething;
 	};
 
-	module("synthetic/mouse", {
+	QUnit.module("synthetic/mouse", {
 		setup: function () {
 			st.g("qunit-test-area")
 				.innerHTML = "<form id='outer'><div id='inner'>" +
@@ -402,10 +402,7 @@ steal("src/synthetic.js", function (syn) {
 	iframe.src = page1
 	st.g("qunit-test-area").appendChild(iframe);*/
 
-		var path = "test/qunit/h3.html";
-		if (typeof steal !== 'undefined') {
-			path = st.rootJoin("test/qunit/h3.html");
-		}
+		var path = st.rootJoin("test/qunit/h3.html");
 		var popup = window.open(path, "synthing");
 
 		setTimeout(function () {
@@ -424,13 +421,8 @@ steal("src/synthetic.js", function (syn) {
 	test("focus on an element then another in another page", function () {
 		stop();
 
-		var page1 = "test/qunit/page1.html",
-			page2 = "test/qunit/page2.html";
-
-		if (typeof steal !== 'undefined') {
-			page1 = st.rootJoin("test/qunit/page1.html");
+		var page1 = st.rootJoin("test/qunit/page1.html"),
 			page2 = st.rootJoin("test/qunit/page2.html");
-		}
 
 		var iframe = document.createElement('iframe'),
 			calls = 0;
