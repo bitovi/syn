@@ -1,3 +1,4 @@
+
 module.exports = function (grunt) {
 
 	grunt.initConfig({
@@ -10,35 +11,34 @@ module.exports = function (grunt) {
 				}
 			}
 		},
-		exec: {
-			pluginifyTests: {
-				command: "node build_tests.js"
-			}
-		},
 		stealPluginify: {
-			src: {
-				options: {
-					system: {
-						config: __dirname + "/stealconfig.js",
-						main: 'src/syn'
-					},
-					ignore: []
+			"standalone": {
+				system: {
+					config: __dirname + "/stealconfig.js",
+					main: 'src/syn'
 				},
-				files: [{
-					dest: __dirname + "/build/syn.js"
-				}]
+				"outputs": {
+					"standalone": {
+						dest: __dirname + "/build/syn.js",
+						minify: false
+					}
+				}
 			},
-			tests: {
-				options: {
-					system: {
-						config: __dirname + "/stealconfig.js",
-						main: "test/qunit/qunit"
-					},
-					ignore: []
+
+			"tests": {
+				system: {
+					config: __dirname + "/stealconfig.js",
+					main: "test/qunit/qunit"
 				},
-				files: [{
-					dest: __dirname + "/build/tests.js"
-				}]
+				"outputs": {
+					"all tests": {
+						// Ignore everything without _test in the filename
+						ignore: /^((?!_test).)*$/,
+						format: "global",
+						dest: __dirname + "/build/tests.js",
+						minify: false
+					}
+				}
 			}
 		},
 		concat: {
@@ -108,16 +108,15 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-exec');
 	grunt.loadNpmTasks('grunt-jsbeautifier');
 	grunt.loadNpmTasks('testee');
 	grunt.loadNpmTasks('steal-tools');
 
 	grunt.registerTask('quality', ['jsbeautifier', 'jshint']);
-	grunt.registerTask('build', ['stealPluginify:src', 'concat', 'uglify']);
+	grunt.registerTask('build', ['stealPluginify:standalone', 'concat', 'uglify']);
 
 	// Test tasks
 	grunt.registerTask('test', ['connect:server', 'testee:src']);
-	grunt.registerTask('testbuild', ['build', 'exec:pluginifyTests',
+	grunt.registerTask('testbuild', ['build', 'stealPluginify:tests',
 										 'connect:server', 'testee:built']);
 };

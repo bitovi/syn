@@ -9,6 +9,7 @@
 		<div id="qunit-test-area"></div>
 		<div id="qunit-fixture"></div>
 
+		<script src="../lib/jquery/jquery.js"></script>
 		<script src="../lib/qunit/qunit/qunit.js"></script>
 		<script type="text/javascript">
 			QUnit.config.autostart = false;
@@ -17,5 +18,8 @@
 		</script>
 		<script src="../dist/syn.js"></script>
 		<script src="../build/tests.js"></script>
+		<script>
+			QUnit.start();
+		</script>
 	</body>
 </html>
