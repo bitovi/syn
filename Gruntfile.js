@@ -15,7 +15,7 @@ module.exports = function (grunt) {
 			"standalone": {
 				system: {
 					config: __dirname + "/stealconfig.js",
-					main: 'src/syn'
+					main: 'syn/syn'
 				},
 				"outputs": {
 					"standalone": {

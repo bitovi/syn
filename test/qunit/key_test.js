@@ -1,6 +1,6 @@
 /* global st */
 
-steal("src/synthetic.js", function (syn) {
+steal("syn/synthetic.js", function (syn) {
 	QUnit.module("synthetic/key", {
 		setup: function () {
 			st.g("qunit-test-area")

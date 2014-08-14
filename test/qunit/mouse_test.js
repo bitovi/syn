@@ -1,6 +1,6 @@
 /* global st */
 
-steal("src/synthetic.js", function (syn) {
+steal("syn/synthetic.js", function (syn) {
 	var didSomething = 0;
 	window.doSomething = function () {
 		++didSomething;

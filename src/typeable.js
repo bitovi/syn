@@ -1,4 +1,4 @@
-steal("src/synthetic.js", function (syn) {
+steal("syn/synthetic.js", function (syn) {
 	// Holds functions that test for typeability
 	var typeables = [];
 
