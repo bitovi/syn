@@ -1,4 +1,4 @@
-steal('src/synthetic.js', function (syn) {
+steal('syn/synthetic.js', function (syn) {
 	//handles mosue events
 
 	var h = syn.helpers,
