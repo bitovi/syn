@@ -30,6 +30,6 @@
     "testee": "0.0.x"
   },
   "scripts": {
-    "test": "grunt test && grunt testbuild"
+    "test": "grunt test && grunt test:build && grunt test:amd"
   }
 }

@@ -1,3 +1,4 @@
+var path = require("path");
 
 module.exports = function (grunt) {
 
@@ -12,7 +13,7 @@ module.exports = function (grunt) {
 			}
 		},
 		stealPluginify: {
-			"standalone": {
+			"standalone-amd": {
 				system: {
 					config: __dirname + "/stealconfig.js",
 					main: 'syn/syn'
@@ -21,22 +22,41 @@ module.exports = function (grunt) {
 					"standalone": {
 						dest: __dirname + "/build/syn.js",
 						minify: false
+					},
+					"amd": {
+						format: "amd",
+						useNormalizedDependencies: true,
+						dest: function(moduleName){
+							return path.join(__dirname,"dist/amd/"+
+											 moduleName+".js");
+						},
+						graphs: ["syn/syn"]
 					}
 				}
 			},
-
 			"tests": {
 				system: {
 					config: __dirname + "/stealconfig.js",
 					main: "test/qunit/qunit"
 				},
 				"outputs": {
-					"all tests": {
+					"standalone": {
 						// Ignore everything without _test in the filename
 						ignore: /^((?!_test).)*$/,
 						format: "global",
-						dest: __dirname + "/build/tests.js",
+						dest: __dirname + "/build/tests/standalone.js",
 						minify: false
+					},
+					"amd": {
+						// Ignore everything without _test in the filename
+						ignore: /^((?!_test|test\/qunit\/qunit).)*$/,
+						format: "amd",
+						useNormalizedDependencies: true,
+						dest: function(moduleName){
+							return path.join(__dirname,"build/tests/amd/"+
+											 moduleName+".js");
+						},
+						graphs: ["test/qunit/qunit"]
 					}
 				}
 			}
@@ -45,15 +65,7 @@ module.exports = function (grunt) {
 			options: {
 				banner: '/**\n * <%= pkg.title || pkg.name %> - <%= pkg.version %>\n * <%= pkg.homepage %>\n * @copyright <%= new Date().getFullYear() %> <%= pkg.author.name %>\n * <%= new Date().toUTCString() %>\n * @license <%= pkg.licenses[0].type %>\n */\n\n'
 			},
-
-			dist: {
-				files: [{
-					expand: true,
-					cwd: 'build/',
-					src: ['*'],
-					dest: 'dist/'
-				}]
-			}
+			'dist/syn.js': ['build/syn.js']
 		},
 		jshint: {
 			options: {
@@ -90,7 +102,13 @@ module.exports = function (grunt) {
 			},
 			built: {
 				options: {
-					urls: ['http://localhost:8000/test/built.html'],
+					urls: ['http://localhost:8000/test/standalone.html'],
+					browsers: ['phantom']
+				}
+			},
+			amd: {
+				options: {
+					urls: ['http://localhost:8000/test/amd.html'],
 					browsers: ['phantom']
 				}
 			},
@@ -113,10 +131,11 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('steal-tools');
 
 	grunt.registerTask('quality', ['jsbeautifier', 'jshint']);
-	grunt.registerTask('build', ['stealPluginify:standalone', 'concat', 'uglify']);
+	grunt.registerTask('build', ['stealPluginify:standalone-amd', 'concat', 'uglify']);
 
 	// Test tasks
 	grunt.registerTask('test', ['connect:server', 'testee:src']);
-	grunt.registerTask('testbuild', ['build', 'stealPluginify:tests',
+	grunt.registerTask('test:build', ['build', 'stealPluginify:tests',
 										 'connect:server', 'testee:built']);
+	grunt.registerTask('test:amd', ['connect:server', 'testee:amd']);
 };

@@ -1,6 +1,6 @@
 /* global st:true */
 
-steal("syn/synthetic.js", function (syn) {
+steal("syn/syn.js", function (syn) {
 
 	QUnit.module("syn");
 
