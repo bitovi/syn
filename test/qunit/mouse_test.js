@@ -15,6 +15,7 @@ steal("src/synthetic.js", function (Syn) {
 				"<input type='radio' name='radio' value='radio2' id='radio2'/>" +
 				"<a href='javascript:doSomething()' id='jsHref'>click me</a>" +
 				"<a href='#aHash' id='jsHrefHash'>click me</a>" +
+				"<button id='button' type='button'>Click me</button>" +
 				"<input type='submit' id='submit'/></div></form>";
 		},
 
@@ -112,6 +113,20 @@ steal("src/synthetic.js", function (Syn) {
 		});
 
 		Syn.trigger("click", {}, st.g("checkbox"));
+	});
+	
+	test("Click a button that is type=button should not trigger form submit", function(){
+		var timeout = setTimeout(function(){
+			ok(true, "Form was not submitted");
+			start();
+		});
+		st.binder("outer", "submit", function(ev){
+			clearTimeout(timeout);
+			ev.preventDefault();
+		});
+
+		Syn.trigger("click", {}, st.g("button"));
+		stop();
 	});
 
 	test("Select is changed on click", function () {
