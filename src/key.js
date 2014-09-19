@@ -535,6 +535,18 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 					var form = Syn.closest(this, "form");
 					if (form) {
 						Syn.trigger("submit", {}, form);
+
+						//click first submit button
+						var implicitSubmitButton = Syn.jquery()(form)
+							.find("button, input[type=submit]")
+							.filter(function (i, button) {
+								//buttons are implicitly submit buttons
+								// unless they have type="button"
+								return button.type != "button"
+							})[0];
+						if (implicitSubmitButton) {
+							Syn.trigger("click", {}, implicitSubmitButton);
+						}
 					}
 
 				}
