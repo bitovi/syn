@@ -15,6 +15,7 @@ steal("src/synthetic.js", function (Syn) {
 				"<input type='radio' name='radio' value='radio2' id='radio2'/>" +
 				"<a href='javascript:doSomething()' id='jsHref'>click me</a>" +
 				"<a href='#aHash' id='jsHrefHash'>click me</a>" +
+				"<button type='submit' id='submitButton'></button>" +
 				"<input type='submit' id='submit'/></div></form>";
 		},
 
@@ -57,10 +58,11 @@ steal("src/synthetic.js", function (Syn) {
 				return false;
 			};
 		st.bind(st.g("outer"), "submit", submitf);
+		Syn.trigger("click", {}, st.g("submitButton"));
 		Syn.trigger("click", {}, st.g("submit"));
 		Syn("submit", {}, "outer");
 
-		equal(submit, 2, "Click on submit");
+		equal(submit, 3, "Click on submit");
 
 		//make sure clicking the div does not submit the form
 		var click = 0,
@@ -75,7 +77,7 @@ steal("src/synthetic.js", function (Syn) {
 
 		Syn.trigger("click", {}, st.g("submit"));
 
-		equal(submit, 2, "Submit prevented");
+		equal(submit, 3, "Submit prevented");
 		equal(click, 1, "Clicked");
 
 		st.unbinder("outer", "submit", submitf);
