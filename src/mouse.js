@@ -47,7 +47,7 @@ steal('./synthetic.js', function (Syn) {
 
 			//submit a form
 			if (!(Syn.support.clickSubmits) && ((nodeName == "input" || 
-					nodeName == 'button') && type == "submit" ) ) {
+					nodeName == 'button') && type == "submit")) {
 
 				var form = Syn.closest(element, "form");
 				if (form) {

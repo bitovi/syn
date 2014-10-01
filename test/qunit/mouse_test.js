@@ -15,6 +15,7 @@ steal("src/synthetic.js", function (Syn) {
 				"<input type='radio' name='radio' value='radio2' id='radio2'/>" +
 				"<a href='javascript:doSomething()' id='jsHref'>click me</a>" +
 				"<a href='#aHash' id='jsHrefHash'>click me</a>" +
+				"<button type='button' id='button'></button>" +
 				"<button type='submit' id='submitButton'></button>" +
 				"<input type='submit' id='submit'/></div></form>";
 		},
@@ -83,6 +84,25 @@ steal("src/synthetic.js", function (Syn) {
 		st.unbinder("outer", "submit", submitf);
 		st.unbinder("inner", "click", clickf);
 	});
+
+	test("Click button[type=button] doesn't submit form", function() {
+		var submit = 0,
+			submitf = function (ev) {
+				submit++;
+				if (ev.preventDefault) {
+					ev.preventDefault();
+				}
+				ev.returnValue = false;
+				return false;
+			};
+		st.bind(st.g("outer"), "submit", submitf);
+		Syn.trigger("click", {}, st.g("button"));
+
+		equal(submit, 0, "No submit called");
+		
+		st.unbinder("outer", "submit", submitf);
+	});
+
 	test("Click Checkboxes", function () {
 		var checkbox = 0;
 
