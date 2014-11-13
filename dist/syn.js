@@ -2,7 +2,7 @@
  * Syn - 0.0.2
  * 
  * @copyright 2014 Bitovi
- * Mon, 30 Jun 2014 22:44:59 GMT
+ * Thu, 13 Nov 2014 00:56:49 GMT
  * @license MIT
  */
 
@@ -907,7 +907,7 @@ var __m2 = (function () {
 })();
 
 // ## src/mouse.js
-var __m3 = (function (Syn) {
+var __m4 = (function (Syn) {
 	//handles mosue events
 
 	var h = Syn.helpers,
@@ -1123,8 +1123,84 @@ var __m3 = (function (Syn) {
 	return Syn;
 })(__m2);
 
+// ## src/mouse.support.js
+var __m3 = (function checkSupport(Syn) {
+
+	if (!document.body) {
+		Syn.schedule(function () {
+			checkSupport(Syn);
+		}, 1);
+		return;
+	}
+
+	window.__synthTest = function () {
+		Syn.support.linkHrefJS = true;
+	};
+
+	var div = document.createElement("div"),
+		checkbox, submit, form, select;
+
+	div.innerHTML = "<form id='outer'>" + "<input name='checkbox' type='checkbox'/>" + "<input name='radio' type='radio' />" + "<input type='submit' name='submitter'/>" + "<input type='input' name='inputter'/>" + "<input name='one'>" + "<input name='two'/>" + "<a href='javascript:__synthTest()' id='synlink'></a>" + "<select><option></option></select>" + "</form>";
+	document.documentElement.appendChild(div);
+	form = div.firstChild;
+	checkbox = form.childNodes[0];
+	submit = form.childNodes[2];
+	select = form.getElementsByTagName('select')[0];
+
+	//trigger click for linkHrefJS support, childNodes[6] === anchor
+	Syn.trigger('click', {}, form.childNodes[6]);
+
+	checkbox.checked = false;
+	checkbox.onchange = function () {
+		Syn.support.clickChanges = true;
+	};
+
+	Syn.trigger("click", {}, checkbox);
+	Syn.support.clickChecks = checkbox.checked;
+
+	checkbox.checked = false;
+
+	Syn.trigger("change", {}, checkbox);
+
+	Syn.support.changeChecks = checkbox.checked;
+
+	form.onsubmit = function (ev) {
+		if (ev.preventDefault) {
+			ev.preventDefault();
+		}
+		Syn.support.clickSubmits = true;
+		return false;
+	};
+	Syn.trigger("click", {}, submit);
+
+	form.childNodes[1].onchange = function () {
+		Syn.support.radioClickChanges = true;
+	};
+	Syn.trigger("click", {}, form.childNodes[1]);
+
+	Syn.bind(div, 'click', function onclick() {
+		Syn.support.optionClickBubbles = true;
+		Syn.unbind(div, 'click', onclick);
+	});
+	Syn.trigger("click", {}, select.firstChild);
+
+	Syn.support.changeBubbles = Syn.eventSupported('change');
+
+	//test if mousedown followed by mouseup causes click (opera), make sure there are no clicks after this
+	div.onclick = function () {
+		Syn.support.mouseDownUpClicks = true;
+	};
+	Syn.trigger("mousedown", {}, div);
+	Syn.trigger("mouseup", {}, div);
+
+	document.documentElement.removeChild(div);
+
+	//check stuff
+	Syn.support.ready++;
+})(__m2, __m4);
+
 // ## src/browsers.js
-var __m4 = (function (Syn) {
+var __m5 = (function (Syn) {
 	Syn.key.browsers = {
 		webkit: {
 			'prevent': {
@@ -1549,10 +1625,10 @@ var __m4 = (function (Syn) {
 		return Syn.mouse.browsers.gecko;
 	})();
 	return Syn;
-})(__m2, __m3);
+})(__m2, __m4);
 
 // ## src/typeable.js
-var __m6 = (function (Syn) {
+var __m8 = (function (Syn) {
 	// Holds functions that test for typeability
 	var typeables = [];
 
@@ -1619,7 +1695,7 @@ var __m6 = (function (Syn) {
 })(__m2);
 
 // ## src/key.js
-var __m5 = (function (Syn) {
+var __m7 = (function (Syn) {
 	var h = Syn.helpers,
 
 		// gets the selection of an input or textarea
@@ -2213,13 +2289,11 @@ var __m5 = (function (Syn) {
 					el = orders[i][0];
 					if (this === el) {
 						if (!Syn.key.shiftKey) {
-							current = orders[i + 1][0];
-							if (!current) {
+							if (i === orders.length - 1 || !(current = orders[i + 1][0])) {
 								current = orders[0][0];
 							}
 						} else {
-							current = orders[i - 1][0];
-							if (!current) {
+							if (i === 0 || !(current = orders[i - 1][0])) {
 								current = orders[focusEls.length - 1][0];
 							}
 						}
@@ -2517,10 +2591,100 @@ var __m5 = (function (Syn) {
 	});
 
 	return Syn;
-})(__m2, __m6, __m4);
+})(__m2, __m8, __m5);
+
+// ## src/key.support.js
+var __m6 = (function (Syn) {
+
+	if (!Syn.config.support) {
+		//do support code
+		(function checkForSupport() {
+			if (!document.body) {
+				return Syn.schedule(checkForSupport, 1);
+			}
+
+			var div = document.createElement("div"),
+				checkbox, submit, form, anchor, textarea, inputter, one, doc;
+
+			doc = document.documentElement;
+
+			div.innerHTML = "<form id='outer'>" +
+				"<input name='checkbox' type='checkbox'/>" +
+				"<input name='radio' type='radio' />" +
+				"<input type='submit' name='submitter'/>" +
+				"<input type='input' name='inputter'/>" +
+				"<input name='one'>" +
+				"<input name='two'/>" +
+				"<a href='#abc'></a>" +
+				"<textarea>1\n2</textarea>" +
+				"</form>";
+
+			doc.insertBefore(div, doc.firstElementChild || doc.children[0]);
+			form = div.firstChild;
+			checkbox = form.childNodes[0];
+			submit = form.childNodes[2];
+			anchor = form.getElementsByTagName("a")[0];
+			textarea = form.getElementsByTagName("textarea")[0];
+			inputter = form.childNodes[3];
+			one = form.childNodes[4];
+
+			form.onsubmit = function (ev) {
+				if (ev.preventDefault) {
+					ev.preventDefault();
+				}
+				Syn.support.keypressSubmits = true;
+				ev.returnValue = false;
+				return false;
+			};
+			// Firefox 4 won't write key events if the element isn't focused
+			Syn.__tryFocus(inputter);
+			Syn.trigger("keypress", "\r", inputter);
+
+			Syn.trigger("keypress", "a", inputter);
+			Syn.support.keyCharacters = inputter.value === "a";
+
+			inputter.value = "a";
+			Syn.trigger("keypress", "\b", inputter);
+			Syn.support.backspaceWorks = inputter.value === "";
+
+			inputter.onchange = function () {
+				Syn.support.focusChanges = true;
+			};
+			Syn.__tryFocus(inputter);
+			Syn.trigger("keypress", "a", inputter);
+			Syn.__tryFocus(form.childNodes[5]); // this will throw a change event
+			Syn.trigger("keypress", "b", inputter);
+			Syn.support.keysOnNotFocused = inputter.value === "ab";
+
+			//test keypress \r on anchor submits
+			Syn.bind(anchor, "click", function (ev) {
+				if (ev.preventDefault) {
+					ev.preventDefault();
+				}
+				Syn.support.keypressOnAnchorClicks = true;
+				ev.returnValue = false;
+				return false;
+			});
+			Syn.trigger("keypress", "\r", anchor);
+
+			Syn.support.textareaCarriage = textarea.value.length === 4;
+
+			// IE only, oninput event.
+			Syn.support.oninput = 'oninput' in one;
+
+			doc.removeChild(div);
+
+			Syn.support.ready++;
+		})();
+	} else {
+		Syn.helpers.extend(Syn.support, Syn.config.support);
+	}
+
+	return Syn;
+})(__m2, __m7);
 
 // ## src/drag/drag.js
-var __m7 = (function (Syn) {
+var __m9 = (function (Syn) {
 
 	// check if elementFromPageExists
 	(function dragSupport() {
@@ -2853,6 +3017,6 @@ var __m1 = (function (Syn) {
 		window.Syn = Syn;
 
 		return Syn;
-	})(__m2, __m3, __m4, __m5, __m7);
+	})(__m2, __m3, __m4, __m5, __m6, __m7, __m9);
 
 }(window);
