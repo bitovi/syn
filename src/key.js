@@ -592,13 +592,11 @@ steal('./synthetic.js', './typeable.js', './browsers.js', function (Syn) {
 					el = orders[i][0];
 					if (this === el) {
 						if (!Syn.key.shiftKey) {
-							current = orders[i + 1][0];
-							if (!current) {
+							if (i === orders.length - 1 || !(current = orders[i + 1][0])) {
 								current = orders[0][0];
 							}
 						} else {
-							current = orders[i - 1][0];
-							if (!current) {
+							if (i === 0 || !(current = orders[i - 1][0])) {
 								current = orders[focusEls.length - 1][0];
 							}
 						}

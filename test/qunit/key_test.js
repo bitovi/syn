@@ -331,7 +331,7 @@ steal("src/synthetic.js", function (Syn) {
 		stop();
 		//give ie a second to focus
 		setTimeout(function () {
-			Syn.type('\r\tSecond\tThird\tFourth', 'first', function () {
+			Syn.type('\r\tSecond\tThird\tFourth\t', 'first', function () {
 				equal(clicked, 1, "clickd first");
 				equal(st.g('second')
 					.value, "Second", "moved to second");
@@ -339,6 +339,8 @@ steal("src/synthetic.js", function (Syn) {
 					.value, "Third", "moved to Third");
 				equal(st.g('fourth')
 					.value, "Fourth", "moved to Fourth");
+				equal(st.g('third')
+					.value, "Third", "moved to Third");
 				start();
 			});
 		}, 1);
