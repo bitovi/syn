@@ -9,22 +9,17 @@
 		<div id="qunit-test-area"></div>
 		<div id="qunit-fixture"></div>
 
+		<script src="../lib/jquery/jquery.js"></script>
 		<script src="../lib/qunit/qunit/qunit.js"></script>
 		<script type="text/javascript">
 			QUnit.config.autostart = false;
 			QUnit.config.reorder = false;
 			QUnit.config.testTimeout = 5000;
 		</script>
-		<script src="../lib/steal/steal.js"
-					  data-config="../stealconfig.js"></script>
-		<script type="text/javascript">
-      System.import("@config").then(function() {
-			  return System.import("test/qunit/qunit");
-      }).then(function() {}, function(err) {
-        setTimeout(function() {
-				  throw err;
-        }, 0);
-			});
+		<script src="../dist/syn.js"></script>
+		<script src="../build/tests.js"></script>
+		<script>
+			QUnit.start();
 		</script>
 	</body>
 </html>

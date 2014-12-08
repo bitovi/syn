@@ -3,17 +3,18 @@
 <title>Syn.schedule test</title>
 </head>
 <body>
-	<script src="../../steal/steal.js"></script>
+	<script src="../../lib/steal/steal.js"
+					data-config="../../stealconfig.js"></script>
 	<script>
-		Syn = {
+		syn = {
 			schedule: function() {
 				parent.synSchedule.apply(parent, arguments);
 			}
 		};
 
-		steal('src/syn.js').then(function(){
+		steal('syn/syn.js', function(){
 			var body = document.body;
-			Syn.click({}, body).delay(function(){}, 0);
+			syn.click(body, {}).delay(function(){}, 0);
 		});
 	</script>
 </body>

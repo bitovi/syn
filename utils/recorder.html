@@ -90,20 +90,21 @@
 		<h3>Click Data</h3>
 		<pre id="clickdata"></pre>
 
-		<script src="../steal/steal.js"></script>
+		<script src="../lib/steal/steal.js"
+            data-config="../stealconfig.js"></script>
 		<script type="text/javascript" id="demo-source">
 			steal('src/syn.js','jquery','jquery/lang/json', function() {
 				var gId = function(id) {
 					return document.getElementById(id)
 				},
 				bind = function(el, ev, func){
-					Syn.bind(gId(el.replace('\\','\\\\')), ev,func);
+					syn.bind(gId(el.replace('\\','\\\\')), ev,func);
 				};
 				$(function(){
 					$('#ua').html(window.navigator.userAgent)
 				});
 
-				var keycodes = Syn.keycodes,
+				var keycodes = syn.keycodes,
 				special = {
 					backspace : '\b',
 					tab : '\t',

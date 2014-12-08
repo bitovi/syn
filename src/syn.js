@@ -1,9 +1,9 @@
-steal('./synthetic.js',
-	'./mouse.js',
-	'./browsers.js',
-	'./key.js',
-	'./drag/drag.js', function (Syn) {
-		window.Syn = Syn;
+steal('syn/synthetic.js',
+	'syn/mouse.support.js',
+	'syn/browsers.js',
+	'syn/key.support.js',
+	'syn/drag', function (syn) {
+		window.syn = syn;
 
-		return Syn;
+		return syn;
 	});

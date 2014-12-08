@@ -21,12 +21,12 @@
 <script type='text/javascript' id="demo-source">
 	steal('funcunit/synthetic', 'funcunit/synthetic/drag','jquery').then(function(){
 		setTimeout(function(){
-			Syn("move",{
+			syn("move", "start", {
 				from: "#start",
 				to: "#end",
 				duration: 1000
-			},"start")
-		},1000)
+			});
+		},1000);
 		
 		
 		$(".over").bind('mouseover',function(){

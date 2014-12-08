@@ -1,4 +1,4 @@
-steal("./synthetic.js", function (Syn) {
+steal("syn/synthetic.js", function (syn) {
 	// Holds functions that test for typeability
 	var typeables = [];
 
@@ -23,7 +23,7 @@ steal("./synthetic.js", function (Syn) {
 	 *
 	 * @param {Function} fn Function to register.
 	 */
-	Syn.typeable = function (fn) {
+	syn.typeable = function (fn) {
 		if (__indexOf.call(typeables, fn) === -1) {
 			typeables.push(fn);
 		}
@@ -32,14 +32,14 @@ steal("./synthetic.js", function (Syn) {
 	/*
 	 * @function test
 	 * Tests whether an element can be typed into using the test
-	 * functions registered by [Syn.typeable typeable]. If any of the
+	 * functions registered by [syn.typeable typeable]. If any of the
 	 * test functions returns true, `test` will return true and allow
 	 * the element to be typed into.
 	 *
 	 * @param {HTMLElement} el the element to test.
 	 * @return {Boolean} true if the element can be typed into.
 	 */
-	Syn.typeable.test = function (el) {
+	syn.typeable.test = function (el) {
 		for (var i = 0, len = typeables.length; i < len; i++) {
 			if (typeables[i](el)) {
 				return true;
@@ -48,7 +48,7 @@ steal("./synthetic.js", function (Syn) {
 		return false;
 	};
 
-	var type = Syn.typeable;
+	var type = syn.typeable;
 
 	// Inputs and textareas
 	var typeableExp = /input|textarea/i;
@@ -61,5 +61,5 @@ steal("./synthetic.js", function (Syn) {
 		return __indexOf.call(["", "true"], el.getAttribute("contenteditable")) !== -1;
 	});
 
-	return Syn;
+	return syn;
 });

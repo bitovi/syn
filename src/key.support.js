@@ -1,10 +1,10 @@
-steal('src/synthetic.js', 'src/key.js', function (Syn) {
+steal('syn/synthetic.js', 'syn/key.js', function (syn) {
 
-	if (!Syn.config.support) {
+	if (!syn.config.support) {
 		//do support code
 		(function checkForSupport() {
 			if (!document.body) {
-				return Syn.schedule(checkForSupport, 1);
+				return syn.schedule(checkForSupport, 1);
 			}
 
 			var div = document.createElement("div"),
@@ -36,53 +36,53 @@ steal('src/synthetic.js', 'src/key.js', function (Syn) {
 				if (ev.preventDefault) {
 					ev.preventDefault();
 				}
-				Syn.support.keypressSubmits = true;
+				syn.support.keypressSubmits = true;
 				ev.returnValue = false;
 				return false;
 			};
 			// Firefox 4 won't write key events if the element isn't focused
-			Syn.__tryFocus(inputter);
-			Syn.trigger("keypress", "\r", inputter);
+			syn.__tryFocus(inputter);
+			syn.trigger(inputter, "keypress", "\r");
 
-			Syn.trigger("keypress", "a", inputter);
-			Syn.support.keyCharacters = inputter.value === "a";
+			syn.trigger(inputter, "keypress", "a");
+			syn.support.keyCharacters = inputter.value === "a";
 
 			inputter.value = "a";
-			Syn.trigger("keypress", "\b", inputter);
-			Syn.support.backspaceWorks = inputter.value === "";
+			syn.trigger(inputter, "keypress", "\b");
+			syn.support.backspaceWorks = inputter.value === "";
 
 			inputter.onchange = function () {
-				Syn.support.focusChanges = true;
+				syn.support.focusChanges = true;
 			};
-			Syn.__tryFocus(inputter);
-			Syn.trigger("keypress", "a", inputter);
-			Syn.__tryFocus(form.childNodes[5]); // this will throw a change event
-			Syn.trigger("keypress", "b", inputter);
-			Syn.support.keysOnNotFocused = inputter.value === "ab";
+			syn.__tryFocus(inputter);
+			syn.trigger(inputter, "keypress", "a");
+			syn.__tryFocus(form.childNodes[5]); // this will throw a change event
+			syn.trigger(inputter, "keypress", "b");
+			syn.support.keysOnNotFocused = inputter.value === "ab";
 
 			//test keypress \r on anchor submits
-			Syn.bind(anchor, "click", function (ev) {
+			syn.bind(anchor, "click", function (ev) {
 				if (ev.preventDefault) {
 					ev.preventDefault();
 				}
-				Syn.support.keypressOnAnchorClicks = true;
+				syn.support.keypressOnAnchorClicks = true;
 				ev.returnValue = false;
 				return false;
 			});
-			Syn.trigger("keypress", "\r", anchor);
+			syn.trigger(anchor, "keypress", "\r");
 
-			Syn.support.textareaCarriage = textarea.value.length === 4;
+			syn.support.textareaCarriage = textarea.value.length === 4;
 
 			// IE only, oninput event.
-			Syn.support.oninput = 'oninput' in one;
+			syn.support.oninput = 'oninput' in one;
 
 			doc.removeChild(div);
 
-			Syn.support.ready++;
+			syn.support.ready++;
 		})();
 	} else {
-		Syn.helpers.extend(Syn.support, Syn.config.support);
+		syn.helpers.extend(syn.support, syn.config.support);
 	}
 
-	return Syn;
+	return syn;
 });

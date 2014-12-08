@@ -1,6 +1,6 @@
-steal("src/synthetic.js", function (Syn) {
+steal("syn/synthetic.js", function (syn) {
 
-	module("drag");
+	QUnit.module("drag");
 
 	// test("dragging off the page", function(){
 	// var drags = ( {}),
@@ -34,7 +34,7 @@ steal("src/synthetic.js", function (Syn) {
 	// 	
 	// stop();
 	// 	
-	// Syn.drag( {to: "#drop", duration: 700}, $("#drag")[0], function(){
+	// syn.drag($("#drag")[0], {to: "#drop", duration: 700}, function(){
 	// ok(drops.dropover,"dropover fired correctly")
 	// $("#qunit-test-area").innerHTML = "";
 	// start();
@@ -105,7 +105,7 @@ steal("src/synthetic.js", function (Syn) {
 			.bind('mousemove', move);
 
 		stop();
-		Syn.move({
+		syn.move("wrap", {
 			from: {
 				pageX: 2,
 				pageY: 50
@@ -115,7 +115,7 @@ steal("src/synthetic.js", function (Syn) {
 				pageY: 50
 			},
 			duration: 1000
-		}, "wrap", function () {
+		}, function () {
 
 			equal(clientX, 199);
 			equal(clientY, 50);
@@ -131,7 +131,7 @@ steal("src/synthetic.js", function (Syn) {
 		});
 	});
 
-	//These rely on jquery++ events atm. TODO: remove tests as this produces a circular dependency between jQuery++ and Syn
+	//These rely on jquery++ events atm. TODO: remove tests as this produces a circular dependency between jQuery++ and syn
 	// test("dragging an element with duration", function(){
 	// 	var drags = ( {}),
 	// 		drops = ({});
@@ -195,7 +195,7 @@ steal("src/synthetic.js", function (Syn) {
 
 	// 	stop();
 
-	// 	Syn.drag( {to: "#midpoint", duration: 700}, $("#drag")[0], function(){
+	// 	syn.drag($("#drag")[0], {to: "#midpoint", duration: 700}, function(){
 
 	// 		ok(drags.draginit, "draginit fired correctly")
 	// 		ok(drags.dragmove, "dragmove fired correctly")
@@ -205,13 +205,13 @@ steal("src/synthetic.js", function (Syn) {
 	// 		ok(!drops.dropon,	"dropon not fired yet")
 	// 		ok(drops.dropend, 	"dropend fired");
 
-	// 		Syn.drag( {to: "#drop", duration: 700}, $("#drag")[0], function(){
+	// 		syn.drag($("#drag")[0], {to: "#drop", duration: 700}, function(){
 	// 			ok(drops.dropinit, 	"dropinit fired correctly")
 	// 			ok(drops.dropover, 	"dropover fired correctly")
 	// 			ok(drops.dropmove, 	"dropmove fired correctly")
 	// 			ok(drops.dropon, 	"dropon fired correctly")
 
-	// 			Syn.drag( {to: "#midpoint", duration: 700}, $("#drag")[0], function(){
+	// 			syn.drag($("#drag")[0], {to: "#midpoint", duration: 700}, function(){
 	// 				ok(drags.dragout, 	"dragout fired correctly")
 	// 				ok(drops.dropout, 	"dropout fired correctly")
 	// 				$("#qunit-test-area").innerHTML = "";
