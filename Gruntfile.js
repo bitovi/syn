@@ -1,9 +1,10 @@
-var path = require("path");
+var path = require('path');
 
 module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('bower.json'),
+		browsers: grunt.file.readJSON('browserstack/browsers.json'),
 		stealPluginify: {
 			"standalone-amd": {
 				system: {
@@ -88,8 +89,29 @@ module.exports = function (grunt) {
 		testee: {
 			phantom: ['test/index.html',
 				'test/standalone.html',
-				'test/amd.html',
-				'test/built.html']
+				'test/amd.html'],
+			browserstack: {
+				options: {
+					timeout: 600,
+					tunnel: {
+						type: 'browserstack',
+						key: process.env.BROWSERSTACK_PASSWORD
+					},
+					launch: {
+						type: 'browserstack',
+						username: process.env.BROWSERSTACK_USER,
+						password: process.env.BROWSERSTACK_PASSWORD,
+						version: 2
+					},
+					browsers: [{
+						os: 'Windows',
+						os_version: 'XP',
+						browser: 'ie',
+						browser_version: '8.0'
+					}]
+				},
+				src: ['test/index.html']
+			}
 		}
 	});
 
