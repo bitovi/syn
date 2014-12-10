@@ -4,14 +4,6 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('bower.json'),
-		connect: {
-			server: {
-				options: {
-					port: 8000,
-					base: '.'
-				}
-			}
-		},
 		stealPluginify: {
 			"standalone-amd": {
 				system: {
@@ -94,35 +86,13 @@ module.exports = function (grunt) {
 			}
 		},
 		testee: {
-			src: {
-				options: {
-					urls: ['http://localhost:8000/test/index.html'],
-					browsers: ['phantom']
-				}
-			},
-			built: {
-				options: {
-					urls: ['http://localhost:8000/test/standalone.html'],
-					browsers: ['phantom']
-				}
-			},
-			amd: {
-				options: {
-					urls: ['http://localhost:8000/test/amd.html'],
-					browsers: ['phantom']
-				}
-			},
-			both: {
-				options: {
-					urls: ['http://localhost:8000/test/index.html',
-								 'http://localhost:8000/test/built.html'],
-					browsers: ['phantom']
-				}
-			}
-    }
+			phantom: ['test/index.html',
+				'test/standalone.html',
+				'test/amd.html',
+				'test/built.html']
+		}
 	});
 
-	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -134,8 +104,6 @@ module.exports = function (grunt) {
 	grunt.registerTask('build', ['stealPluginify:standalone-amd', 'concat', 'uglify']);
 
 	// Test tasks
-	grunt.registerTask('test', ['connect:server', 'testee:src']);
-	grunt.registerTask('test:build', ['build', 'stealPluginify:tests',
-										 'connect:server', 'testee:built']);
-	grunt.registerTask('test:amd', ['connect:server', 'testee:amd']);
+	grunt.registerTask('test', ['testee']);
+	grunt.registerTask('test:build', ['build', 'stealPluginify:tests', 'testee']);
 };
