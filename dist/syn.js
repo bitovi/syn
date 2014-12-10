@@ -1,12 +1,15 @@
 /**
- * Syn - 0.0.2
+ * Syn - 0.0.3
  * 
  * @copyright 2014 Bitovi
- * Fri, 25 Jul 2014 14:34:48 GMT
+ * Mon, 08 Dec 2014 19:56:27 GMT
  * @license MIT
  */
 
+/*[global-shim]*/
 (function (exports, global){
+	var origDefine = global.define;
+
 	var get = function(name){
 		var parts = name.split("."),
 			cur = global,
@@ -17,7 +20,8 @@
 		return cur;
 	};
 	var modules = global.define && global.define.modules || {};
-	global.define = function(moduleName, deps, callback){
+	var ourDefine = global.define = function(moduleName, deps, callback){
+		var module;
 		if(typeof deps === "function") {
 			callback = deps;
 			deps = [];
@@ -27,17 +31,33 @@
 		for(i =0; i < deps.length; i++) {
 			args.push( exports[deps[i]] ? get(exports[deps[i]]) : modules[deps[i]]  );
 		}
-		modules[moduleName] = callback.apply(null, args);
+		// CJS has no dependencies but 3 callback arguments
+		if(!deps.length && callback.length) {
+			module = { exports: {} };
+			var require = function(name) {
+				return exports[name] ? get(exports[name]) : modules[name];
+			};
+			args.push(require, module.exports, module);
+		}
+
+		global.define = origDefine;
+		var result = callback ? callback.apply(null, args) : undefined;
+		global.define = ourDefine;
+
+		// Favor CJS module.exports over the return value
+		modules[moduleName] = module && module.exports ? module.exports : result;
 	};
 	global.define.modules = modules;
 	global.System = {
 		define: function(__name, __code){
-			eval(__code);
+			global.define = origDefine;
+			eval("(function() { " + __code + " \n }).call(global);");
+			global.define = ourDefine;
 		}
 	};
 })({},window)
-/*src/synthetic*/
-define('src/synthetic', [], function () {
+/*syn/synthetic*/
+define('syn/synthetic', [], function () {
     var opts = window.syn ? window.syn : {};
     var extend = function (d, s) {
             var p;
@@ -501,8 +521,8 @@ define('src/synthetic', [], function () {
     }
     return syn;
 });
-/*src/mouse*/
-define('src/mouse', ['src/synthetic'], function (syn) {
+/*syn/mouse*/
+define('syn/mouse', ['syn/synthetic'], function (syn) {
     var h = syn.helpers, getWin = h.getWindow;
     syn.mouse = {};
     h.extend(syn.defaults, {
@@ -650,10 +670,10 @@ define('src/mouse', ['src/synthetic'], function (syn) {
     });
     return syn;
 });
-/*src/mouse.support*/
-define('src/mouse.support', [
-    'src/synthetic',
-    'src/mouse'
+/*syn/mouse.support*/
+define('syn/mouse.support', [
+    'syn/synthetic',
+    'syn/mouse'
 ], function checkSupport(syn) {
     if (!document.body) {
         syn.schedule(function () {
@@ -707,10 +727,10 @@ define('src/mouse.support', [
     document.documentElement.removeChild(div);
     syn.support.ready++;
 });
-/*src/browsers*/
-define('src/browsers', [
-    'src/synthetic',
-    'src/mouse'
+/*syn/browsers*/
+define('syn/browsers', [
+    'syn/synthetic',
+    'syn/mouse'
 ], function (syn) {
     syn.key.browsers = {
         webkit: {
@@ -1485,8 +1505,8 @@ define('src/browsers', [
     }();
     return syn;
 });
-/*src/typeable*/
-define('src/typeable', ['src/synthetic'], function (syn) {
+/*syn/typeable*/
+define('syn/typeable', ['syn/synthetic'], function (syn) {
     var typeables = [];
     var __indexOf = [].indexOf || function (item) {
             for (var i = 0, l = this.length; i < l; i++) {
@@ -1522,11 +1542,11 @@ define('src/typeable', ['src/synthetic'], function (syn) {
     });
     return syn;
 });
-/*src/key*/
-define('src/key', [
-    'src/synthetic',
-    'src/typeable',
-    'src/browsers'
+/*syn/key*/
+define('syn/key', [
+    'syn/synthetic',
+    'syn/typeable',
+    'syn/browsers'
 ], function (syn) {
     var h = syn.helpers, getSelection = function (el) {
             var real, r, start;
@@ -2155,10 +2175,10 @@ define('src/key', [
     });
     return syn;
 });
-/*src/key.support*/
-define('src/key.support', [
-    'src/synthetic',
-    'src/key'
+/*syn/key.support*/
+define('syn/key.support', [
+    'syn/synthetic',
+    'syn/key'
 ], function (syn) {
     if (!syn.config.support) {
         (function checkForSupport() {
@@ -2218,8 +2238,8 @@ define('src/key.support', [
     }
     return syn;
 });
-/*src/drag/drag*/
-define('src/drag/drag', ['src/synthetic'], function (syn) {
+/*syn/drag/drag*/
+define('syn/drag/drag', ['syn/synthetic'], function (syn) {
     (function dragSupport() {
         if (!document.body) {
             syn.schedule(dragSupport, 1);
@@ -2393,13 +2413,13 @@ define('src/drag/drag', ['src/synthetic'], function (syn) {
     });
     return syn;
 });
-/*src/syn*/
-define('src/syn', [
-    'src/synthetic',
-    'src/mouse.support',
-    'src/browsers',
-    'src/key.support',
-    'src/drag/drag'
+/*syn/syn*/
+define('syn/syn', [
+    'syn/synthetic',
+    'syn/mouse.support',
+    'syn/browsers',
+    'syn/key.support',
+    'syn/drag/drag'
 ], function (syn) {
     window.syn = syn;
     return syn;
