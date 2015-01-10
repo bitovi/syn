@@ -30,7 +30,8 @@ dragging exactly how a real user would perform those actions.
 ## Relevant Links
 
 1. [http://bitovi.com/blog/2010/07/syn-a-standalone-synthetic-event-library.html](http://bitovi.com/blog/2010/07/syn-a-standalone-synthetic-event-library.html)
-2. Full Syn docs coming soon!
+2. Documentation: http://v3.javascriptmvc.com/docs.html#&who=Syn
+3. Full Syn docs coming soon!
 
 ## Using Syn
 
