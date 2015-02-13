@@ -24,6 +24,8 @@ The history of Syn will be maintained, however with the version change, we will 
 
 ## What It Is
 
+[![Join the chat at https://gitter.im/bitovi/syn](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bitovi/syn?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Syn is a synthetic event library that pretty much handles typing, clicking, moving, and 
 dragging exactly how a real user would perform those actions.
 
