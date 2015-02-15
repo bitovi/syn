@@ -65,8 +65,10 @@ steal('syn/synthetic.js', function (syn) {
 				var options = syn.helpers.extend({}, point);
 				options.relatedTarget = el;
 				syn.trigger(last, "mouseout", options);
+				if ('onmouseleave' in window) syn.trigger(last, "mouseleave", options);
 				options.relatedTarget = last;
 				syn.trigger(el, "mouseover", options);
+				if ('onmouseenter' in window) syn.trigger(el, "mouseenter", options);
 			}
 
 			syn.trigger(el || element, "mousemove", point);
