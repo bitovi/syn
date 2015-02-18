@@ -1,9 +1,9 @@
 /* global st */
 
-steal("syn/synthetic.js", function (syn) {
+steal("synjs/synthetic.js", 'synjs/key.support.js','steal-qunit',function (syn) {
 	QUnit.module("synthetic/key", {
 		setup: function () {
-			st.g("qunit-test-area")
+			st.g("qunit-fixture")
 				.innerHTML = "<form id='outer'>" +
 				"<div id='inner'>" +
 				"<input type='input' id='key' value=''/>" +
@@ -14,7 +14,7 @@ steal("syn/synthetic.js", function (syn) {
 		},
 
 		teardown: function () {
-			st.g("qunit-test-area")
+			st.g("qunit-fixture")
 				.innerHTML = '';
 		}
 	});
@@ -159,7 +159,7 @@ steal("syn/synthetic.js", function (syn) {
 	});
 
 	test("page down, page up, home, end", function () {
-		st.g("qunit-test-area")
+		st.g("qunit-fixture")
 			.innerHTML =
 			"<div id='scrolldiv' style='width:100px;height:200px;overflow-y:scroll;' tabindex='0'>" +
 			"<div id='innerdiv' style='height:1000px;'><a href='javascript://'>Scroll on me</a></div></div>";
@@ -236,7 +236,7 @@ steal("syn/synthetic.js", function (syn) {
 				r.select();
 			}
 		};
-		st.g("qunit-test-area")
+		st.g("qunit-fixture")
 			.innerHTML = "<form id='outer'><div id='inner'><input type='input' id='key' value=''/></div></form>" +
 			"<textarea id='mytextarea' />";
 
@@ -310,12 +310,12 @@ steal("syn/synthetic.js", function (syn) {
 
 		equal(textAreaEl.value.replace("\r", ""), "1\n456", "return range works in a textarea");
 
-		//st.g("qunit-test-area").innerHTML = "";
+		//st.g("qunit-fixture").innerHTML = "";
 
 	});
 
 	test("Type with tabs", function () {
-		st.g("qunit-test-area")
+		st.g("qunit-fixture")
 			.innerHTML =
 			"<input tabindex='3' id='third'/>" +
 			"<a tabindex='1' id='first' href='javascript://'>First</a>" +
@@ -345,7 +345,7 @@ steal("syn/synthetic.js", function (syn) {
 	});
 
 	test("Type with shift tabs", function () {
-		st.g("qunit-test-area")
+		st.g("qunit-fixture")
 			.innerHTML =
 			"<input tabindex='3' id='third'/>" +
 			"<a tabindex='1' id='first' href='javascript://'>First</a>" +

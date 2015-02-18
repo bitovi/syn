@@ -1,5 +1,5 @@
 {
-  "name": "syn",
+  "name": "synjs",
   "version": "0.0.3",
   "author": {
     "name": "Bitovi",
@@ -24,10 +24,23 @@
     "grunt-contrib-jshint": "^0.8.0",
     "grunt-contrib-uglify": "~0.3.2",
     "grunt-jsbeautifier": "^0.2.6",
-    "steal-tools": "0.5.0",
-    "testee": "0.1.7"
+    "steal-tools": "0.6.0",
+    "steal": "bitovi/steal#directories-lib-changes",
+    "testee": "0.1.7",
+    "jquery": ">=2.0.0",
+    "steal-qunit": "0.0.2"
   },
   "scripts": {
     "test": "grunt test:build"
+  },
+  "system": {
+    "directories": {
+      "lib": "src"
+    },
+    "main" : "syn",
+    "map": {
+      "jquery/jquery": "jquery",
+      "steal-qunit/steal-qunit": "steal-qunit"
+	}
   }
 }

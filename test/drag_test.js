@@ -1,6 +1,6 @@
-steal("syn/synthetic.js", function (syn) {
+steal("synjs/synthetic.js","steal-qunit","synjs/drag.js",  "jquery", function (syn, QUnit) {
 
-	QUnit.module("drag");
+	QUnit.module("syn/drag");
 
 	// test("dragging off the page", function(){
 	// var drags = ( {}),
@@ -13,7 +13,7 @@ steal("syn/synthetic.js", function (syn) {
 	// "<div id='drop'></div>"+
 	// "</div>");
 	// 	
-	// div.appendTo($("#qunit-test-area"));
+	// div.appendTo($("#qunit-fixture"));
 	// var basicCss = {
 	// width: "20px",
 	// height: "20px",
@@ -36,7 +36,7 @@ steal("syn/synthetic.js", function (syn) {
 	// 	
 	// syn.drag($("#drag")[0], {to: "#drop", duration: 700}, function(){
 	// ok(drops.dropover,"dropover fired correctly")
-	// $("#qunit-test-area").innerHTML = "";
+	// $("#qunit-fixture").innerHTML = "";
 	// start();
 	// })
 	// })
@@ -47,7 +47,7 @@ steal("syn/synthetic.js", function (syn) {
 			"<div id='right'></div>" +
 			"</div>");
 
-		div.appendTo($("#qunit-test-area"));
+		div.appendTo(document.body);
 		var basicCss = {
 			width: "90px",
 			height: "100px",
@@ -84,6 +84,7 @@ steal("syn/synthetic.js", function (syn) {
 			targets = [];
 
 		var move = function (ev) {
+			console.log(ev.target);
 			if (ev.clientX === 0 && ev.clientY === 0) {
 				// this happens once per run in Chrome only
 				return;
@@ -121,12 +122,12 @@ steal("syn/synthetic.js", function (syn) {
 			equal(clientY, 50);
 			$(document.documentElement)
 				.unbind('mousemove', move);
+				
 			for (var i = 0; i < els.length; i++) {
-				ok(els[i] === targets[i], "target is right");
+				equal(targets[i], els[i], "target is right");
 			}
 
-			$("#qunit-test-area")
-				.html("");
+			div.remove();
 			start();
 		});
 	});
@@ -142,7 +143,7 @@ steal("syn/synthetic.js", function (syn) {
 	// 			"<div id='drop'></div>"+
 	// 			"</div>");
 
-	// 	div.appendTo($("#qunit-test-area"));
+	// 	div.appendTo($("#qunit-fixture"));
 	// 	var basicCss = {
 	// 		width: "20px",
 	// 		height: "20px",
@@ -214,7 +215,7 @@ steal("syn/synthetic.js", function (syn) {
 	// 			syn.drag($("#drag")[0], {to: "#midpoint", duration: 700}, function(){
 	// 				ok(drags.dragout, 	"dragout fired correctly")
 	// 				ok(drops.dropout, 	"dropout fired correctly")
-	// 				$("#qunit-test-area").innerHTML = "";
+	// 				$("#qunit-fixture").innerHTML = "";
 	// 				start();
 	// 			})
 

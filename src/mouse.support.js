@@ -1,4 +1,4 @@
-steal('syn/synthetic.js', 'syn/mouse.js', function checkSupport(syn) {
+steal('synjs/synthetic.js', 'synjs/mouse.js', function checkSupport(syn) {
 
 	if (!document.body) {
 		syn.schedule(function () {

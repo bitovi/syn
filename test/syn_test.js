@@ -1,6 +1,6 @@
 /* global st:true */
 
-steal("syn/syn.js", function (syn) {
+steal("synjs/syn.js",'steal-qunit', function (syn) {
 
 	QUnit.module("syn");
 
@@ -51,7 +51,7 @@ steal("syn/syn.js", function (syn) {
 	}, 1);
 
 	test("Selecting a select element", function () {
-		st.g("qunit-test-area")
+		st.g("qunit-fixture")
 			.innerHTML =
 			"<form id='outer'><select name='select'><option value='1' id='one'>one</option><option value='2' id='two'>two</option></select></form>";
 
@@ -73,13 +73,13 @@ steal("syn/syn.js", function (syn) {
 				.select.selectedIndex, 1, "Change Selected Index");
 
 			start();
-			st.g("qunit-test-area")
+			st.g("qunit-fixture")
 				.innerHTML = "";
 		});
 	});
 
 	test("scrollTop triggers scroll events", function () {
-		st.g("qunit-test-area")
+		st.g("qunit-fixture")
 			.innerHTML = "<div id='scroller' style='height:100px;width: 100px;overflow:auto'>" +
 			"<div style='height: 200px; width: 100%'>text" +
 			"</div>" +
@@ -87,7 +87,7 @@ steal("syn/syn.js", function (syn) {
 
 		st.binder("scroller", "scroll", function (ev) {
 			ok(true, "scrolling created just by changing ScrollTop");
-			st.g("qunit-test-area")
+			st.g("qunit-fixture")
 				.innerHTML = "";
 			start();
 		});
@@ -102,12 +102,12 @@ steal("syn/syn.js", function (syn) {
 
 	if (!syn.skipFocusTests) {
 		test("focus triggers focus events", function () {
-			st.g("qunit-test-area")
+			st.g("qunit-fixture")
 				.innerHTML = "<input type='text' id='focusme'/>";
 
 			st.binder("focusme", "focus", function (ev) {
 				ok(true, "focus creates event");
-				st.g("qunit-test-area")
+				st.g("qunit-fixture")
 					.innerHTML = "";
 				start();
 			});
@@ -126,43 +126,51 @@ steal("syn/syn.js", function (syn) {
 		// Make sure the browser hasn't scrolled on account of feature detection.
 		// We're going to do this by opening a new page with a lot of text that might
 		// cause scroll.
-		var iframe = document.createElement("iframe");
-		iframe.setAttribute("height", "100");
-		var scroll30 = st.rootJoin("test/qunit/scroll_30/index.html");
-		iframe.src = scroll30;
-		window.synReady = function () {
-			try {
-				delete window.synReady;
-			} catch (e) {
-				window.synReady = undefined; // IE 8 and below
-			}
-			var win = iframe.contentWindow;
-			var scrollTop = win.document.body.scrollTop;
-
-			equal(scrollTop, 0);
-			start();
-		};
-
-		st.g("qunit-test-area")
-			.appendChild(iframe);
+		// test/qunit/page1.html
+		System.locate({name: "test/pages/scroll_30.html"}).then(function(scroll30){
+			scroll30 = scroll30.replace(".js","");
+			
+			var iframe = document.createElement("iframe");
+			iframe.setAttribute("height", "100");
+			iframe.src = scroll30;
+			window.synReady = function () {
+				try {
+					delete window.synReady;
+				} catch (e) {
+					window.synReady = undefined; // IE 8 and below
+				}
+				var win = iframe.contentWindow;
+				var scrollTop = win.document.body.scrollTop;
+	
+				equal(scrollTop, 0);
+				start();
+			};
+	
+			st.g("qunit-fixture")
+				.appendChild(iframe);
+		});
+		
 	});
 
 	test("syn.schedule gets called when syn.delay is used", function () {
 		stop();
-
-		var iframe = document.createElement("iframe");
-		iframe.src = st.rootJoin("test/qunit/syn.schedule.html");
-		window.synSchedule = function (fn, ms) {
-			// fn should be a function
-			equal(typeof fn, "function");
-			// ms is a Number
-			equal(typeof ms, "number");
-
-			start();
-		};
-
-		st.g("qunit-test-area")
-			.appendChild(iframe);
+		System.locate({name: "test/pages/syn.schedule.html"}).then(function(synUrl){
+			var iframe = document.createElement("iframe");
+			iframe.src = synUrl.replace(".js","");
+			window.synSchedule = function (fn, ms) {
+				// fn should be a function
+				equal(typeof fn, "function");
+				// ms is a Number
+				equal(typeof ms, "number");
+	
+				start();
+			};
+	
+			st.g("qunit-fixture")
+				.appendChild(iframe);
+			
+		});
+		
 	});
 
 });

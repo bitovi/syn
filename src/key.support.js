@@ -1,4 +1,4 @@
-steal('syn/synthetic.js', 'syn/key.js', function (syn) {
+steal('synjs/synthetic.js', 'synjs/key.js', function (syn) {
 
 	if (!syn.config.support) {
 		//do support code
