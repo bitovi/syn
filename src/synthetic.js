@@ -262,12 +262,12 @@ steal(function () {
 					//TODO, this should be textarea too
 					//and this might be for only text style inputs ... hmmmmm ....
 					if (nodeName === "input" || nodeName === "textarea") {
-						bind(element, "blur", function () {
+						bind(element, "blur", function blur() {
 							if (syn.data(element, "syntheticvalue") !== element.value) {
 
 								syn.trigger(element, "change", {});
 							}
-							unbind(element, "blur", focus);
+							unbind(element, "blur", blur);
 						});
 
 					}
