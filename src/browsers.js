@@ -324,10 +324,10 @@ steal('syn/synthetic.js', 'syn/mouse.js', function (syn) {
 			},
 			"left": {
 				"mousedown": {
-					"button": 1
+					"button": window.addEventListener ? 0 : 1
 				},
 				"mouseup": {
-					"button": 1
+					"button": window.addEventListener ? 0 : 1
 				},
 				"click": {
 					"button": 0
