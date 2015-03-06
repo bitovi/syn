@@ -1,4 +1,4 @@
-/*syn@0.1.0-pre.0#synthetic*/
+/*syn@0.1.1#synthetic*/
 
 //allow for configuration of syn
 var opts = window.syn ? window.syn : {};
@@ -263,12 +263,12 @@ extend(syn, {
 				//TODO, this should be textarea too
 				//and this might be for only text style inputs ... hmmmmm ....
 				if (nodeName === "input" || nodeName === "textarea") {
-					bind(element, "blur", function () {
+					bind(element, "blur", function blur() {
 						if (syn.data(element, "syntheticvalue") !== element.value) {
 
 							syn.trigger(element, "change", {});
 						}
-						unbind(element, "blur", focus);
+						unbind(element, "blur", blur);
 					});
 
 				}

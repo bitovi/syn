@@ -1,4 +1,4 @@
-/*syn@0.1.0-pre.0#drag*/
+/*syn@0.1.1#drag*/
 define(function(require, exports, module) {
 var syn = require('./synthetic');
 (function dragSupport() {

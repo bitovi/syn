@@ -1,4 +1,4 @@
-/*syn@0.1.0-pre.0#synthetic*/
+/*syn@0.1.1#synthetic*/
 define(function(require, exports, module) {
 var opts = window.syn ? window.syn : {};
 var extend = function (d, s) {
@@ -92,11 +92,11 @@ extend(syn, {
                 var element = this, nodeName = element.nodeName.toLowerCase();
                 syn.data(element, 'syntheticvalue', element.value);
                 if (nodeName === 'input' || nodeName === 'textarea') {
-                    bind(element, 'blur', function () {
+                    bind(element, 'blur', function blur() {
                         if (syn.data(element, 'syntheticvalue') !== element.value) {
                             syn.trigger(element, 'change', {});
                         }
-                        unbind(element, 'blur', focus);
+                        unbind(element, 'blur', blur);
                     });
                 }
             }

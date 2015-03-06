@@ -1,4 +1,4 @@
-/*syn@0.1.0-pre.0#mouse*/
+/*syn@0.1.1#mouse*/
 var syn = require('./synthetic');
 
 //handles mosue events

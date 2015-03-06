@@ -1,4 +1,4 @@
-/*syn@0.1.0-pre.0#mouse*/
+/*syn@0.1.1#mouse*/
 define(function(require, exports, module) {
 var syn = require('./synthetic');
 var h = syn.helpers, getWin = h.getWindow;

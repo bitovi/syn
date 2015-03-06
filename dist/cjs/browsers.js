@@ -1,4 +1,4 @@
-/*syn@0.1.0-pre.0#browsers*/
+/*syn@0.1.1#browsers*/
 var syn = require("./synthetic");
 require("./mouse");
 

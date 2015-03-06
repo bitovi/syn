@@ -1,4 +1,4 @@
-/*syn@0.1.0-pre.0#key*/
+/*syn@0.1.1#key*/
 var syn = require('./synthetic');
 require('./typeable');
 require('./browsers');
