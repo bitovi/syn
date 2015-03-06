@@ -1,3 +1,4 @@
+/*syn@0.0.3#drag*/
 var syn = require('syn/synthetic');
 
 // check if elementFromPageExists
@@ -323,4 +324,5 @@ syn.helpers.extend(syn.init.prototype, {
 
 	}
 });
+
 

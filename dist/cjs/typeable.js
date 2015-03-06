@@ -1,3 +1,4 @@
+/*syn@0.0.3#typeable*/
 var syn = require('syn/synthetic');
 
 // TODO: rename to focusable to be more accurate.
@@ -63,3 +64,4 @@ type(function (el) {
 type(function (el) {
 	return __indexOf.call(["", "true"], el.getAttribute("contenteditable")) !== -1;
 });
+

@@ -1,3 +1,4 @@
+/*syn@0.0.3#browsers*/
 var syn = require("syn/synthetic");
 require("syn/mouse");
 
@@ -424,4 +425,5 @@ syn.mouse.browser =
 	}
 	return syn.mouse.browsers.gecko;
 })();
+
 

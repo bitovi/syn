@@ -1,6 +1,36 @@
 {
-  "name": "synjs",
-  "version": "0.0.3",
+  "name": "syn",
+  "version": "0.1.0",
+  "main": "dist/amd/syn.js",
+  "scripts": {
+    "test": "./node_modules/.bin/grunt test --stack",
+    "prepublish": "./node_modules/.bin/grunt build"
+  },
+  "devDependencies": {
+    "tmp": "0.0.23",
+    "grunt": "0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-concat": "0.3.0",
+    "grunt-contrib-jshint": "^0.8.0",
+    "grunt-jsbeautifier": "^0.2.6",
+    "steal-tools": "bitovi/steal-tools#new-system-npm",
+    "steal": "0.7.0",
+    "testee": "0.1.7",
+    "jquery": ">=2.0.0",
+    "steal-qunit": "0.0.2",
+    "requirejs": "2.1.X"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "system": {
+    "directories": {
+      "lib": "src"
+    },
+    "main" : "syn",
+    "map": {},
+    "ignoreBrowser": true
+  },
   "author": {
     "name": "Bitovi",
     "email": "contact@bitovi.com",
@@ -16,31 +46,5 @@
       "type": "MIT",
       "url": "http://opensource.org/licenses/mit-license.php"
     }
-  ],
-  "devDependencies": {
-    "tmp": "0.0.23",
-    "grunt": "0.4.5",
-    "grunt-contrib-concat": "0.3.0",
-    "grunt-contrib-jshint": "^0.8.0",
-    "grunt-contrib-uglify": "~0.3.2",
-    "grunt-jsbeautifier": "^0.2.6",
-    "steal-tools": "0.6.0",
-    "steal": "bitovi/steal#directories-lib-changes",
-    "testee": "0.1.7",
-    "jquery": ">=2.0.0",
-    "steal-qunit": "0.0.2"
-  },
-  "scripts": {
-    "test": "grunt test"
-  },
-  "system": {
-    "directories": {
-      "lib": "src"
-    },
-    "main" : "syn",
-    "map": {
-      "jquery/jquery": "jquery",
-      "steal-qunit/steal-qunit": "steal-qunit"
-	}
-  }
+  ]
 }

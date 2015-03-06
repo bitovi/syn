@@ -1,3 +1,4 @@
+/*syn@0.0.3#key*/
 var syn = require('syn/synthetic');
 require('syn/typeable');
 require('syn/browsers');
@@ -898,4 +899,5 @@ h.extend(syn.init.prototype, {
 
 	}
 });
+
 

@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<link rel="stylesheet" href="../lib/qunit/qunit/qunit.css"/>
+		<link rel="stylesheet" href="../node_modules/steal-qunit/qunit.css"/>
 		<title>QUnit Test</title>
 	</head>
 	<body>
@@ -9,15 +9,15 @@
 		<div id="qunit-fixture"></div>
 		<div id="qunit-fixture"></div>
 
-		<script src="../lib/jquery/dist/jquery.js"></script>
-		<script src="../lib/qunit/qunit/qunit.js"></script>
+		<script src="../node_modules/jquery/dist/jquery.js"></script>
+		<script src="../node_modules/steal-qunit/qunit.js"></script>
 		<script type="text/javascript">
 			QUnit.config.autostart = false;
 			QUnit.config.reorder = false;
 			QUnit.config.testTimeout = 5000;
 		</script>
 		<script src="../dist/syn.js"></script>
-		<script src="../build/tests.js"></script>
+		<script src="../build/tests/standalone_test.js"></script>
 		<script>
 			QUnit.start();
 		</script>

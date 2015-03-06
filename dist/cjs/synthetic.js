@@ -1,3 +1,4 @@
+/*syn@0.0.3#synthetic*/
 
 //allow for configuration of syn
 var opts = window.syn ? window.syn : {};
@@ -894,3 +895,4 @@ for (; i < actions.length; i++) {
 }
 
 module.exports = syn;
+

@@ -1,3 +1,4 @@
+/*syn@0.0.3#key.support*/
 var syn = require('syn/synthetic');
 require('syn/key');
 
@@ -85,5 +86,6 @@ if (!syn.config.support) {
 } else {
 	syn.helpers.extend(syn.support, syn.config.support);
 }
+
 
 

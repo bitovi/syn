@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<link rel="stylesheet" href="../lib/qunit/qunit/qunit.css"/>
+		<link rel="stylesheet" href="../node_modules/steal-qunit/qunit.css"/>
 		<title>QUnit Test</title>
 	</head>
 	<body>
@@ -9,9 +9,15 @@
 		<div id="qunit-fixture"></div>
 		<div id="qunit-fixture"></div>
 
-		<script src="../lib/jquery/dist/jquery.js"></script>
-		<script type="text/javascript" src="../lib/requirejs/require.js"></script>
-		<script src="../lib/qunit/qunit/qunit.js"></script>
+		<script src="../node_modules/steal-qunit/qunit.js"></script>
+		<script type="text/javascript">
+			QUnit.config.current = {
+				ignoreGlobalErrors: true
+			};
+			QUnit.config.autostart = false;
+			QUnit.config.reorder = false;
+			QUnit.config.testTimeout = 5000;
+		</script>
 		<script type="text/javascript">
 			// Socket.IO <1 doesn't play will with require.js and causes a global
 			// failure. Until testee supports Socket.IO >1 we'll have to ignore.
@@ -22,19 +28,31 @@
 			QUnit.config.reorder = false;
 			QUnit.config.testTimeout = 5000;
 		</script>
+		<script type="text/javascript" src="../node_modules/requirejs/require.js"></script>
 		<script>
 			require.config({
-				"baseUrl": "../build/tests/amd",
+				"baseUrl": "..",
 				"paths": {
-					"syn": "../../../dist/amd/syn",
-					"jquery": "../../../lib/jquery/dist",
-					"syn/drag/test/qunit/drag_test": "syn/drag/test/qunit/drag_test"
-				}
+					"jquery": "node_modules/jquery/dist/jquery"
+				},
+				 packages: [{
+				    	name: 'syn',
+				    	location: 'dist/amd',
+				    	main: 'syn'
+			    }]
 			});
 
-			require(["test/qunit/qunit"], function() {
-				QUnit.start();
+			require(["syn","jquery"], function(syn, jQuery) {
+				window.syn = syn;
+				window.jQuery = window.$ = jQuery;
+				var script = document.createElement("script");
+				script.onload = function(){
+					QUnit.start();
+				};
+				script.src = "../build/tests/standalone_test.js";
+				document.body.appendChild(script);
 			});
 		</script>
 	</body>
 </html>
+

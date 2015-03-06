@@ -1,5 +1,9 @@
 /* global st */
-steal("synjs/synthetic.js", "steal-qunit",'synjs/mouse.support.js', function(syn, QUnit){
+
+var syn = require('syn');
+var locate = require('test/locate_test');
+var QUnit = require("steal-qunit");
+var st = require("test/helpers_test");
 
 
 var didSomething = 0;
@@ -148,7 +152,7 @@ QUnit.test("Select is changed on click", function () {
 QUnit.test("Select is change on click (iframe)", function () {
 	stop();
 	
-	System.locate({name: "test/pages/page3.html"}).then(function(page3){
+	locate("test/pages/page3.html",function(page3){
 		page3 = page3.replace(".js","");
 		
 		var iframe = document.createElement('iframe');
@@ -405,7 +409,7 @@ st.bind(iframe,"load",function(){
 iframe.src = page1
 st.g("qunit-fixture").appendChild(iframe);*/
 
-	System.locate({name: "test/pages/h3.html"}).then(function(path){
+	locate("test/pages/h3.html",function(path){
 		path = path.replace(".js","");
 	
 		var popup = window.open(path, "synthing");
@@ -434,35 +438,30 @@ st.g("qunit-fixture").appendChild(iframe);*/
 
 QUnit.test("focus on an element then another in another page", function () {
 	stop();
-	Promise.all([
-		System.locate({name: "test/pages/page1.html"}),
-		System.locate({name: "test/pages/page2.html"})
-	]).then(function(normalized){
-		var page1= normalized[0].replace(".js",""),
-			page2 = normalized[1].replace(".js","");
+	locate("test/pages/page1.html", function(page1){
+		
+		locate("test/pages/page2.html", function(page2){
+			var iframe = document.createElement('iframe'),
+				calls = 0;
 			
-		var iframe = document.createElement('iframe'),
-			calls = 0;
-	
-		st.bind(iframe, "load", function () {
-			if (calls === 0) {
-				syn.click(iframe.contentWindow.document.getElementById("first"), {}, function () {
-					iframe.contentWindow.location = page2;
-				});
-				calls++;
-			} else {
-				syn.click(iframe.contentWindow.document.getElementById("second"), {}, function () {
-					QUnit.ok(iframe.contentWindow.document.getElementById("second") === iframe.contentWindow.document.activeElement);
-					QUnit.start();
-				});
-			}
+			st.bind(iframe, "load", function () {
+				if (calls === 0) {
+					syn.click(iframe.contentWindow.document.getElementById("first"), {}, function () {
+						iframe.contentWindow.location = page2;
+					});
+					calls++;
+				} else {
+					syn.click(iframe.contentWindow.document.getElementById("second"), {}, function () {
+						QUnit.ok(iframe.contentWindow.document.getElementById("second") === iframe.contentWindow.document.activeElement);
+						QUnit.start();
+					});
+				}
+			});
+			iframe.src = page1;
+			st.g("qunit-fixture")
+				.appendChild(iframe);
 		});
-		iframe.src = page1;
-		st.g("qunit-fixture")
-			.appendChild(iframe);
 	});
-
-});
-
+	
 
 });

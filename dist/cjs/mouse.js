@@ -1,3 +1,4 @@
+/*syn@0.0.3#mouse*/
 var syn = require('syn/synthetic');
 
 //handles mosue events
@@ -211,4 +212,5 @@ h.extend(syn.create, {
 		}
 	}
 });
+
 

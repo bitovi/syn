@@ -1,14 +1,12 @@
-/*syn/mouse.support*/
-define('syn/mouse.support', [
-    'syn/synthetic',
-    'syn/mouse'
-], function checkSupport(syn) {
-    if (!document.body) {
-        syn.schedule(function () {
-            checkSupport(syn);
-        }, 1);
-        return;
-    }
+/*syn@0.0.3#mouse.support*/
+define(function(require, exports, module) {
+var syn = require('./synthetic');
+require('./mouse');
+if (!document.body) {
+    syn.schedule(function () {
+        checkSupport(syn);
+    }, 1);
+} else {
     window.__synthTest = function () {
         syn.support.linkHrefJS = true;
     };
@@ -54,4 +52,5 @@ define('syn/mouse.support', [
     syn.trigger(div, 'mouseup', {});
     document.documentElement.removeChild(div);
     syn.support.ready++;
+}
 });

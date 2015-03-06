@@ -10,8 +10,8 @@
 				parent.synSchedule.apply(parent, arguments);
 			}
 		};
-
-		steal('synjs/syn.js', function(){
+		
+		steal('syn', function(syn){
 			var body = document.body;
 			syn.click(body, {}).delay(function(){}, 0);
 		});

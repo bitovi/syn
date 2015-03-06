@@ -4,51 +4,41 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('bower.json'),
-		stealPluginify: {
+		"steal-export": {
 			"standalone-amd": {
 				system: {
-					config: __dirname + "/stealconfig.js",
-					main: 'syn/syn'
+					config: __dirname + "/package.json!npm",
+					main: "syn/syn"
 				},
 				"outputs": {
-					"standalone": {
-						dest: __dirname + "/build/syn.js",
-						minify: false
+					"+global-js": {
+						dest: __dirname+"/build/syn.js"
 					},
-					"amd": {
-						format: "amd",
-						useNormalizedDependencies: true,
-						dest: function(moduleName){
-							return path.join(__dirname,"dist/amd/"+
-											 moduleName+".js");
-						},
-						graphs: ["syn/syn"]
-					}
+					"+amd": {
+						dest: __dirname+"/dist/amd"
+					},
+					"+cjs": {}
 				}
 			},
 			"tests": {
 				system: {
-					config: __dirname + "/stealconfig.js",
-					main: "test/qunit/qunit"
+					config: __dirname + "/package.json!npm",
+					main: "test/tests"
+				},
+				options: {
+					debug: true
 				},
 				"outputs": {
-					"standalone": {
+					"+global-js": {
+						modules: ["test/tests"],
 						// Ignore everything without _test in the filename
 						ignore: /^((?!_test).)*$/,
-						format: "global",
-						dest: __dirname + "/build/tests/standalone.js",
-						minify: false
-					},
-					"amd": {
-						// Ignore everything without _test in the filename
-						ignore: /^((?!_test|test\/qunit\/qunit).)*$/,
-						format: "amd",
-						useNormalizedDependencies: true,
-						dest: function(moduleName){
-							return path.join(__dirname,"build/tests/amd/"+
-											 moduleName+".js");
-						},
-						graphs: ["test/qunit/qunit"]
+						dest: __dirname + "/build/tests/standalone_test.js",
+						exports: {
+							"jquery": "jQuery",
+							"steal-qunit": "QUnit",
+							"syn": "syn"
+						}
 					}
 				}
 			}
@@ -73,18 +63,6 @@ module.exports = function (grunt) {
 				config: '.jsbeautifyrc'
 			}
 		},
-		uglify: {
-			dist: {
-				options: {
-					preserveComments: 'some'
-				},
-				files: {
-					'dist/syn.min.js': [
-						'dist/syn.js'
-					]
-				}
-			}
-		},
 		testee: {
 			phantom: ['test/index.html',
 				'test/standalone.html',
@@ -101,9 +79,9 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('steal-tools');
 
 	grunt.registerTask('quality', ['jsbeautifier', 'jshint']);
-	grunt.registerTask('build', ['stealPluginify:standalone-amd', 'concat', 'uglify']);
+	grunt.registerTask('build', ['steal-export:standalone-amd', 'concat']);
 
 	// Test tasks
 	grunt.registerTask('test', ['testee']);
-	grunt.registerTask('test:build', ['build', 'stealPluginify:tests', 'testee']);
+	grunt.registerTask('test:build', ['build', 'steal-export:tests', 'testee']);
 };

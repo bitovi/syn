@@ -1,5 +1,5 @@
 {
-  "name": "Syn",
+  "name": "syn",
   "version": "0.0.3",
   "author": {
     "name": "Bitovi",
@@ -18,12 +18,6 @@
     }
   ],
   "dependencies": {},
-  "devDependencies": {
-    "jquery": "1.11.1",
-    "jquerypp": "1.0.x",
-    "bootstrap": "3.0.x",
-    "requirejs": "~2.1.10"
-  },
   "ignore": [
     "stealconfig.js",
     "/test",

@@ -1,3 +1,4 @@
+/*syn@0.0.3#mouse.support*/
 var syn = require('syn/synthetic');
 require('syn/mouse');
 
@@ -72,6 +73,7 @@ if (!document.body) {
 	//check stuff
 	syn.support.ready++;
 }
+
 
 
 
