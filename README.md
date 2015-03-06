@@ -13,7 +13,10 @@
 
 [![Join the chat at https://gitter.im/bitovi/syn](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bitovi/syn?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Syn let you simulate user behavior like typing, clicking, moving, and 
+> If you are looking for the Synergy project, you can find it [here](https://www.npmjs.com/~postquagga). Thanks 
+> [postquagga](https://www.npmjs.com/~postquagga) for letting us use the name!
+
+Syn lets you simulate user behavior like typing, clicking, moving, and 
 dragging exactly how a real user would perform those actions.
 
 ```js
