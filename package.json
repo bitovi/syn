@@ -1,6 +1,6 @@
 {
   "name": "syn",
-  "version": "0.1.0",
+  "version": "0.1.0-pre.0",
   "main": "dist/amd/syn.js",
   "scripts": {
     "test": "./node_modules/.bin/grunt test --stack",
