@@ -1,5 +1,5 @@
-var syn = require('syn/synthetic');
-require('syn/mouse');
+var syn = require('./synthetic');
+require('./mouse');
 
 
 if (!document.body) {

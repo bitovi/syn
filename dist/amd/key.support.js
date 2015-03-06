@@ -1,4 +1,4 @@
-/*syn@0.0.3#key.support*/
+/*syn@0.1.0-pre.0#key.support*/
 define(function(require, exports, module) {
 var syn = require('./synthetic');
 require('./key');

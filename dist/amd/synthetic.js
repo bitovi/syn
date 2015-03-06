@@ -1,4 +1,4 @@
-/*syn@0.0.3#synthetic*/
+/*syn@0.1.0-pre.0#synthetic*/
 define(function(require, exports, module) {
 var opts = window.syn ? window.syn : {};
 var extend = function (d, s) {

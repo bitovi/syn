@@ -1,6 +1,6 @@
-/*syn@0.0.3#key.support*/
-var syn = require('syn/synthetic');
-require('syn/key');
+/*syn@0.1.0-pre.0#key.support*/
+var syn = require('./synthetic');
+require('./key');
 
 
 if (!syn.config.support) {

@@ -1,9 +1,9 @@
-/*syn@0.0.3#syn*/
-var syn = require('syn/synthetic');
-require('syn/mouse.support');
-require('syn/browsers');
-require('syn/key.support');
-require('syn/drag');
+/*syn@0.1.0-pre.0#syn*/
+var syn = require('./synthetic');
+require('./mouse.support');
+require('./browsers');
+require('./key.support');
+require('./drag');
 
 window.syn = syn;
 module.exports = syn;

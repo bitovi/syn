@@ -1,7 +1,7 @@
-/*syn@0.0.3#key*/
-var syn = require('syn/synthetic');
-require('syn/typeable');
-require('syn/browsers');
+/*syn@0.1.0-pre.0#key*/
+var syn = require('./synthetic');
+require('./typeable');
+require('./browsers');
 
 
 var h = syn.helpers,

@@ -1,5 +1,5 @@
-var syn = require('syn/synthetic');
-require('syn/key');
+var syn = require('./synthetic');
+require('./key');
 
 
 if (!syn.config.support) {

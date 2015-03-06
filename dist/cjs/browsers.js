@@ -1,6 +1,6 @@
-/*syn@0.0.3#browsers*/
-var syn = require("syn/synthetic");
-require("syn/mouse");
+/*syn@0.1.0-pre.0#browsers*/
+var syn = require("./synthetic");
+require("./mouse");
 
 syn.key.browsers = {
 	webkit: {

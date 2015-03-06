@@ -1,5 +1,5 @@
-/*syn@0.0.3#typeable*/
-var syn = require('syn/synthetic');
+/*syn@0.1.0-pre.0#typeable*/
+var syn = require('./synthetic');
 
 // TODO: rename to focusable to be more accurate.
 

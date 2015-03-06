@@ -1,6 +1,6 @@
-var syn = require('syn/synthetic');
-require('syn/typeable');
-require('syn/browsers');
+var syn = require('./synthetic');
+require('./typeable');
+require('./browsers');
 
 
 var h = syn.helpers,

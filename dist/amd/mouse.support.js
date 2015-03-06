@@ -1,4 +1,4 @@
-/*syn@0.0.3#mouse.support*/
+/*syn@0.1.0-pre.0#mouse.support*/
 define(function(require, exports, module) {
 var syn = require('./synthetic');
 require('./mouse');

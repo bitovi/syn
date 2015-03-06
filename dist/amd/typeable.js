@@ -1,4 +1,4 @@
-/*syn@0.0.3#typeable*/
+/*syn@0.1.0-pre.0#typeable*/
 define(function(require, exports, module) {
 var syn = require('./synthetic');
 var typeables = [];

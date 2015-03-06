@@ -1,4 +1,4 @@
-var syn = require('syn/synthetic');
+var syn = require('./synthetic');
 
 // TODO: rename to focusable to be more accurate.
 

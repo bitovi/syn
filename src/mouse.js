@@ -1,4 +1,4 @@
-var syn = require('syn/synthetic');
+var syn = require('./synthetic');
 
 //handles mosue events
 

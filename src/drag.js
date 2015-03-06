@@ -1,4 +1,4 @@
-var syn = require('syn/synthetic');
+var syn = require('./synthetic');
 
 // check if elementFromPageExists
 (function dragSupport() {

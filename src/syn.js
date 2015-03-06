@@ -1,8 +1,8 @@
-var syn = require('syn/synthetic');
-require('syn/mouse.support');
-require('syn/browsers');
-require('syn/key.support');
-require('syn/drag');
+var syn = require('./synthetic');
+require('./mouse.support');
+require('./browsers');
+require('./key.support');
+require('./drag');
 
 window.syn = syn;
 module.exports = syn;

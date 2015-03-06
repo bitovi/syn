@@ -1,5 +1,5 @@
-/*syn@0.0.3#drag*/
-var syn = require('syn/synthetic');
+/*syn@0.1.0-pre.0#drag*/
+var syn = require('./synthetic');
 
 // check if elementFromPageExists
 (function dragSupport() {

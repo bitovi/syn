@@ -1,6 +1,6 @@
-/*syn@0.0.3#mouse.support*/
-var syn = require('syn/synthetic');
-require('syn/mouse');
+/*syn@0.1.0-pre.0#mouse.support*/
+var syn = require('./synthetic');
+require('./mouse');
 
 
 if (!document.body) {

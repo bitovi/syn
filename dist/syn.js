@@ -2,7 +2,7 @@
  * syn - 0.0.3
  * 
  * @copyright 2015 Bitovi
- * Fri, 06 Mar 2015 00:33:29 GMT
+ * Fri, 06 Mar 2015 01:15:29 GMT
  * @license MIT
  */
 
@@ -60,7 +60,7 @@
 		}
 	};
 })({},window)
-/*syn@0.0.3#synthetic*/
+/*syn@0.1.0-pre.0#synthetic*/
 define('syn/synthetic', function(require, exports, module) {
 var opts = window.syn ? window.syn : {};
 var extend = function (d, s) {
@@ -525,7 +525,7 @@ for (; i < actions.length; i++) {
 }
 module.exports = syn;
 });
-/*syn@0.0.3#mouse*/
+/*syn@0.1.0-pre.0#mouse*/
 define('syn/mouse', function(require, exports, module) {
 var syn = require('syn/synthetic');
 var h = syn.helpers, getWin = h.getWindow;
@@ -674,7 +674,7 @@ h.extend(syn.create, {
     }
 });
 });
-/*syn@0.0.3#mouse.support*/
+/*syn@0.1.0-pre.0#mouse.support*/
 define('syn/mouse.support', function(require, exports, module) {
 var syn = require('syn/synthetic');
 require('syn/mouse');
@@ -730,7 +730,7 @@ if (!document.body) {
     syn.support.ready++;
 }
 });
-/*syn@0.0.3#browsers*/
+/*syn@0.1.0-pre.0#browsers*/
 define('syn/browsers', function(require, exports, module) {
 var syn = require('syn/synthetic');
 require('syn/mouse');
@@ -1506,7 +1506,7 @@ syn.mouse.browser = function () {
     return syn.mouse.browsers.gecko;
 }();
 });
-/*syn@0.0.3#typeable*/
+/*syn@0.1.0-pre.0#typeable*/
 define('syn/typeable', function(require, exports, module) {
 var syn = require('syn/synthetic');
 var typeables = [];
@@ -1543,7 +1543,7 @@ type(function (el) {
     ], el.getAttribute('contenteditable')) !== -1;
 });
 });
-/*syn@0.0.3#key*/
+/*syn@0.1.0-pre.0#key*/
 define('syn/key', function(require, exports, module) {
 var syn = require('syn/synthetic');
 require('syn/typeable');
@@ -2174,7 +2174,7 @@ h.extend(syn.init.prototype, {
     }
 });
 });
-/*syn@0.0.3#key.support*/
+/*syn@0.1.0-pre.0#key.support*/
 define('syn/key.support', function(require, exports, module) {
 var syn = require('syn/synthetic');
 require('syn/key');
@@ -2235,7 +2235,7 @@ if (!syn.config.support) {
     syn.helpers.extend(syn.support, syn.config.support);
 }
 });
-/*syn@0.0.3#drag*/
+/*syn@0.1.0-pre.0#drag*/
 define('syn/drag', function(require, exports, module) {
 var syn = require('syn/synthetic');
 (function dragSupport() {
@@ -2410,7 +2410,7 @@ syn.helpers.extend(syn.init.prototype, {
     }
 });
 });
-/*syn@0.0.3#syn*/
+/*syn@0.1.0-pre.0#syn*/
 define('syn', function(require, exports, module) {
 var syn = require('syn/synthetic');
 require('syn/mouse.support');
