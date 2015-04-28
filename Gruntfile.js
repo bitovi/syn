@@ -64,10 +64,7 @@ module.exports = function (grunt) {
 			}
 		},
 		testee: {
-			phantom: ['test/index.html',
-				'test/standalone.html',
-				'test/amd.html',
-				'test/built.html']
+			phantom: ['test/test.html']
 		}
 	});
 
