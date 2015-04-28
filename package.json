@@ -22,7 +22,7 @@
     "requirejs": "2.1.X"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test:build"
   },
   "system": {
     "directories": {
