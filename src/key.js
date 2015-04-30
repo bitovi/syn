@@ -5,12 +5,21 @@ require('./browsers');
 
 var h = syn.helpers,
 
+	selectionStartAvailable = function (el) {
+		// checking for selectionStart might throw error
+		try {
+			return el.selectionStart !== undefined;
+		} catch (e) {
+			return false;
+		}
+	},
+
 	// gets the selection of an input or textarea
 	getSelection = function (el) {
 		var real, r, start;
 
 		// use selectionStart if we can
-		if (el.selectionStart !== undefined) {
+		if (selectionStartAvailable(el)) {
 			// this is for opera, so we don't have to focus to type how we think we would
 			if (document.activeElement && document.activeElement !== el &&
 				el.selectionStart === el.selectionEnd && el.selectionStart === 0) {
@@ -291,7 +300,7 @@ h.extend(syn, {
 
 	// selects text on an element
 	selectText: function (el, start, end) {
-		if (el.setSelectionRange) {
+		if (el.setSelectionRange && selectionStartAvailable(el)) {
 			if (!end) {
 				syn.__tryFocus(el);
 				el.setSelectionRange(start, start);
