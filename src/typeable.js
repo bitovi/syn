@@ -54,9 +54,14 @@ syn.typeable.test = function (el) {
 var type = syn.typeable;
 
 // Inputs and textareas
-var typeableExp = /input|textarea/i;
+var typeableExp = /input|textarea/i,
+	selectableInputs = ['textarea', 'email', 'number', 'password', 'search', 'tel', 'text', 'url'],
+	isSelectable = function (type) {
+		return __indexOf.call(selectableInputs, type) !== -1;
+	};
+
 type(function (el) {
-	return typeableExp.test(el.nodeName);
+	return typeableExp.test(el.nodeName) && isSelectable(el.type);
 });
 
 // Content editable
