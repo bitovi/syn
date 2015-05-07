@@ -16,7 +16,7 @@
     "grunt-jsbeautifier": "^0.2.6",
     "steal": "^0.9.3",
     "steal-qunit": "0.0.4",
-    "steal-tools": "^0.9.4",
+    "steal-tools": "^0.10.2",
     "testee": "0.1.7",
     "jquery": ">=2.0.0",
     "requirejs": "2.1.X"

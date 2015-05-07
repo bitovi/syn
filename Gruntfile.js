@@ -31,6 +31,8 @@ module.exports = function (grunt) {
 				"outputs": {
 					"+global-js": {
 						modules: ["test/tests"],
+						// Ignore everything without _test in the filename
+						ignore: /^((?!_test).)*$/,
 						dest: __dirname + "/build/tests/standalone_test.js",
 						exports: {
 							"jquery": "jQuery",
@@ -62,9 +64,10 @@ module.exports = function (grunt) {
 			}
 		},
 		testee: {
-			phantom: ['test/test.html',
-				'test/standalone_test.html',
-				'test/amd_test.html']
+			phantom: ['test/index.html',
+				'test/standalone.html',
+				'test/amd.html',
+				'test/built.html']
 		}
 	});
 
