@@ -12,16 +12,17 @@
     "grunt-cli": "^0.1.13",
     "grunt-contrib-concat": "0.3.0",
     "grunt-contrib-jshint": "^0.8.0",
+    "grunt-contrib-uglify": "^0.9.1",
     "grunt-jsbeautifier": "^0.2.6",
-    "steal-tools": "0.7.X",
-    "steal": "0.7.X",
+    "steal": "^0.9.3",
+    "steal-qunit": "0.0.4",
+    "steal-tools": "^0.10.2",
     "testee": "0.1.7",
     "jquery": ">=2.0.0",
-    "steal-qunit": "0.0.2",
     "requirejs": "2.1.X"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test:build"
   },
   "system": {
     "directories": {
