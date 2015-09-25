@@ -3,31 +3,30 @@
   "version": "0.1.2",
   "main": "dist/cjs/syn.js",
   "scripts": {
-    "test": "./node_modules/.bin/grunt test --stack",
+    "test": "grunt test",
     "prepublish": "./node_modules/.bin/grunt build"
   },
   "devDependencies": {
-    "tmp": "0.0.23",
     "grunt": "0.4.5",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-concat": "0.3.0",
     "grunt-contrib-jshint": "^0.8.0",
+    "grunt-contrib-uglify": "^0.9.2",
     "grunt-jsbeautifier": "^0.2.6",
-    "steal-tools": "0.7.X",
-    "steal": "0.7.X",
-    "testee": "0.1.7",
     "jquery": ">=2.0.0",
+    "phantomjs": "^1.9.18",
+    "requirejs": "2.1.X",
+    "steal": "0.7.X",
     "steal-qunit": "0.0.2",
-    "requirejs": "2.1.X"
-  },
-  "scripts": {
-    "test": "grunt test"
+    "steal-tools": "0.7.X",
+    "testee": "0.1.8",
+    "tmp": "0.0.23"
   },
   "system": {
     "directories": {
       "lib": "src"
     },
-    "main" : "syn",
+    "main": "syn",
     "map": {},
     "ignoreBrowser": true
   },
