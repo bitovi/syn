@@ -3,7 +3,8 @@
   "version": "0.1.2",
   "main": "dist/cjs/syn.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "prepublish": "./node_modules/.bin/grunt build"
   },
   "devDependencies": {
     "grunt": "0.4.5",
