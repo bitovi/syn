@@ -64,7 +64,7 @@ module.exports = function (grunt) {
 			}
 		},
 		testee: {
-			phantom: ['test/index.html',
+			phantom: ['test/test.html',
 				'test/standalone.html',
 				'test/amd.html',
 				'test/built.html']
