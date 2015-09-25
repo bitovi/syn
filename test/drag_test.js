@@ -135,6 +135,35 @@ QUnit.test("move", function () {
 	});
 });
 
+QUnit.test("drag - allow to.pageX and from.pageX to 0", 1, function () {
+	var $drag = $("<div id='drag'></div>");
+
+	$drag
+	.appendTo(document.body)
+	.css({
+		width: "50px",
+		height: "50px",
+		position: "absolute",
+		border: "solid 1px black",
+		top:0,
+		left:0
+	});
+	
+	stop();
+	syn.move("drag", {
+		from: {
+			pageX: 0,
+			pageY: 0
+		},
+		to: {
+			pageX: 0,
+			pageY: 0
+		}
+	}, function () {
+		ok(true, "Didn't get an error.");
+		start();
+	});
+});
 //These rely on jquery++ events atm. TODO: remove tests as this produces a circular dependency between jQuery++ and syn
 // test("dragging an element with duration", function(){
 // 	var drags = ( {}),

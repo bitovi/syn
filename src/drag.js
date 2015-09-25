@@ -165,7 +165,7 @@ var elementFromPoint = function (point, element) {
 		if (option.nodeName) {
 			option = center(option);
 		}
-		if (option.pageX) {
+		if (option.pageX != null) {
 			var off = syn.helpers.scrollOffset(win);
 			option = {
 				clientX: option.pageX - off.left,
