@@ -2,11 +2,10 @@ var syn = require('./synthetic');
 require('./mouse');
 
 
-if (!document.body) {
-	syn.schedule(function () {
-		checkSupport(syn);
-	}, 1);
-} else {
+(function checkSupport() {
+	if (!document.body) {
+		return syn.schedule(checkSupport, 1);
+	}
 	window.__synthTest = function () {
 		syn.support.linkHrefJS = true;
 	};
@@ -71,7 +70,7 @@ if (!document.body) {
 	
 	//check stuff
 	syn.support.ready++;
-}
+}());
 
 
 
