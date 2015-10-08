@@ -22,7 +22,9 @@
 		"notStrictEqual": true,
 		"raises": true,
 		"start": true,
-		"stop": true
+		"stop": true,
+
+		"formElExp": true
 	},
 
 

@@ -383,58 +383,65 @@ QUnit.test("Double Click", function () {
 	});
 });
 
-// tests against IE9's weirdness where popup windows don't have dispatchEvent
-QUnit.test("h3 click in popup", 1, function () {
-	st.g("qunit-fixture")
-		.innerHTML = "";
 
-	stop();
-	/*var page1 = st.rootJoin("funcunit/syn/test/qunit/h3.html"),
-	iframe = document.createElement('iframe'),
-	calls = 0;
 
-st.bind(iframe,"load",function(){
-	var el = iframe.contentWindow.document.getElementById('strange')
-	st.bind(el,"click",function(){
-		QUnit.ok(true, "h3 was clicked");
-		
+//check for IE - opening a popup with firefox breaks for CI
+var htmlElement = document.getElementsByTagName("html")[0],
+	htmlClassName = htmlElement.className;
+if(htmlClassName.indexOf('ie9') > -1){
+	// tests against IE9's weirdness where popup windows don't have dispatchEvent
+	QUnit.test("h3 click in popup", 1, function () {
+		st.g("qunit-fixture")
+			.innerHTML = "";
+
+		stop();
+		/*var page1 = st.rootJoin("funcunit/syn/test/qunit/h3.html"),
+		iframe = document.createElement('iframe'),
+		calls = 0;
+
+	st.bind(iframe,"load",function(){
+		var el = iframe.contentWindow.document.getElementById('strange')
+		st.bind(el,"click",function(){
+			QUnit.ok(true, "h3 was clicked");
+			
+		});
+		syn.click(el ,{}, function(){
+			QUnit.start();
+		})
+
+			
+			
 	});
-	syn.click(el ,{}, function(){
-		QUnit.start();
-	})
+	iframe.src = page1
+	st.g("qunit-fixture").appendChild(iframe);*/
 
+		locate("test/pages/h3.html",function(path){
+			path = path.replace(".js","");
 		
+			var popup = window.open(path, "synthing");
+			
+			var runTest = function(el){
+				st.bind(el, "click", function () {
+					QUnit.ok(true, "h3 was clicked");
+				});
+				syn.click(el, {}, function () {
+					QUnit.start();
+					popup.close();
+				});
+			};
+			var ready = function(){
+				var el = popup.document.getElementById('strange');
+				if(el) {
+					runTest(el);
+				} else {
+					setTimeout(ready,100);
+				}
+			};
 		
-});
-iframe.src = page1
-st.g("qunit-fixture").appendChild(iframe);*/
-
-	locate("test/pages/h3.html",function(path){
-		path = path.replace(".js","");
-	
-		var popup = window.open(path, "synthing");
-		
-		var runTest = function(el){
-			st.bind(el, "click", function () {
-				QUnit.ok(true, "h3 was clicked");
-			});
-			syn.click(el, {}, function () {
-				QUnit.start();
-				popup.close();
-			});
-		};
-		var ready = function(){
-			var el = popup.document.getElementById('strange');
-			if(el) {
-				runTest(el);
-			} else {
-				setTimeout(ready,100);
-			}
-		};
-	
-		setTimeout(ready, 100);
+			setTimeout(ready, 100);
+		});
 	});
-});
+}
 
 QUnit.test("focus on an element then another in another page", function () {
 	stop();
