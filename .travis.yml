@@ -6,4 +6,4 @@ before_script:
   - bower install
 script: npm test
 addons:
-	firefox: latest
+	firefox: "latest"
