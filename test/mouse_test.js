@@ -385,7 +385,7 @@ QUnit.test("Double Click", function () {
 
 
 
-//check for IE
+//check for IE - opening a popup with firefox breaks for CI
 var htmlElement = document.getElementsByTagName("html")[0],
 	htmlClassName = htmlElement.className;
 if(htmlClassName.indexOf('ie9') > -1){
