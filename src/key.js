@@ -5,12 +5,29 @@ require('./browsers');
 
 var h = syn.helpers,
 
+	inputSupportsSelectionStart = {},
+
+	supportsSelectionStart = function (el) {
+		// checking selection attrs will trigger errors on all inputs but text, url, search, tel & password.
+		// Ultimately, this creates an issue specifically w/ email and number inputs
+		if (!inputSupportsSelectionStart[el.type]) { // try to avoid having to run the try/catch repeatedly
+			try {
+				return inputSupportsSelectionStart[el.type] = el.selectionStart !== undefined;
+			} catch (e) {
+				return inputSupportsSelectionStart[el.type] = false;
+			}
+		} else {
+			return inputSupportsSelectionStart[el.type];
+		}
+	},
+
 	// gets the selection of an input or textarea
 	getSelection = function (el) {
-		var real, r, start;
+		var real, r, start,
+			isInput = el.nodeName.toLowerCase() === 'input';
 
 		// use selectionStart if we can
-		if (el.selectionStart !== undefined) {
+		if (isInput ? supportsSelectionStart(el) : el.selectionStart !== undefined) {
 			// this is for opera, so we don't have to focus to type how we think we would
 			if (document.activeElement && document.activeElement !== el &&
 				el.selectionStart === el.selectionEnd && el.selectionStart === 0) {
@@ -27,7 +44,7 @@ var h = syn.helpers,
 			//check if we aren't focused
 			try {
 				//try 2 different methods that work differently (IE breaks depending on type)
-				if (el.nodeName.toLowerCase() === 'input') {
+				if (isInput) {
 					real = h.getWindow(el)
 						.document.selection.createRange();
 					r = el.createTextRange();
@@ -67,6 +84,7 @@ var h = syn.helpers,
 					};
 				}
 			} catch (e) {
+				// the elements most likely to get caught here are input[type=number] & input[type=email]
 				var prop = formElExp.test(el.nodeName) ? "value" : "textContent";
 
 				return {
@@ -291,7 +309,7 @@ h.extend(syn, {
 
 	// selects text on an element
 	selectText: function (el, start, end) {
-		if (el.setSelectionRange) {
+		if (el.setSelectionRange && supportsSelectionStart(el)) {
 			if (!end) {
 				syn.__tryFocus(el);
 				el.setSelectionRange(start, start);
