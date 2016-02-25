@@ -47,9 +47,9 @@ h.extend(syn.defaults, {
 		}
 
 		//submit a form
-		if (!(syn.support.clickSubmits) && (nodeName === "input" &&
-				type === "submit") ||
-			nodeName === 'button') {
+		if (!(syn.support.clickSubmits) && ((nodeName === "input" ||
+			nodeName === "button") &&
+				type === "submit")) {
 
 			var form = syn.closest(element, "form");
 			if (form) {
