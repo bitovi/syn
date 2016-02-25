@@ -18,10 +18,10 @@
     "jquery": ">=2.0.0",
     "jshint": "^2.8.0",
     "requirejs": "2.1.X",
-    "steal": "0.7.X",
+    "steal": "0.14.1",
     "steal-qunit": "0.0.2",
-    "steal-tools": "0.7.X",
-    "testee": "0.1.8",
+    "steal-tools": "0.14.0",
+    "testee": "0.2.5",
     "tmp": "0.0.23"
   },
   "system": {
