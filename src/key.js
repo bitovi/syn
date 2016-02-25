@@ -5,6 +5,7 @@ require('./browsers');
 
 var h = syn.helpers,
 
+	formElExp = /input|textarea/i,
 	// gets the selection of an input or textarea
 	getSelection = function (el) {
 		var real, r, start;
@@ -92,7 +93,6 @@ var h = syn.helpers,
 		}
 		return res;
 	},
-	formElExp = /input|textarea/i,
 	textProperty = (function(){
 		var el = document.createElement("span");
 		return el.textContent != null ? 'textContent' : 'innerText';
