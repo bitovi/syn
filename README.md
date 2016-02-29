@@ -27,11 +27,11 @@ or bower:
 
     > bower install syn
 
-Or by downloading it [here](https://github.com/bitovi/syn/archive/master.zip).
+Or by downloading it [here](https://github.com/bitovi/syn/archive/v0.2.0.zip).
 
 Inside the download, npm package and bower package, there are the following folders:
 
- - `dist/syn.js` - A standalone file that can be used with a `<script>` tag.
+ - `dist/global/syn.js` - A standalone file that can be used with a `<script>` tag.
  - `dist/amd` - An AMD build that can be used with [RequireJS](http://requirejs.org) and other AMD loaders.
  - `dist/cjs` - A CommonJS build that is used by node or browserify.
  - `src` - The source files that can be loaded by [StealJS](http://stealjs.com), SystemJS, and eventually JSPM.
