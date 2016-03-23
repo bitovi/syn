@@ -167,7 +167,7 @@ QUnit.test("page down, page up, home, end", function () {
 		"<div id='scrolldiv' style='width:100px;height:200px;overflow-y:scroll;' tabindex='0'>" +
 		"<div id='innerdiv' style='height:1000px;'><a href='javascript://'>Scroll on me</a></div></div>";
 
-	//reset the scroll top	
+	//reset the scroll top
 	st.g("scrolldiv")
 		.scrollTop = 0;
 
@@ -531,6 +531,23 @@ QUnit.test("typing in a contenteditable works", function () {
 		var editable = st.g("editable");
 		var text = editable.textContent || editable.innerText;
 		equal(text, "hello world", "Content editable was edited");
+		start();
+	});
+});
+
+QUnit.test("typing in an input type=number works", function() {
+	stop();
+
+	st.g("qunit-fixture").innerHTML =
+		"<form id='outer'>" +
+			"<div id='inner'>" +
+				"<input type='number' pattern='[0-9]*' id='number' value='' />" +
+			"</div>" +
+		"</form>";
+
+	syn.type("number", 123, function() {
+		var val = st.g("number").value;
+		equal(val, "123", "number input was edited");
 		start();
 	});
 });

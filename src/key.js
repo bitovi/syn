@@ -6,12 +6,25 @@ require('./browsers');
 var h = syn.helpers,
 
 	formElExp = /input|textarea/i,
+	// selection is not supported by some inputs and would throw in Chrome.
+	supportsSelection = function(el) {
+		var result;
+
+		try {
+			result = el.selectionStart !== undefined;
+		}
+		catch(e) {
+			result = false;
+		}
+
+		return result;
+	},
 	// gets the selection of an input or textarea
 	getSelection = function (el) {
 		var real, r, start;
 
 		// use selectionStart if we can
-		if (el.selectionStart !== undefined) {
+		if (supportsSelection(el)) {
 			// this is for opera, so we don't have to focus to type how we think we would
 			if (document.activeElement && document.activeElement !== el &&
 				el.selectionStart === el.selectionEnd && el.selectionStart === 0) {
@@ -291,7 +304,7 @@ h.extend(syn, {
 
 	// selects text on an element
 	selectText: function (el, start, end) {
-		if (el.setSelectionRange) {
+		if (supportsSelection(el)) {
 			if (!end) {
 				syn.__tryFocus(el);
 				el.setSelectionRange(start, start);
@@ -552,14 +565,14 @@ h.extend(syn.key, {
 				syn.trigger(this, "click", {});
 			}
 		},
-		// 
+		//
 		// Gets all focusable elements.  If the element (this)
 		// doesn't have a tabindex, finds the next element after.
-		// If the element (this) has a tabindex finds the element 
+		// If the element (this) has a tabindex finds the element
 		// with the next higher tabindex OR the element with the same
 		// tabindex after it in the document.
 		// @return the next element
-		// 
+		//
 		'\t': function (options, scope) {
 			// focusable elements
 			var focusEls = getFocusable(this),
@@ -745,7 +758,7 @@ var convert = {
 };
 
 /**
- * 
+ *
  */
 h.extend(syn.init.prototype, {
 	/**
