@@ -8,3 +8,4 @@ Gruntfile.js
 .jshintrc
 .travis.yml
 .editorconfig
+!dist/
