@@ -611,6 +611,8 @@ extend(syn, {
 		tabKeyTabs: false,
 		keypressOnAnchorClicks: false,
 		optionClickBubbles: false,
+		pointerEvents: false,
+		touchEvents: false,		
 		ready: 0
 	},
 	/**
@@ -805,10 +807,24 @@ extend(syn.init.prototype, {
 	 */
 	"_click": function (element, options, callback, force) {
 		syn.helpers.addOffset(options, element);
+		if(syn.support.pointerEvents){
+			syn.trigger(element, 'pointerdown', options);
+		}
+		if(syn.support.touchEvents){
+			syn.trigger(element, 'touchstart', options);				
+		}
+		
 		syn.trigger(element, "mousedown", options);
 
 		//timeout is b/c IE is stupid and won't call focus handlers
 		schedule(function () {
+			if(syn.support.pointerEvents){
+				syn.trigger(element, 'pointerup', options);
+			}
+			if(syn.support.touchEvents){
+				syn.trigger(element, 'touchend', options);				
+			}	
+			
 			syn.trigger(element, "mouseup", options);
 			if (!syn.support.mouseDownUpClicks || force) {
 				syn.trigger(element, "click", options);

@@ -68,6 +68,9 @@ require('./mouse');
 	
 	document.documentElement.removeChild(div);
 	
+	syn.support.pointerEvents = (syn.eventSupported('pointerdown'));
+	syn.support.touchEvents = (syn.eventSupported('touchstart'));	
+	
 	//check stuff
 	syn.support.ready++;
 }());
