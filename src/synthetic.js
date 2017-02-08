@@ -591,9 +591,11 @@ extend(syn, {
 	 *   - `linkHrefJS` - An achor's href JavaScript is run.
 	 *   - `mouseDownUpClicks` - A mousedown followed by mouseup creates a click event.
 	 *   - `mouseupSubmits` - a mouseup on a form button submits the form.
+	 *	 - `pointerEvents` - does this browser natively support pointer events (for newer browsers).
 	 *   - `radioClickChanges` - clicking a radio button changes the radio.
 	 *   - `tabKeyTabs` - A tab key changes tabs.
 	 *   - `textareaCarriage` - a new line in a textarea creates a carriage return.
+	 *	 - `touchEvents` - does this browser natively support touch events (for older mobile browsers, mostly).
 	 *
 	 *
 	 */
