@@ -68,6 +68,10 @@ require('./mouse');
 	
 	document.documentElement.removeChild(div);
 	
+	// register whether or not the current browser supports either pointer or touch events
+	syn.support.pointerEvents = (syn.eventSupported('pointerdown'));
+	syn.support.touchEvents = (syn.eventSupported('touchstart'));	
+	
 	//check stuff
 	syn.support.ready++;
 }());

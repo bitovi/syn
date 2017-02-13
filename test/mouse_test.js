@@ -263,6 +263,64 @@ QUnit.test("Click! Event Order", syn.skipFocusTests ? 3 : 4, function () {
 
 });
 
+QUnit.test("Click! Pointer Event Order", syn.support.pointerEvents ? 3 : 0, function () {
+	var order = 0;
+	st.g("qunit-fixture").innerHTML = "<input id='focusme'/>";
+
+	if(syn.support.pointerEvents){ // skips test on browsers that do not support pointer events
+
+		st.binder("focusme", "pointerdown", function () {
+			QUnit.equal(++order, 1, "pointerdown");
+		});
+
+		st.binder("focusme", "pointerup", function () {
+			QUnit.equal(++order, 2, "pointerup");
+		});
+
+		st.binder("focusme", "click", function (ev) {
+			QUnit.equal(++order, 3, "click");
+			if (ev.preventDefault) {
+				ev.preventDefault();
+			}
+			ev.returnValue = false;
+		});
+	}
+		
+	stop();
+	syn.click("focusme", {}, function () {
+		QUnit.start();
+	});
+});
+
+QUnit.test("Click! Touch Event Order", syn.support.touchEvents ? 3 : 0, function () {
+	var order = 0;
+	st.g("qunit-fixture").innerHTML = "<input id='focusme'/>";
+
+	if(syn.support.touchEvents){ // skips test on browsers that do not support touch events
+
+		st.binder("focusme", "touchstart", function () {
+			QUnit.equal(++order, 1, "touchstart");
+		});
+
+		st.binder("focusme", "touchend", function () {
+			QUnit.equal(++order, 2, "touchend");
+		});
+
+		st.binder("focusme", "click", function (ev) {
+			QUnit.equal(++order, 3, "click");
+			if (ev.preventDefault) {
+				ev.preventDefault();
+			}
+			ev.returnValue = false;
+		});
+	}
+		
+	stop();
+	syn.click("focusme", {}, function () {
+		QUnit.start();
+	});
+});
+
 QUnit.test("Click Anchor Runs HREF JavaScript", function () {
 	stop();
 	syn.trigger(st.g("jsHref"), "click", {});

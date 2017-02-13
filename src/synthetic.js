@@ -591,9 +591,11 @@ extend(syn, {
 	 *   - `linkHrefJS` - An achor's href JavaScript is run.
 	 *   - `mouseDownUpClicks` - A mousedown followed by mouseup creates a click event.
 	 *   - `mouseupSubmits` - a mouseup on a form button submits the form.
+	 *	 - `pointerEvents` - does this browser natively support pointer events (for newer browsers).
 	 *   - `radioClickChanges` - clicking a radio button changes the radio.
 	 *   - `tabKeyTabs` - A tab key changes tabs.
 	 *   - `textareaCarriage` - a new line in a textarea creates a carriage return.
+	 *	 - `touchEvents` - does this browser natively support touch events (for older mobile browsers, mostly).
 	 *
 	 *
 	 */
@@ -611,6 +613,8 @@ extend(syn, {
 		tabKeyTabs: false,
 		keypressOnAnchorClicks: false,
 		optionClickBubbles: false,
+		pointerEvents: false,
+		touchEvents: false,		
 		ready: 0
 	},
 	/**
@@ -805,10 +809,24 @@ extend(syn.init.prototype, {
 	 */
 	"_click": function (element, options, callback, force) {
 		syn.helpers.addOffset(options, element);
+		if(syn.support.pointerEvents){
+			syn.trigger(element, 'pointerdown', options);
+		}
+		if(syn.support.touchEvents){
+			syn.trigger(element, 'touchstart', options);				
+		}
+		
 		syn.trigger(element, "mousedown", options);
 
 		//timeout is b/c IE is stupid and won't call focus handlers
 		schedule(function () {
+			if(syn.support.pointerEvents){
+				syn.trigger(element, 'pointerup', options);
+			}
+			if(syn.support.touchEvents){
+				syn.trigger(element, 'touchend', options);				
+			}	
+			
 			syn.trigger(element, "mouseup", options);
 			if (!syn.support.mouseDownUpClicks || force) {
 				syn.trigger(element, "click", options);
