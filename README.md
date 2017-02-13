@@ -79,7 +79,7 @@ properly configured, you should be able to write:
 
 If you don't use a module loader, you can simply add the following to your page:
 
-   <script src='PATH/TO/dist/syn.js'></script>
+    <script src='PATH/TO/dist/syn.js'></script>
 
 _PATH/TO_ should be the path to the installed syn folder.
 
