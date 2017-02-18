@@ -11,7 +11,7 @@ var h = syn.helpers,
 		var result;
 
 		try {
-			result = el.selectionStart !== undefined;
+			result = ((el.selectionStart !== undefined) && (el.selectionStart !== null));
 		}
 		catch(e) {
 			result = false;
