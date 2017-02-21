@@ -19,6 +19,8 @@ Syn.click( 'hello' )
 
 ## Install
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/bitovi/syn.svg)](https://greenkeeper.io/)
+
 Install Syn via the command line with npm:
 
     > npm install syn
