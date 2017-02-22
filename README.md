@@ -1,20 +1,20 @@
 [![Build Status](https://travis-ci.org/bitovi/syn.png?branch=master)](https://travis-ci.org/bitovi/syn.png?branch=master)
-
+[![Greenkeeper badge](https://badges.greenkeeper.io/bitovi/syn.svg)](https://greenkeeper.io/)
 
 [![Join the chat at https://gitter.im/bitovi/syn](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bitovi/syn?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 For questions or discussion checkout our [forums](http://forums.donejs.com/c/testing).
 
-> If you are looking for the Synergy project, you can find it [here](https://www.npmjs.com/~postquagga). Thanks 
+> If you are looking for the Synergy project, you can find it [here](https://www.npmjs.com/~postquagga). Thanks
 > [postquagga](https://www.npmjs.com/~postquagga) for letting us use the name!
 
-Syn lets you simulate user behavior like typing, clicking, moving, and 
+Syn lets you simulate user behavior like typing, clicking, moving, and
 dragging exactly how a real user would perform those actions.
 
 ```js
 Syn.click( 'hello' )
    .type( 'Hello World' )
-   .drag( 'trash' ); 
+   .drag( 'trash' );
 ```
 
 ## Install
@@ -22,7 +22,7 @@ Syn.click( 'hello' )
 Install Syn via the command line with npm:
 
     > npm install syn
-    
+
 or bower:
 
     > bower install syn
@@ -49,7 +49,7 @@ Assuming you installed with `npm`, simply `require("syn")` like the following:
 
 ### StealJS
 
-If you installed via NPM or Bower and are using the [npm](http://stealjs.com/docs/npm.html) 
+If you installed via NPM or Bower and are using the [npm](http://stealjs.com/docs/npm.html)
 or [bower](http://stealjs.com/docs/bower.html) module for configuration,
 you can use import, require, or define to load the syn module without any configuration.
 
@@ -68,7 +68,7 @@ Add the following package configuration:
         }]
     });
 
-_PATH/TO_ should be the path from your baseUrl to the location of the syn folder.  Once this is 
+_PATH/TO_ should be the path from your baseUrl to the location of the syn folder.  Once this is
 properly configured, you should be able to write:
 
     define(['syn'], function(syn){
@@ -97,7 +97,7 @@ _PATH/TO_ should be the path to the installed syn folder.
 ### syn.key( element, key [, callback] )
 
 ### syn.delay( time=600 )
- 
+
 ### syn.drag( element, optionsOrTarget [, callback])
 
 
