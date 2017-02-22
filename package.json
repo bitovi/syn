@@ -24,7 +24,7 @@
     "testee": "^0.3.1",
     "tmp": "^0.0.31"
   },
-  "system": {
+  "steal": {
     "directories": {
       "lib": "src"
     },
