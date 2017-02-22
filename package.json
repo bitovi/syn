@@ -17,12 +17,12 @@
   "devDependencies": {
     "jquery": ">=2.0.0",
     "jshint": "^2.8.0",
-    "requirejs": "~2.3.3",
-    "steal": "1.2.5",
-    "steal-qunit": "1.0.1",
-    "steal-tools": "1.1.2",
-    "testee": "0.3.1",
-    "tmp": "0.0.31"
+    "requirejs": "^2.3.3",
+    "steal": "^1.2.5",
+    "steal-qunit": "^1.0.1",
+    "steal-tools": "^1.1.2",
+    "testee": "^0.3.1",
+    "tmp": "^0.0.31"
   },
   "system": {
     "directories": {
