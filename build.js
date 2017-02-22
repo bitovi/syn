@@ -1,7 +1,7 @@
 var stealTools = require("steal-tools");
 
 stealTools.export({
-	system: {
+	steal: {
 		config: __dirname+"/package.json!npm"
 	},
 	outputs: {
@@ -10,9 +10,9 @@ stealTools.export({
     "+cjs": {}
 	}
 }).catch(function(e){
-	
+
 	setTimeout(function(){
 		throw e;
 	},1);
-	
+
 });
