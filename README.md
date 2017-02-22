@@ -104,40 +104,9 @@ _PATH/TO_ should be the path to the installed syn folder.
 
 ## Contributing
 
-To fix a bug, fork and clone `bitovi/syn` to your computer. Next, install its npm dependencies with:
-
-    npm install
-    
-Please add a test within the _tests_ folder and make your changes to _syn.js_ source files in the _src_ 
-folder. For a quick check that everything is working, open _test/test.html_.
-
-To make sure all the distributables are working, run:
-
-    npm test
-  
-## Code Organization
-
-All source files are in the _src_ folder.  Here's what each files does:
-
- - _browsers.js_ - Contains the output of _utils/recorder.html_ data.
- - _drag.js_ - Drag / drop utility.
- - _key.js_ - Typing and key event simulation.
- - _key.support.js_ - Feature detection of key event behavior.
- - _mouse.js_ - Click and mouse event simulation.
- - _mouse.support.js_ - Feature detection of mouse event behavior.
- - _syn.js_ - Main entrypoint that loads all other modules.
- - _synthtic.js_ - Creates the `syn` object and adds helpers used by other modules.
- - _typeable.js_ - Used to test if an element can be typed into.
-
-Tests are in the _test_ folder.
-
- _utils/recorder.html_ is used to record behaviors of the browser that can not be feature detected.  Those
-behaviors are added to _src/browser.js_.
-
+Check out the [contribution guide](CONTRIBUTING.md).
 
 ## Relevant Links
 
-1. [http://bitovi.com/blog/2010/07/syn-a-standalone-synthetic-event-library.html](http://bitovi.com/blog/2010/07/syn-a-standalone-synthetic-event-library.html)
-2. Full Syn docs coming soon!
-
-
+1. Blog post introducing [Syn — a Standalone Synthetic Event Library](https://www.bitovi.com/blog/syn-a-standalone-synthetic-event-library)
+2. [Gitter chat](https://gitter.im/bitovi/syn)
