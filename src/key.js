@@ -11,7 +11,7 @@ var h = syn.helpers,
 		var result;
 
 		try {
-			result = ((el.selectionStart !== undefined) && (el.selectionStart !== null));
+			result = el.selectionStart !== undefined && el.selectionStart !== null;
 		}
 		catch(e) {
 			result = false;
@@ -163,7 +163,7 @@ h.extend(syn, {
 	 * up        - moves the cursor up
 	 * down      - moves the cursor down
 	 * f1-12     - function buttons
-	 * shift, ctrl, alt - special keys
+	 * shift, ctrl, alt, meta - special keys
 	 * pause-break      - the pause button
 	 * scroll-lock      - locks scrolling
 	 * caps      - makes caps
@@ -192,6 +192,7 @@ h.extend(syn, {
 		'shift': 16,
 		'ctrl': 17,
 		'alt': 18,
+		'meta': 91,
 
 		//weird
 		'pause-break': 19,
@@ -411,7 +412,7 @@ h.extend(syn.key, {
 	},
 	//types of event keys
 	kinds: {
-		special: ["shift", 'ctrl', 'alt', 'caps'],
+		special: ["shift", 'ctrl', 'alt', 'meta', 'caps'],
 		specialChars: ["\b"],
 		navigation: ["page-up", 'page-down', 'end', 'home', 'left', 'up', 'right', 'down', 'insert', 'delete'],
 		'function': ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12']
@@ -670,6 +671,12 @@ h.extend(syn.key, {
 			return null;
 		},
 		'ctrl': function () {
+			return null;
+		},
+		'alt': function () {
+			return null;
+		},
+		'meta': function () {
 			return null;
 		}
 	}

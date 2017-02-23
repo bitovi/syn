@@ -454,6 +454,84 @@ QUnit.test("shift characters", function () {
 	});
 });
 
+QUnit.test("ctrl keycodes", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.ctrlKey;
+		ok(ev.ctrlKey, "Ctrl key functioning. Expected: " + ev.which + ", Actual: "+ev.keyCode);
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.ctrlKey;
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	syn.type('key', "[ctrl]", function () {
+		ok(keyIsDown, "ctrl modifier key pressed successfully");
+
+		syn.type('key', "[ctrl-up]", function () {
+			ok(!keyIsUp, "ctrl modifier key released successfully");
+			start();
+		});
+	});
+});
+
+QUnit.test("alt keycodes", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.altKey;
+		ok(ev.altKey, "Alt key functioning. Expected: " + ev.which + ", Actual: "+ev.keyCode);
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.altKey;
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	syn.type('key', "[alt]", function () {
+		ok(keyIsDown, "alt modifier key pressed successfully");
+
+		syn.type('key', "[alt-up]", function () {
+			ok(!keyIsUp, "alt modifier key released successfully");
+			start();
+		});
+	});
+});
+
+QUnit.test("meta keycodes", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.metaKey;
+		ok(ev.metaKey, "Meta key functioning. Expected: " + ev.which + ", Actual: "+ev.keyCode);
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.metaKey;
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	syn.type('key', "[meta]", function () {
+		ok(keyIsDown, "meta modifier key pressed successfully");
+
+		syn.type('key', "[meta-up]", function () {
+			ok(!keyIsUp, "meta modifier key released successfully");
+			start();
+		});
+	});
+});
+
 test("number key codes", 2, function () {
 	stop();
 

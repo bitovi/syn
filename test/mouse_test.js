@@ -141,7 +141,15 @@ QUnit.test("Select is changed on click", function () {
 		select2 = 0;
 
 	st.g("qunit-fixture")
-		.innerHTML = '<select id="s1"><option id="s1o1">One</option><option id="s1o2">Two</option></select><select id="s2"><option id="s2o1">One</option><option id="s2o2">Two</option></select>';
+		.innerHTML = 
+			'<select id="s1">'+
+				'<option id="s1o1">One</option>'+
+				'<option id="s1o2">Two</option>'+
+			'</select>'+
+			'<select id="s2">'+
+				'<option id="s2o1">One</option>'+
+				'<option id="s2o2">Two</option>'+
+			'</select>';
 
 	st.bind(st.g("s1"), "change", function (ev) {
 		select1++;
@@ -265,19 +273,19 @@ QUnit.test("Click! Event Order", syn.skipFocusTests ? 3 : 4, function () {
 
 QUnit.test("Click! Pointer Event Order", syn.support.pointerEvents ? 3 : 0, function () {
 	var order = 0;
-	st.g("qunit-fixture").innerHTML = "<input id='focusme'/>";
+	st.g("qunit-fixture").innerHTML = "<input id='pointerTarget'/>";
 
 	if(syn.support.pointerEvents){ // skips test on browsers that do not support pointer events
 
-		st.binder("focusme", "pointerdown", function () {
+		st.binder("pointerTarget", "pointerdown", function () {
 			QUnit.equal(++order, 1, "pointerdown");
 		});
 
-		st.binder("focusme", "pointerup", function () {
+		st.binder("pointerTarget", "pointerup", function () {
 			QUnit.equal(++order, 2, "pointerup");
 		});
 
-		st.binder("focusme", "click", function (ev) {
+		st.binder("pointerTarget", "click", function (ev) {
 			QUnit.equal(++order, 3, "click");
 			if (ev.preventDefault) {
 				ev.preventDefault();
@@ -287,26 +295,26 @@ QUnit.test("Click! Pointer Event Order", syn.support.pointerEvents ? 3 : 0, func
 	}
 		
 	stop();
-	syn.click("focusme", {}, function () {
+	syn.click("pointerTarget", {}, function () {
 		QUnit.start();
 	});
 });
 
 QUnit.test("Click! Touch Event Order", syn.support.touchEvents ? 3 : 0, function () {
 	var order = 0;
-	st.g("qunit-fixture").innerHTML = "<input id='focusme'/>";
+	st.g("qunit-fixture").innerHTML = "<input id='touchTarget'/>";
 
 	if(syn.support.touchEvents){ // skips test on browsers that do not support touch events
 
-		st.binder("focusme", "touchstart", function () {
+		st.binder("touchTarget", "touchstart", function () {
 			QUnit.equal(++order, 1, "touchstart");
 		});
 
-		st.binder("focusme", "touchend", function () {
+		st.binder("touchTarget", "touchend", function () {
 			QUnit.equal(++order, 2, "touchend");
 		});
 
-		st.binder("focusme", "click", function (ev) {
+		st.binder("touchTarget", "click", function (ev) {
 			QUnit.equal(++order, 3, "click");
 			if (ev.preventDefault) {
 				ev.preventDefault();
@@ -316,7 +324,7 @@ QUnit.test("Click! Touch Event Order", syn.support.touchEvents ? 3 : 0, function
 	}
 		
 	stop();
-	syn.click("focusme", {}, function () {
+	syn.click("touchTarget", {}, function () {
 		QUnit.start();
 	});
 });
