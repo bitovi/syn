@@ -188,7 +188,7 @@ h.extend(syn, {
 		//enter
 		'\r': 13,
 
-		//special
+		//modifier keys
 		'shift': 16,
 		'ctrl': 17,
 		'alt': 18,
