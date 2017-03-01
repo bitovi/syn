@@ -63,12 +63,20 @@ var elementFromPoint = function (point, element) {
 		var el = elementFromPoint(point, element);
 		if (last !== el && el && last) {
 			var options = syn.helpers.extend({}, point);
+
+			// QUESTION: Should we also be sending a pointerleave event?
 			options.relatedTarget = el;
+			if(syn.support.pointerEvents){syn.trigger(last, 'pointerout', options);}
 			syn.trigger(last, "mouseout", options);
+
+			// QUESTION: Should we also be sending a pointerenter event?
 			options.relatedTarget = last;
+			if(syn.support.pointerEvents){syn.trigger(el, 'pointerover', options);}
 			syn.trigger(el, "mouseover", options);
 		}
 
+		if(syn.support.pointerEvents){syn.trigger(el || element, "pointermove", point);}
+		if(syn.support.touchEvents){syn.trigger(el || element, "touchmove", point);}
 		syn.trigger(el || element, "mousemove", point);
 		return el;
 	},
@@ -117,8 +125,12 @@ var elementFromPoint = function (point, element) {
 		move();
 	},
 	startDrag = function (start, end, duration, element, callback) {
+		if(syn.support.pointerEvents){createEventAtPoint("pointerdown", start, element);}
+		if(syn.support.touchEvents){createEventAtPoint("touchstart", start, element);}
 		createEventAtPoint("mousedown", start, element);
 		startMove(start, end, duration, element, function () {
+			if(syn.support.pointerEvents){createEventAtPoint("pointerup", end, element);}
+			if(syn.support.touchEvents){createEventAtPoint("touchend", end, element);}
 			createEventAtPoint("mouseup", end, element);
 			callback();
 		});

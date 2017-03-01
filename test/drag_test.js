@@ -4,6 +4,14 @@ var QUnit = require("steal-qunit");
 var $ = require("jquery");
 require("syn/drag");
 
+// TESTS THAT WE SHOULD REALLY ADD TO THIS.
+// 1a. Tests that go Up
+// 1b. Tests that move Down, 
+// 1c. Tests that move Left (currently it only goes right)
+// 2a. Drag (Not just move) for PointerEvents
+// 2b. Drag (Not just move) for TouchEvents
+
+
 QUnit.module("syn/drag");
 
 // test("dragging off the page", function(){
@@ -45,7 +53,7 @@ QUnit.module("syn/drag");
 // })
 // })
 
-QUnit.test("move", function () {
+QUnit.test("Move Mouse2", function () {
 	var div = $("<div id='wrap'>" +
 		"<div id='left'></div>" +
 		"<div id='right'></div>" +
@@ -105,8 +113,7 @@ QUnit.test("move", function () {
 			targets.push(ev.target);
 		}
 	};
-	$(document.documentElement)
-		.bind('mousemove', move);
+	$(document.documentElement).bind('mousemove', move);
 
 	stop();
 	syn.move("wrap", {
@@ -123,11 +130,10 @@ QUnit.test("move", function () {
 
 		equal(clientX, 199);
 		equal(clientY, 50);
-		$(document.documentElement)
-			.unbind('mousemove', move);
+		$(document.documentElement).unbind('mousemove', move);
 			
 		for (var i = 0; i < els.length; i++) {
-			equal(targets[i], els[i], "target is right");
+			equal(targets[i], els[i], "mouse is moving right");
 		}
 
 		div.remove();
@@ -135,7 +141,191 @@ QUnit.test("move", function () {
 	});
 });
 
-QUnit.test("drag - allow to.pageX and from.pageX to 0", 1, function () {
+QUnit.test("Move Pointer", function () {
+	
+	// skip test if pointers are not supported
+	if(!syn.eventSupported('pointerdown')){ok(true, "Browser does not support pointer events."); return;} 
+	
+	var div = $("<div id='wrap'>" +
+		"<div id='left'></div>" +
+		"<div id='right'></div>" +
+		"</div>");
+
+	div.appendTo(document.body);
+	var basicCss = {
+		width: "90px",
+		height: "100px",
+		position: "absolute",
+		border: "solid 1px black"
+	};
+	$('#wrap')
+		.css({
+			position: "absolute",
+			top: "0px",
+			left: "0px",
+			width: "200px",
+			height: "100px",
+			backgroundColor: "yellow"
+		});
+	$("#left")
+		.css(basicCss)
+		.css({
+			top: "0px",
+			left: "10px",
+			backgroundColor: "green"
+		});
+	$("#right")
+		.css(basicCss)
+		.css({
+			top: "0px",
+			left: "100px",
+			backgroundColor: "blue"
+		});
+
+	var clientX = -1,
+		clientY = -1,
+		els = [$('#wrap')[0], $('#left')[0], $('#right')[0], $('#wrap')[0]],
+		targets = [];
+
+	var move = function (ev) {
+		if (ev.clientX === 0 && ev.clientY === 0) {
+			// this happens once per run in Chrome only
+			return;
+		}
+		if (ev.clientX < clientX) {
+			ok(false, "pointer isn't moving right");
+		}
+		clientX = ev.clientX;
+		if (ev.clientY < clientY) {
+			console.log('y', ev.clientY, clientY);
+			ok(false, "pointer isn't moving right");
+		}
+		clientY = ev.clientY;
+		if (!targets.length || targets[targets.length - 1] !== ev.target) {
+			targets.push(ev.target);
+		}
+	};
+	$(document.documentElement).bind('pointermove', move);
+
+	stop();
+	syn.move("wrap", {
+		from: {
+			pageX: 2,
+			pageY: 50
+		},
+		to: {
+			pageX: 199,
+			pageY: 50
+		},
+		duration: 1000
+	}, function () {
+
+		equal(clientX, 199);
+		equal(clientY, 50);
+		$(document.documentElement).unbind('pointermove', move);
+			
+		for (var i = 0; i < els.length; i++) {
+			equal(targets[i], els[i], "pointer is moving right");
+		}
+
+		div.remove();
+		start();
+	});
+});
+
+QUnit.test("Move Touch", function () {
+	
+	// skip test if touch is not supported
+	if(!syn.eventSupported('touchstart')){ok(true, "Browser does not support touch events."); return;} 
+	
+	var div = $("<div id='wrap'>" +
+		"<div id='left'></div>" +
+		"<div id='right'></div>" +
+		"</div>");
+
+	div.appendTo(document.body);
+	var basicCss = {
+		width: "90px",
+		height: "100px",
+		position: "absolute",
+		border: "solid 1px black"
+	};
+	$('#wrap')
+		.css({
+			position: "absolute",
+			top: "0px",
+			left: "0px",
+			width: "200px",
+			height: "100px",
+			backgroundColor: "yellow"
+		});
+	$("#left")
+		.css(basicCss)
+		.css({
+			top: "0px",
+			left: "10px",
+			backgroundColor: "green"
+		});
+	$("#right")
+		.css(basicCss)
+		.css({
+			top: "0px",
+			left: "100px",
+			backgroundColor: "blue"
+		});
+
+	var clientX = -1,
+		clientY = -1,
+		els = [$('#wrap')[0], $('#left')[0], $('#right')[0], $('#wrap')[0]],
+		targets = [];
+
+	var move = function (ev) {
+		if (ev.clientX === 0 && ev.clientY === 0) {
+			// this happens once per run in Chrome only
+			return;
+		}
+		if (ev.clientX < clientX) {
+			ok(false, "touch isn't moving right");
+		}
+		clientX = ev.clientX;
+		if (ev.clientY < clientY) {
+			console.log('y', ev.clientY, clientY);
+			ok(false, "touch isn't moving right");
+		}
+		clientY = ev.clientY;
+		if (!targets.length || targets[targets.length - 1] !== ev.target) {
+			targets.push(ev.target);
+		}
+	};
+	$(document.documentElement).bind('touchmove', move);
+
+	stop();
+	syn.move("wrap", {
+		from: {
+			pageX: 2,
+			pageY: 50
+		},
+		to: {
+			pageX: 199,
+			pageY: 50
+		},
+		duration: 1000
+	}, function () {
+
+		equal(clientX, 199);
+		equal(clientY, 50);
+		$(document.documentElement).unbind('touchmove', move);
+			
+		for (var i = 0; i < els.length; i++) {
+			equal(targets[i], els[i], "touch is moving right");
+		}
+
+		div.remove();
+		start();
+	});
+});
+
+QUnit.test("Drag Mouse - allow to.pageX and from.pageX to 0", 1, function () {
 	var $drag = $("<div id='drag'></div>");
 
 	$drag
