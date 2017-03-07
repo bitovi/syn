@@ -392,6 +392,7 @@ QUnit.test("Type left and right", function () {
 	});
 
 });
+
 QUnit.test("Type left and delete", function () {
 	stop();
 	syn.type('key', "123[left][delete]", function () {
@@ -401,6 +402,7 @@ QUnit.test("Type left and delete", function () {
 	});
 
 });
+
 QUnit.test("Typing Shift", function () {
 	stop();
 
@@ -413,6 +415,7 @@ QUnit.test("Typing Shift", function () {
 		start();
 	});
 });
+
 QUnit.test("Typing Shift then clicking", function () {
 	stop();
 
@@ -438,7 +441,7 @@ QUnit.test("Typing Shift Left and Right", function () {
 		syn.type('key', "[left][left][shift][right][right]\b[shift-up]", function () {
 
 			equal(st.g('key')
-				.value, "015", "shift right works");
+			.value, "015", "shift right works");
 			start();
 		});
 
@@ -453,6 +456,203 @@ QUnit.test("shift characters", function () {
 		start();
 	});
 });
+
+
+QUnit.test("shift keycodes", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.shiftKey;
+		ok(ev.shiftKey, "Shift key functioning. Expected: " + ev.which + ", Actual: "+ev.keyCode);
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.shiftKey;
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	syn.type('key', "[shift]", function () {
+		ok(keyIsDown, "shift modifier key pressed successfully");
+
+		syn.type('key', "[shift-up]", function () {
+			ok(!keyIsUp, "shift modifier key released successfully");
+			start();
+		});
+	});
+});
+
+QUnit.test("shift practical test", function () {
+	stop();
+	
+	syn.type('key', "hello [shift]world[shift-up]", function () {
+		// TODO: Fix this!
+		//equal(key.value, "hello WORLD", "uppercasing successful while using shift");
+		equal(true, true, "Test was not run due to known Syn issue : https://github.com/bitovi/syn/issues/97");
+		start();
+	});
+});
+
+QUnit.test("ctrl keycodes", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.ctrlKey;
+		ok(ev.ctrlKey, "Ctrl key functioning. Expected: " + ev.which + ", Actual: "+ev.keyCode);
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.ctrlKey;
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	syn.type('key', "[ctrl]", function () {
+		ok(keyIsDown, "ctrl modifier key pressed successfully");
+
+		syn.type('key', "[ctrl-up]", function () {
+			ok(!keyIsUp, "ctrl modifier key released successfully");
+			start();
+		});
+	});
+});
+
+QUnit.test("ctrl practical test", function () {
+	stop();
+	
+	syn.type('key', "Hello World", function () {
+		ok(key.value, "Hello World");
+		equal(key.selectionStart, 11, "pre-selectAll has correct start of 11");
+		equal(key.selectionEnd, 11, "pre-selectAll has correct end of 11");
+
+		syn.type('key', "[ctrl]a[ctrl-up]", function () {
+			
+			equal(key.selectionStart, 0, "post-selectAll has correct start of 0");
+			equal(key.selectionEnd, 11, "post-selectAll has correct end of 11");
+			start();
+		});
+	});
+});
+
+QUnit.test("alt keycodes", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.altKey;
+		ok(ev.altKey, "Alt key functioning. Expected: " + ev.which + ", Actual: "+ev.keyCode);
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.altKey;
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	syn.type('key', "[alt]", function () {
+		ok(keyIsDown, "alt modifier key pressed successfully");
+
+		syn.type('key', "[alt-up]", function () {
+			ok(!keyIsUp, "alt modifier key released successfully");
+			start();
+		});
+	});
+});
+
+QUnit.test("meta keycodes", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.metaKey;
+		ok(ev.metaKey, "Meta key functioning. Expected: " + ev.which + ", Actual: "+ev.keyCode);
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.metaKey;
+		ok(ev.which === ev.keyCode, "which is normalized");
+	});
+	
+	syn.type('key', "[meta]", function () {
+		ok(keyIsDown, "meta modifier key pressed successfully");
+
+		syn.type('key', "[meta-up]", function () {
+			ok(!keyIsUp, "meta modifier key released successfully");
+			start();
+		});
+	});
+});
+
+// INSERT TEST disabled because of https://github.com/bitovi/syn/issues/131
+
+//QUnit.test("insert keycodes", function () {
+	//stop();
+
+	//st.binder("key", "keydown", function (ev) {
+	//	ok(ev.keyCode === 45, "Received expected insert keycode");
+	//	ok(ev.which === ev.keyCode, "which is normalized");
+	//	start();
+	//});
+
+	//syn.type('key', "[insert]", function () {});
+//});
+
+// INSERT TEST disabled because of https://github.com/bitovi/syn/issues/131
+
+//QUnit.test("insert practical test", function () {
+//	stop();
+	
+//	syn.type('key', "Hello World", function () {
+//		equal(key.value, "Hello World", "Verified initial state");
+//		selectText(key, 6, 6);
+
+		// TODO: this actually hangs the test. Should I be using something like insert-up ?
+		//syn.type('key', "[insert]Universe[insert-up]", function () {
+			//equal(key.value, "Hello Universe", "Verified modified state");
+			
+//			start();
+		//});
+//	});
+//});
+
+QUnit.test("caps keycodes", function () {
+	stop();
+
+	st.binder("key", "keydown", function (ev) {
+		ok(ev.keyCode === 20, "Received expected caps keycode");
+		ok(ev.which === ev.keyCode, "which is normalized");
+		start();
+	});
+
+	syn.type('key', "[caps]", function () {});
+});
+
+
+// CAPS TEST disabled because of https://github.com/bitovi/syn/issues/132
+
+//QUnit.test("caps practical test", function () {
+//	stop();
+	
+//	syn.type('key', "Hello", function () {
+//		equal(key.value, "Hello", "Verified initial state");
+
+		// TODO: this actually hangs the test. Should I be using something like insert-up ?
+		//syn.type('key', "[caps] universe[caps]", function () {
+		//	equal(key.value, "Hello UNIVERSE", "Verified modified state");
+			
+		//	start();
+		//});
+	//});
+//});
+
+
 
 test("number key codes", 2, function () {
 	stop();
