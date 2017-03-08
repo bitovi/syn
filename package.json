@@ -4,7 +4,7 @@
   "main": "dist/cjs/syn.js",
   "scripts": {
     "preversion": "npm test && npm run build",
-    "postversion": "git push --tags && git push",
+    "postpublish": "git push --tags && git checkout master && git branch -D release && git push",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
