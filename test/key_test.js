@@ -388,7 +388,9 @@ QUnit.test("Type left and right", function () {
 				.value, "0123467a8", "right works");
 			start();
 		});
+
 	});
+
 });
 
 QUnit.test("Type left and delete", function () {
@@ -400,25 +402,6 @@ QUnit.test("Type left and delete", function () {
 	});
 
 });
-
-
-QUnit.test("Ensure backspace is called once", function () {
-	stop();
-	
-	st.g("qunit-fixture").innerHTML =
-		"<textarea rows=20 cols=50 id='textareasimple'>Some initial text</textarea>";
-	
-	var keycount = 0;
-	st.binder('textareasimple', 'keypress', function (ev) {
-		keycount++;
-	});
-	
-	syn.type('textareasimple', "\b", function () {
-		equal(keycount, 1, "Sending correct number of events");
-		start();
-	});
-});
-
 
 QUnit.test("Typing Shift", function () {
 	stop();

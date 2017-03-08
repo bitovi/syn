@@ -53,7 +53,7 @@ QUnit.module("syn/drag");
 // })
 // })
 
-QUnit.test("Move Mouse", function () {
+QUnit.test("Move Mouse2", function () {
 	var div = $("<div id='wrap'>" +
 		"<div id='left'></div>" +
 		"<div id='right'></div>" +
