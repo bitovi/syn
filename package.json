@@ -20,7 +20,7 @@
     "steal": "^1.2.5",
     "steal-qunit": "^1.0.1",
     "steal-tools": "^1.1.2",
-    "testee": "^0.2.5",
+    "testee": "^0.4.0",
     "tmp": "^0.0.31"
   },
   "steal": {
