@@ -63,12 +63,20 @@ var elementFromPoint = function (point, element) {
 		var el = elementFromPoint(point, element);
 		if (last !== el && el && last) {
 			var options = syn.helpers.extend({}, point);
+
+			// QUESTION: Should we also be sending a pointerleave event?
 			options.relatedTarget = el;
+			if(syn.support.pointerEvents){syn.trigger(last, 'pointerout', options);}
 			syn.trigger(last, "mouseout", options);
+
+			// QUESTION: Should we also be sending a pointerenter event?
 			options.relatedTarget = last;
+			if(syn.support.pointerEvents){syn.trigger(el, 'pointerover', options);}
 			syn.trigger(el, "mouseover", options);
 		}
 
+		if(syn.support.pointerEvents){syn.trigger(el || element, "pointermove", point);}
+		if(syn.support.touchEvents){syn.trigger(el || element, "touchmove", point);}
 		syn.trigger(el || element, "mousemove", point);
 		return el;
 	},
@@ -117,8 +125,12 @@ var elementFromPoint = function (point, element) {
 		move();
 	},
 	startDrag = function (start, end, duration, element, callback) {
+		if(syn.support.pointerEvents){createEventAtPoint("pointerdown", start, element);}
+		if(syn.support.touchEvents){createEventAtPoint("touchstart", start, element);}
 		createEventAtPoint("mousedown", start, element);
 		startMove(start, end, duration, element, function () {
+			if(syn.support.pointerEvents){createEventAtPoint("pointerup", end, element);}
+			if(syn.support.touchEvents){createEventAtPoint("touchend", end, element);}
 			createEventAtPoint("mouseup", end, element);
 			callback();
 		});
@@ -204,13 +216,13 @@ syn.helpers.extend(syn.init.prototype, {
 		 * @function syn.move move()
 	   * @parent mouse
 		 * @signature `syn.move(from, options, callback)`
-		 * Moves the cursor from one point to another.  
-		 * 
+		 * Moves the cursor from one point to another.
+		 *
 		 * ### Quick Example
-		 * 
+		 *
 		 * The following moves the cursor from (0,0) in
 		 * the window to (100,100) in 1 second.
-		 * 
+		 *
 		 *     syn.move(
 		 *          document.document,
 		 *          {
@@ -218,69 +230,69 @@ syn.helpers.extend(syn.init.prototype, {
 		 *            to: {clientX: 100, clientY: 100},
 		 *            duration: 1000
 		 *          })
-		 * 
+		 *
 		 * ## Options
-		 * 
+		 *
 		 * There are many ways to configure the endpoints of the move.
-		 * 
+		 *
 		 * ### PageX and PageY
-		 * 
+		 *
 		 * If you pass pageX or pageY, these will get converted
 		 * to client coordinates.
-		 * 
+		 *
 		 *     syn.move(
 		 *          document.document,
 		 *          {
 		 *            from: {pageX: 0, pageY: 0},
 		 *            to: {pageX: 100, pageY: 100}
 		 *          })
-		 * 
+		 *
 		 * ### String Coordinates
-		 * 
+		 *
 		 * You can set the pageX and pageY as strings like:
-		 * 
+		 *
 		 *     syn.move(
 		 *          document.document,
 		 *          {
 		 *            from: "0x0",
 		 *            to: "100x100"
 		 *          })
-		 * 
+		 *
 		 * ### Element Coordinates
-		 * 
+		 *
 		 * If jQuery is present, you can pass an element as the from or to option
 		 * and the coordinate will be set as the center of the element.
-		 
+
 		 *     syn.move(
 		 *          document.document,
 		 *          {
 		 *            from: $(".recipe")[0],
 		 *            to: $("#trash")[0]
 		 *          })
-		 * 
+		 *
 		 * ### Query Strings
-		 * 
+		 *
 		 * If jQuery is present, you can pass a query string as the from or to option.
-		 * 
+		 *
 		 * syn.move(
 		 *      document.document,
 		 *      {
 		 *        from: ".recipe",
 		 *        to: "#trash"
 		 *      })
-		 *    
+		 *
 		 * ### No From
-		 * 
+		 *
 		 * If you don't provide a from, the element argument passed to syn is used.
-		 * 
+		 *
 		 *     syn.move(
 		 *          'myrecipe',
 		 *          { to: "#trash" })
-		 * 
+		 *
 		 * ### Relative
-		 * 
+		 *
 		 * You can move the drag relative to the center of the from element.
-		 * 
+		 *
 		 *     syn.move("myrecipe", "+20 +30");
 		 *
 		 * @param {HTMLElement} from the element to move
@@ -323,4 +335,3 @@ syn.helpers.extend(syn.init.prototype, {
 
 	}
 });
-
