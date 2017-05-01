@@ -29,3 +29,4 @@ node_modules
 dist/**
 lib
 build
+*.orig
