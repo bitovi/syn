@@ -1,8 +1,23 @@
-var syn = require('./synthetic');
-require('./mouse.support');
-require('./browsers');
-require('./key.support');
-require('./drag');
+import assign from 'lodash/assign';
+import kefir from 'kefir';
+
+import move from './behaviors/move';
+
+import touch from './listeners/touch';
+
+const syn = {};
+
+const emitter;
+const stream = kefir.stream(em => emitter = emitter);
+
+assign(syn, {
+	stream,
+	emitter,
+	move: move(emitter)
+});
+
+touch(syn.stream);
 
 window.syn = syn;
-module.exports = syn;
+
+export default syn;
