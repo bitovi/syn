@@ -2,8 +2,8 @@
 //over, enter, leave, out, move
 
 const move = emitter => {
-	return (options, duration) {
+	return (options, duration) => {
 	};
 };
 
-export default emitter;
+export default move;

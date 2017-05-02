@@ -7,8 +7,9 @@ import touch from './listeners/touch';
 
 const syn = {};
 
-const emitter;
-const stream = kefir.stream(em => emitter = emitter);
+let emitter;
+const stream = kefir.stream(em => emitter = em);
+stream.onValue();
 
 assign(syn, {
 	stream,
