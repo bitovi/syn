@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			div { 
+				height: 150px;
+				width: 150px;
+				background-color: red;
+				margin: 50px;
+				text-align: center;
+				line-height: 150px;
+				color: white;
+			}
+			#div2 {
+				background-color: blue;
+				display: inline-block;
+				opacity: 0.8;
+			}
+			#div3 {
+				background-color: green;
+				display: inline-block;
+				margin-left: -100px;
+				opacity: 0.8;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Demo Page</h1>
+		<div id="div1">Div 1</div>
+		<div id="div2">Div 2</div>
+		<div id="div3">Div 3</div>
+		<script>
+			const elements = [document, document.getElementById('div1'), document.getElementById('div2'), document.getElementById('div3')];
+			const events = ['touchmove', 'touchcancel', 'touchend', 'touchstart', 'mousemove', 'mousestart', 'mouseover', 'mouseend'];
+			elements.forEach(element => {
+				events.forEach(event => {
+					element.addEventListener(event, (ev) => {
+						console.log(`${element.id || element.nodeName} ${event}`)
+					});
+				});
+			})
+		</script>
+	</body>
+</html>
