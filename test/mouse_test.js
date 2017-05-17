@@ -428,8 +428,7 @@ if (!syn.skipFocusTests) {
 	});
 }
 QUnit.test("Right Click", function () {
-	st.g("qunit-fixture")
-		.innerHTML = "<div id='one'>right click me</div>";
+	st.g("qunit-fixture").innerHTML = "<div id='one'>right click me</div>";
 	stop();
 	var context = 0;
 	st.binder("one", "contextmenu", function () {
@@ -445,6 +444,29 @@ QUnit.test("Right Click", function () {
 		QUnit.start();
 	});
 });
+
+
+QUnit.test("Right Click Issues PointerEvents", syn.support.pointerEvents ? 2 : 0, function () {
+	var order = 1;
+	st.g("qunit-fixture").innerHTML = "<input id='pointerTarget'/>";
+
+	if(syn.support.pointerEvents){ // skips test on browsers that do not support pointer events
+		st.binder("pointerTarget", "pointerdown", function (ev) {
+			QUnit.equal(ev.button, 2, "pointerdown");
+		});
+	}
+	
+	if(syn.support.pointerEvents){ // skips test on browsers that do not support pointer events
+		st.binder("pointerTarget", "pointerup", function (ev) {
+			QUnit.equal(ev.button, 2, "pointerup");
+		});
+	}		
+	stop();
+	syn.rightClick("pointerTarget", {}, function () {
+		QUnit.start();
+	});
+});
+
 
 QUnit.test("Double Click", function () {
 	st.g("qunit-fixture")
