@@ -855,11 +855,17 @@ extend(syn.init.prototype, {
 	"_rightClick": function (element, options, callback) {
 		syn.helpers.addOffset(options, element);
 		var mouseopts = extend(extend({}, syn.mouse.browser.right.mouseup), options);
-
+		if(syn.support.pointerEvents){
+			syn.trigger(element, 'pointerdown', mouseopts);
+		}
+			
 		syn.trigger(element, "mousedown", mouseopts);
 
 		//timeout is b/c IE is stupid and won't call focus handlers
 		schedule(function () {
+			if(syn.support.pointerEvents){
+				syn.trigger(element, 'pointerup', mouseopts);
+			}
 			syn.trigger(element, "mouseup", mouseopts);
 			if (syn.mouse.browser.right.contextmenu) {
 				syn.trigger(element, "contextmenu", extend(extend({}, syn.mouse.browser.right.contextmenu), options));

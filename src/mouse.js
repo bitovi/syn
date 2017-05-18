@@ -88,7 +88,7 @@ h.extend(syn.defaults, {
 	}
 });
 
-//add create and setup behavior for mosue events
+//add create and setup behavior for mouse events
 h.extend(syn.create, {
 	mouse: {
 		options: function (type, options, element) {
