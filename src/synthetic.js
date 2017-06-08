@@ -11,7 +11,8 @@ var extend = function (d, s) {
 },
 	// only uses browser detection for key events
 	browser = {
-		msie: !! (window.attachEvent && !window.opera),
+		//msie: !! (window.attachEvent && !window.opera),
+		msie: (!!(window.attachEvent && !window.opera) || (navigator.userAgent.indexOf('Trident/') > -1)),
 		opera: !! window.opera,
 		webkit: navigator.userAgent.indexOf('AppleWebKit/') > -1,
 		safari: navigator.userAgent.indexOf('AppleWebKit/') > -1 && navigator.userAgent.indexOf('Chrome/') === -1,
