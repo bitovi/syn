@@ -57,7 +57,6 @@ var DragonDrop = {
 	
 
 	_DragStart: function(node, options){ this.createAndDispatchEvent(node, 'dragstart', options); },
-	_DragStart: function(node, options){ this.createAndDispatchEvent(node, 'dragstart', options); },
 	_Drag: function(node, options){ this.createAndDispatchEvent(node, 'drag', options); },
 	_DragEnter: function(node, options){ this.createAndDispatchEvent(node, 'dragenter', options); },
 	_DragOver: function(node, options){ this.createAndDispatchEvent(node, 'dragover', options); },
@@ -304,12 +303,6 @@ var elementFromPoint = function (point, win) {
 	return win.document.elementFromPoint(Math.round(clientX), Math.round(clientY));
 },
 
-//creates an event at a certain point
-createEventAtPoint = function (event, point, element) {
-	var el = elementFromPoint(point, element);
-	syn.trigger(el || element, event, point);
-	return el;
-},
 
 	
 	
