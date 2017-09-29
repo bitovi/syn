@@ -1,0 +1,58 @@
+Author: Kevin Dillon
+
+This is a list of tests identified that need to be added for exhaustive testing.
+
+DRAG BASIC
+// 1a. Tests that go Up
+// 1b. Tests that move Down, 
+// 1c. Tests that move Left
+// 1d. Tests that move Right
+
+// 2a. Tests that go Up + Left
+// 2b. Tests that go Up + Right
+// 2c. Tests that go Down + Left
+// 2d. Tests that go Down + Right
+
+// 3a. Drag (Not just move) for PointerEvents
+// 3b. Drag (Not just move) for TouchEvents
+
+DRAG OFF SCREEN
+// 4a. Edge cases: Drag off-screen
+// 4b. Drag off page(?) << What was meant by this? (drag between iframes?)
+
+DRAG OVER TIME
+// 6a. Drag over time (Drag with duration)
+
+DRAG TOO FAR
+// Modify test pages to make sure that the drag doesn't go past the expect location
+
+NOTES TO EXPAND ROBUSTNESS OF EXISTING TESTS
+// 5a. Note: Ensure that no moves are sent past the drag cutoff (accurately)
+
+
+MOVE BASIC
+// 1a. Tests that go Up
+// 1b. Tests that move Down, 
+// 1c. Tests that move Left
+// 1d. Tests that move Right
+
+// 2a. Tests that go Up + Left
+// 2b. Tests that go Up + Right
+// 2c. Tests that go Down + Left
+// 2d. Tests that go Down + Right
+
+// 3a. Move for PointerEvents
+// 3b. Move for TouchEvents
+
+MOVE OFF SCREEN
+// 4a. Edge cases: Move to off-screen element
+// 4b. Move off page(?) << What was meant by this?
+
+MOVE OVER TIME
+// 6a. Move over time Move with duration)
+
+DRAG TOO FAR
+// Modify test pages to make sure that the move doesn't go past the expect location
+
+NOTES TO EXPAND ROBUSTNESS OF EXISTING TESTS
+// 5a. Note: Mouse moves should not be in the drag test

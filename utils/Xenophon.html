@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+	<head>
+		<title>The Inspector Gadget: Demonstration Page</title>
+		<style>
+		iframe{
+			width: 100%;
+			height: 600px;
+		}
+		</style>
+		<link rel="stylesheet" href="./Xenophon.css">
+		<script type="text/javascript" src="./Xenophon.js"></script>
+	</head>
+
+	<body>
+		<div id="leftClick">Left Click Me</div>
+		<div id="eventWriter"></div>
+		
+		<iframe src="./innerTestPage.html"> </iframe>
+		
+		<script>
+			//Xenophon.headless = true;
+			Xenophon.register(document.getElementById("leftClick"));
+			document.getElementById("leftClick").addEventListener('click', function(eventtext){
+				document.getElementById("eventWriter").innerHTML="Hi";
+			});
+		</script>
+	</body>
+</html>
