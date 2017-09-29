@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<link rel="shortcut icon" href="../resources/images/favicon.ico" type="image/x-icon">
+		<title>Dragon Drop testing</title>
+		<script>
+			function allowDrop(ev, targetElement) {
+				ev.preventDefault();
+				if(targetElement){
+					targetElement.style.backgroundColor="DarkGreen";
+					targetElement.classList.add('dragOver');
+				}
+			}
+
+			function drag(ev) {	
+				ev.dataTransfer.setData("text", ev.target.id);
+			}
+
+			function drop(ev) {
+				ev.preventDefault();
+				var data = ev.dataTransfer.getData("text");
+				ev.target.appendChild(document.getElementById(data));
+			}
+			
+			function badDrop(ev, targetElement) {
+				ev.preventDefault();
+				var data = ev.dataTransfer.getData("text");
+				ev.target.appendChild(document.getElementById(data));
+				
+				targetElement.style.backgroundColor="Red";
+			}
+		</script>
+		<style>
+			span.dragTarget {
+				display:inline-block;
+				height: 60px;
+				width: 60px;
+				border:1px solid black;
+				background-color: white;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			span.dragListener {
+				display:inline-block;
+				height: 60px;
+				width: 60px;
+				border:1px solid black;
+				background-color: grey;
+			}
+
+			span.dragOrigin {
+				display:inline-block;
+				height: 60px;
+				width: 60px;
+				border:1px solid black;
+				background-color: lime;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			img {
+				height: 60px;
+			}
+
+		</style>
+		
+
+
+		<link rel="stylesheet" href="../../utils/Xenophon.css">
+		<script type="text/javascript" src="../../utils/Xenophon.js"></script>
+
+
+	</head>
+	<body>
+
+		<div id="row1">
+			<span id="cell_a0" class="dragTarget"></span>
+			<span id="cell_a1" class="dragListener"></span>
+			<span id="cell_a2" class="dragTarget"></span>
+			<span id="cell_a3" class="dragListener"></span>
+			<span id="cell_a4" class="dragTarget"></span>
+		</div>
+		<div id="row2">
+			<span id="cell_b0" class="dragListener"></span>
+			<span id="cell_b1" class="dragListener"></span>
+			<span id="cell_b2" class="dragListener"></span>
+			<span id="cell_b3" class="dragListener"></span>
+			<span id="cell_b4" class="dragListener"></span>
+		</div>
+		<div id="row3">
+			<span id="cell_c0" class="dragTarget"></span>
+			<span id="cell_c1" class="dragListener"></span>
+			<span id="cell_c2" class="dragOrigin">
+				<img id="drag1" src="../resources/images/donejs-logo-matrix.png" draggable="true" ondragstart="drag(event)">
+			</span>
+			<span id="cell_c3" class="dragListener"></span>
+			<span id="cell_c4" class="dragTarget"></span>
+		</div>
+		<div id="row4">
+			<span id="cell_d0" class="dragListener"></span>
+			<span id="cell_d1" class="dragListener"></span>
+			<span id="cell_d2" class="dragListener"></span>
+			<span id="cell_d3" class="dragListener"></span>
+			<span id="cell_d4" class="dragListener"></span>
+		</div>
+		<div id="row5">
+			<span id="cell_e0" class="dragTarget"></span>
+			<span id="cell_e1" class="dragListener"></span>
+			<span id="cell_e2" class="dragTarget"></span>
+			<span id="cell_e3" class="dragListener"></span>
+			<span id="cell_e4" class="dragTarget"></span>
+		</div>
+		
+		<script>
+
+			dragTargets = document.querySelectorAll('span.dragTarget');
+			dragTargets.forEach(function(elem){
+				elem.addEventListener("dragover", function(event){ allowDrop(event); } );
+				elem.addEventListener("drop", function(event){ drop(event); });
+			});
+
+			dragListeners = document.querySelectorAll('span.dragListener');
+			dragListeners.forEach(function(elem){
+				elem.addEventListener("dragover", function(event){ allowDrop(event, elem); } );
+				elem.addEventListener("drop", function(event){ badDrop(event, elem); });
+			});
+
+
+		</script>
+
+	</body>
+</html>

@@ -1,0 +1,2 @@
+var syn = require('./element');
+

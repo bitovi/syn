@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<link rel="shortcut icon" href="../resources/images/favicon.ico" type="image/x-icon">
+		<title>Dragon Drop testing</title>
+		<script>
+			function mousedOver(ev, targetElement) {
+				ev.preventDefault();
+				//if(targetElement.classList.contains('mouseOver')){ return; }
+				targetElement.classList.add('mouseOver');
+				
+			}
+
+		</script>
+		<style>
+			span.detectsMouseOver {
+				display:inline-block;
+				height: 60px;
+				width: 60px;
+				border:1px solid black;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			span.mouseOver {
+				background-color: lightblue;
+			}
+
+			span.dragOrigin {
+				display:inline-block;
+				height: 60px;
+				width: 60px;
+				border:1px solid black;
+				background-color: lime;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			img {
+				height: 60px;
+			}
+
+		</style>
+		
+
+
+		<link rel="stylesheet" href="../../utils/Xenophon.css">
+		<script type="text/javascript" src="../../utils/Xenophon.js"></script>
+
+
+	</head>
+	<body>
+
+		<div id="row1">
+			<span id="cell_a0" class="detectsMouseOver"></span>
+			<span id="cell_a1" class="detectsMouseOver"></span>
+			<span id="cell_a2" class="detectsMouseOver"></span>
+			<span id="cell_a3" class="detectsMouseOver"></span>
+			<span id="cell_a4" class="detectsMouseOver"></span>
+		</div>
+		<div id="row2">
+			<span id="cell_b0" class="detectsMouseOver"></span>
+			<span id="cell_b1" class="detectsMouseOver"></span>
+			<span id="cell_b2" class="detectsMouseOver"></span>
+			<span id="cell_b3" class="detectsMouseOver"></span>
+			<span id="cell_b4" class="detectsMouseOver"></span>
+		</div>
+		<div id="row3">
+			<span id="cell_c0" class="detectsMouseOver"></span>
+			<span id="cell_c1" class="detectsMouseOver"></span>
+			<span id="cell_c2" class="detectsMouseOver"></span>
+			<span id="cell_c3" class="detectsMouseOver"></span>
+			<span id="cell_c4" class="detectsMouseOver"></span>
+		</div>
+		<div id="row4">
+			<span id="cell_d0" class="detectsMouseOver"></span>
+			<span id="cell_d1" class="detectsMouseOver"></span>
+			<span id="cell_d2" class="detectsMouseOver"></span>
+			<span id="cell_d3" class="detectsMouseOver"></span>
+			<span id="cell_d4" class="detectsMouseOver"></span>
+		</div>
+		<div id="row5">
+			<span id="cell_e0" class="detectsMouseOver"></span>
+			<span id="cell_e1" class="detectsMouseOver"></span>
+			<span id="cell_e2" class="detectsMouseOver"></span>
+			<span id="cell_e3" class="detectsMouseOver"></span>
+			<span id="cell_e4" class="detectsMouseOver"></span>
+		</div>
+		
+		<script>
+
+			mouseListeners = document.querySelectorAll('span.detectsMouseOver');
+			mouseListeners.forEach(function(elem){
+				elem.addEventListener("mouseover", function(event){ mousedOver(event, elem); });
+			});
+
+		</script>
+
+	</body>
+</html>
