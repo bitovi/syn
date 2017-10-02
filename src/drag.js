@@ -1,5 +1,26 @@
 var syn = require('./synthetic');
-require('./event');
+
+
+
+
+// returns the element that exists at a provided x, y coordinate
+// TODO: move this to element.js
+var elementFromPoint = function (point, win) {
+	var clientX = point.clientX;
+	var clientY = point.clientY;
+
+	if(point == null){return null;}
+	
+	if (syn.support.elementFromPage) {
+		var off = syn.helpers.scrollOffset(win);
+		clientX = clientX + off.left; //convert to pageX
+		clientY = clientY + off.top; //convert to pageY
+	}
+	
+	return win.document.elementFromPoint(Math.round(clientX), Math.round(clientY));
+};
+
+
 
 //======================================================================================================
 //  DragonDrop prototype STARTS
@@ -285,31 +306,12 @@ syn.create.dragend = {
 })();
 
 
-
-// returns the element that exists at a provided x, y coordinate
-// TODO: move this to element.js
-var elementFromPoint = function (point, win) {
-	var clientX = point.clientX;
-	var clientY = point.clientY;
-
-	if(point == null){return null;}
-	
-	if (syn.support.elementFromPage) {
-		var off = syn.helpers.scrollOffset(win);
-		clientX = clientX + off.left; //convert to pageX
-		clientY = clientY + off.top; //convert to pageY
-	}
-	
-	return win.document.elementFromPoint(Math.round(clientX), Math.round(clientY));
-},
-
-
 	
 	
 	
 	
 	// creates a mousemove event, but first triggering mouseout / mouseover if appropriate
-	mouseMove = function (point, win, last) {
+	var mouseMove = function (point, win, last) {
 		var el = elementFromPoint(point, win);
 		
 		if (last !== el && el && last) {
