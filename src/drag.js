@@ -39,14 +39,14 @@ var DragonDrop = {
 		this.focusWindow = focusWindow;
 	
 		// This would be a series of events to syntesize a drag operation
-		this._MouseOver(fromPoint);
-		this._MouseEnter(fromPoint);
-		this._MouseMove(fromPoint);
-		this._MouseDown(fromPoint);
-		this._DragStart(fromPoint);
-		this._Drag(fromPoint);
-		this._DragEnter(fromPoint);
-		this._DragOver(fromPoint);
+		this._mouseOver(fromPoint);
+		this._mouseEnter(fromPoint);
+		this._mouseMove(fromPoint);
+		this._mouseDown(fromPoint);
+		this._dragStart(fromPoint);
+		this._drag(fromPoint);
+		this._dragEnter(fromPoint);
+		this._dragOver(fromPoint);
 		
 		
 		
@@ -54,20 +54,20 @@ var DragonDrop = {
 		DragonDrop.startMove(fromPoint, toPoint, duration, function () {
 			
 			// this happens later
-			DragonDrop._DragLeave(fromPoint);
-			DragonDrop._DragEnd(fromPoint);
-			DragonDrop._MouseOut(fromPoint);
-			DragonDrop._MouseLeave(fromPoint);
+			DragonDrop._dragLeave(fromPoint);
+			DragonDrop._dragEnd(fromPoint);
+			DragonDrop._mouseOut(fromPoint);
+			DragonDrop._mouseLeave(fromPoint);
 			
-			DragonDrop._Drop(toPoint);
-			DragonDrop._DragEnd(toPoint);
-			DragonDrop._MouseOver(toPoint);
-			DragonDrop._MouseEnter(toPoint);
+			DragonDrop._drop(toPoint);
+			DragonDrop._dragEnd(toPoint);
+			DragonDrop._mouseOver(toPoint);
+			DragonDrop._mouseEnter(toPoint);
 			
 			// these are the "user" moving the mouse away after the drop
-			DragonDrop._MouseMove(toPoint);
-			DragonDrop._MouseOut(toPoint);
-			DragonDrop._MouseLeave(toPoint);
+			DragonDrop._mouseMove(toPoint);
+			DragonDrop._mouseOut(toPoint);
+			DragonDrop._mouseLeave(toPoint);
 
 			
 			callback();
@@ -77,20 +77,20 @@ var DragonDrop = {
 	
 	
 
-	_DragStart: function(node, options){ this.createAndDispatchEvent(node, 'dragstart', options); },
-	_Drag: function(node, options){ this.createAndDispatchEvent(node, 'drag', options); },
-	_DragEnter: function(node, options){ this.createAndDispatchEvent(node, 'dragenter', options); },
-	_DragOver: function(node, options){ this.createAndDispatchEvent(node, 'dragover', options); },
-	_DragLeave: function(node, options){ this.createAndDispatchEvent(node, 'dragleave', options); },
-	_Drop: function(node, options){ this.createAndDispatchEvent(node, 'drop', options); },
-	_DragEnd: function(node, options){ this.createAndDispatchEvent(node, 'dragend', options); },
+	_dragStart: function(node, options){ this.createAndDispatchEvent(node, 'dragstart', options); },
+	_drag: function(node, options){ this.createAndDispatchEvent(node, 'drag', options); },
+	_dragEnter: function(node, options){ this.createAndDispatchEvent(node, 'dragenter', options); },
+	_dragOver: function(node, options){ this.createAndDispatchEvent(node, 'dragover', options); },
+	_dragLeave: function(node, options){ this.createAndDispatchEvent(node, 'dragleave', options); },
+	_drop: function(node, options){ this.createAndDispatchEvent(node, 'drop', options); },
+	_dragEnd: function(node, options){ this.createAndDispatchEvent(node, 'dragend', options); },
 
-	_MouseDown: function(node, options){ this.createAndDispatchEvent(node, 'mousedown', options); },
-	_MouseMove: function(node, options){ this.createAndDispatchEvent(node, 'mousemove', options); },
-	_MouseEnter: function(node, options){ this.createAndDispatchEvent(node, 'mouseenter', options); },
-	_MouseOver: function(node, options){ this.createAndDispatchEvent(node, 'mouseover', options); },
-	_MouseOut: function(node, options){ this.createAndDispatchEvent(node, 'mouseout', options); },
-	_MouseLeave: function(node, options){ this.createAndDispatchEvent(node, 'mouseleave', options); },
+	_mouseDown: function(node, options){ this.createAndDispatchEvent(node, 'mousedown', options); },
+	_mouseMove: function(node, options){ this.createAndDispatchEvent(node, 'mousemove', options); },
+	_mouseEnter: function(node, options){ this.createAndDispatchEvent(node, 'mouseenter', options); },
+	_mouseOver: function(node, options){ this.createAndDispatchEvent(node, 'mouseover', options); },
+	_mouseOut: function(node, options){ this.createAndDispatchEvent(node, 'mouseout', options); },
+	_mouseLeave: function(node, options){ this.createAndDispatchEvent(node, 'mouseleave', options); },
 	
 
 	/**
@@ -213,12 +213,12 @@ var DragonDrop = {
 		if (thisElement !== previousElement) {		
 		
 			options.relatedTarget = thisElement;
-			this._DragLeave(previousPoint, options);
+			this._dragLeave(previousPoint, options);
 			
 			options.relatedTarget = previousElement;
-			this._DragEnter(thisPoint, options);
+			this._dragEnter(thisPoint, options);
 		}
-		this._DragOver(thisPoint, options);
+		this._dragOver(thisPoint, options);
 		return thisPoint;
 	}
 
