@@ -612,12 +612,13 @@ h.extend(syn.key, {
 			for (i = 0; i < ordersLength; i++) {
 				el = orders[i][0];
 				if (this === el) {
+					var nextIndex = i;
 					if (syn.key.shiftKey) {
-						var nextIndex = i - 1;
+						nextIndex--;
 						// Select the previous item or loop down to the last
 						current = nextIndex >= 0  && orders[nextIndex][0] || orders[ordersLength-1][0];						
 					} else {
-						var nextIndex = i + 1;
+						nextIndex++;
 						// Select the next item or loop back to the first
 						current = nextIndex < ordersLength && orders[nextIndex][0] || orders[0][0];						
 					}
