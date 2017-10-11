@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>Testpage for Focus Management</title>
+		
+		<style>
+			span.focusbox {
+				display:inline-block;
+				height: 60px;
+				width: 60px;
+				border:1px solid black;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			
+			span.hasfocus{
+				background-color: lime;
+			}
+		</style>
+		
+		<script>
+			function focused(element, bool){
+				var classname = "hasfocus";
+				if(bool){
+					element.classList.add(classname);
+				}else{
+					element.classList.remove(classname);
+				}
+			}
+		</script>
+		
+		<link rel="stylesheet" href="../../utils/Xenophon.css">
+		<script type="text/javascript" src="../../utils/Xenophon.js"></script>
+		
+	</head>
+	
+	<body>
+		<div>
+			<span class="focusbox" tabindex="1" onfocus="focused(this, true)" onblur="focused(this, false)"></span>
+			<span class="focusbox" tabindex="2" onfocus="focused(this, true)" onblur="focused(this, false)"></span>
+			<span class="focusbox" tabindex="3" onfocus="focused(this, true)" onblur="focused(this, false)"></span>
+			<span class="focusbox" tabindex="4" onfocus="focused(this, true)" onblur="focused(this, false)"></span>
+		</div>
+	</body>
+
+
+</html>

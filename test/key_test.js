@@ -347,36 +347,6 @@ QUnit.test("Type with tabs", function () {
 	}, 1);
 });
 
-QUnit.test("Type with shift tabs", function () {
-	st.g("qunit-fixture")
-		.innerHTML =
-		"<input tabindex='3' id='third'/>" +
-		"<a tabindex='1' id='first' href='javascript://'>First</a>" +
-		"<input tabindex='2' id='second'/>" +
-		"<input tabindex='4' id='fourth'/>";
-	st.g('first')
-		.focus();
-
-	var clicked = 0;
-	st.binder('first', 'click', function () {
-		clicked++;
-	});
-	stop();
-	//give ie a second to focus
-	setTimeout(function () {
-		syn.type('fourth', '[shift]4\t3\t2\t\r[shift-up]', function () {
-			equal(clicked, 1, "clickd first");
-			equal(st.g('second')
-				.value, "2", "moved to second");
-			equal(st.g('third')
-				.value, "3", "moved to Third");
-			equal(st.g('fourth')
-				.value, "4", "moved to Fourth");
-			start();
-		});
-	}, 1);
-});
-
 QUnit.test("Type left and right", function () {
 	stop();
 	syn.type('key', "012345678[left][left][left]\b", function () {

@@ -604,21 +604,22 @@ h.extend(syn.key, {
 					}
 				}
 			};
+
 			orders.sort(sort);
+			var ordersLength = orders.length;
+
 			//now find current
-			for (i = 0; i < orders.length; i++) {
+			for (i = 0; i < ordersLength; i++) {
 				el = orders[i][0];
 				if (this === el) {
-					if (!syn.key.shiftKey) {
-						current = orders[i + 1][0];
-						if (!current) {
-							current = orders[0][0];
-						}
+					if (syn.key.shiftKey) {
+						var nextIndex = i - 1;
+						// Select the previous item or loop down to the last
+						current = nextIndex >= 0  && orders[nextIndex][0] || orders[ordersLength-1][0];						
 					} else {
-						current = orders[i - 1][0];
-						if (!current) {
-							current = orders[focusEls.length - 1][0];
-						}
+						var nextIndex = i + 1;
+						// Select the next item or loop back to the first
+						current = nextIndex < ordersLength && orders[nextIndex][0] || orders[0][0];						
 					}
 				}
 			}
