@@ -6,10 +6,7 @@
 		<script>
 			function allowDrop(ev, targetElement) {
 				ev.preventDefault();
-				if(targetElement){
-					targetElement.style.backgroundColor="DarkGreen";
-					targetElement.classList.add('dragOver');
-				}
+				if(targetElement){ targetElement.classList.add('dragOver'); }
 			}
 
 			function drag(ev) {	
@@ -26,8 +23,7 @@
 				ev.preventDefault();
 				var data = ev.dataTransfer.getData("text");
 				ev.target.appendChild(document.getElementById(data));
-				
-				targetElement.style.backgroundColor="Red";
+				targetElement.classList.add('badDrop');
 			}
 		</script>
 		<style>
@@ -57,6 +53,14 @@
 				background-color: lime;
 				margin-left: auto;
 				margin-right: auto;
+			}
+			
+			span.dragOver {
+				background-color: DarkGreen;
+			}
+			
+			span.badDrop {
+				background-color: Red;
 			}
 
 			img {
