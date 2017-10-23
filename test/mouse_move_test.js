@@ -281,7 +281,6 @@ QUnit.test("Move Cursor Diagonal Down+Right", 2, function () {
 });
 
 
-// TODO : Does not work yet? Do not understand
 function checkThatMousePassedOver(pageUnderTest, cellName, expectedState){
 	var cell = pageUnderTest.querySelector(cellName);
 	ok((cell.classList.contains('mouseOver') == expectedState), "MouseOver on expected node: "+cellName+".");
