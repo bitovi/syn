@@ -673,6 +673,10 @@ extend(syn, {
 		}
 		return ret;
 	},
+	
+	
+	
+	
 	eventSupported: function (eventName) {
 		var el = document.createElement("div");
 		eventName = "on" + eventName;

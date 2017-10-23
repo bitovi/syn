@@ -9,7 +9,7 @@ var st = require("test/helpers_test");
 var didSomething = 0;
 
 
-QUnit.module("syn/mouse", {
+QUnit.module("syn/mouse_button", {
 	setup: function () {
 		window.doSomething = function () {
 			++didSomething;
@@ -88,6 +88,7 @@ QUnit.test("Click Forms", function () {
 	st.unbinder("outer", "submit", submitf);
 	st.unbinder("inner", "click", clickf);
 });
+
 QUnit.test("Click Checkboxes", function () {
 	var checkbox = 0;
 

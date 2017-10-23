@@ -1,0 +1,96 @@
+
+div.XenophonBody{
+	position: fixed;
+	width: 200px;
+	height: 400px;
+	z-index: 2147483646;
+	background-color:gainsboro;
+	border-width:2px;
+	border-style:solid;
+	border-color:darkgrey;
+	box-shadow: 10px 10px 10px #888888;
+}
+
+div.dockLeft{
+	left: 25px;
+}
+
+div.dockRight{
+	right: 25px;
+}
+
+div.dockTop{
+	top: 25px;
+}
+
+div.dockBottom{
+	bottom: 25px;	
+}
+
+div.XenophonTitle{
+	font-family: verdana;
+	text-align: center;
+	text-shadow: 2px 1px #000000;
+	color: white;
+	width:100%;
+}
+
+div.XenophonOutputBox{
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+    height: 90%;
+    overflow-y: scroll;
+	background-color:white;
+}
+
+div.XenophonOutputItem{
+	font-size: small;
+	color: white;
+	margin: 5px;
+    padding: 5px;	
+	background-color:lightblue;
+}
+
+div.XenophonOutputItemName{
+	font-size: xx-small;	
+}
+
+img.XenophonCloseBox{
+	float: right;
+	width: 24px;
+	margin: 5px;
+}
+
+img.XenophonPauseBox{
+	float: right;
+	width: 24px;
+	margin: 5px;
+}
+
+img.XenophonDockHorizontalBox{
+	float: left;
+	width: 24px;
+	margin: 5px;
+
+}
+
+img.XenophonDockVerticalBox{
+	float: left;
+	width: 24px;
+	margin: 5px;
+}
+
+textarea.XenophonToolTipTextArea{
+	height: 200px;
+	width: 95%;
+	white-space: nowrap;
+	font-size: xx-small;
+	resize:none;
+}
+
+span.undecided{
+	float:right;
+	background-color: teal;
+	padding: 3px;
+}

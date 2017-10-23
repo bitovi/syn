@@ -1,5 +1,277 @@
 var syn = require('./synthetic');
 
+
+
+
+// returns the element that exists at a provided x, y coordinate
+// TODO: move this to element.js
+var elementFromPoint = function (point, win) {
+	var clientX = point.clientX;
+	var clientY = point.clientY;
+
+	if(point == null){return null;}
+	
+	if (syn.support.elementFromPage) {
+		var off = syn.helpers.scrollOffset(win);
+		clientX = clientX + off.left; //convert to pageX
+		clientY = clientY + off.top; //convert to pageY
+	}
+	
+	return win.document.elementFromPoint(Math.round(clientX), Math.round(clientY));
+};
+
+
+
+//======================================================================================================
+//  DragonDrop prototype STARTS
+//======================================================================================================
+var DragonDrop = {
+	
+	focusWindow : null,
+	
+	/**
+	* Performs a series of dragStart, dragEnter, dragOver and drop operations to simulate a dragDrop
+	* @param fromElement: element from where drag is started
+	* @param channel: destination element for drop
+	*/
+	dragAndDrop: function(focusWindow, fromPoint, toPoint, duration, callback){
+		this.currentDataTransferItem = null;
+		this.focusWindow = focusWindow;
+	
+		// This would be a series of events to syntesize a drag operation
+		this._mouseOver(fromPoint);
+		this._mouseEnter(fromPoint);
+		this._mouseMove(fromPoint);
+		this._mouseDown(fromPoint);
+		this._dragStart(fromPoint);
+		this._drag(fromPoint);
+		this._dragEnter(fromPoint);
+		this._dragOver(fromPoint);
+		
+		
+		
+		
+		DragonDrop.startMove(fromPoint, toPoint, duration, function () {
+			
+			// this happens later
+			DragonDrop._dragLeave(fromPoint);
+			DragonDrop._dragEnd(fromPoint);
+			DragonDrop._mouseOut(fromPoint);
+			DragonDrop._mouseLeave(fromPoint);
+			
+			DragonDrop._drop(toPoint);
+			DragonDrop._dragEnd(toPoint);
+			DragonDrop._mouseOver(toPoint);
+			DragonDrop._mouseEnter(toPoint);
+			
+			// these are the "user" moving the mouse away after the drop
+			DragonDrop._mouseMove(toPoint);
+			DragonDrop._mouseOut(toPoint);
+			DragonDrop._mouseLeave(toPoint);
+
+			
+			callback();
+			DragonDrop.cleanup();
+		});
+	},
+	
+	
+
+	_dragStart: function(node, options){ this.createAndDispatchEvent(node, 'dragstart', options); },
+	_drag: function(node, options){ this.createAndDispatchEvent(node, 'drag', options); },
+	_dragEnter: function(node, options){ this.createAndDispatchEvent(node, 'dragenter', options); },
+	_dragOver: function(node, options){ this.createAndDispatchEvent(node, 'dragover', options); },
+	_dragLeave: function(node, options){ this.createAndDispatchEvent(node, 'dragleave', options); },
+	_drop: function(node, options){ this.createAndDispatchEvent(node, 'drop', options); },
+	_dragEnd: function(node, options){ this.createAndDispatchEvent(node, 'dragend', options); },
+
+	_mouseDown: function(node, options){ this.createAndDispatchEvent(node, 'mousedown', options); },
+	_mouseMove: function(node, options){ this.createAndDispatchEvent(node, 'mousemove', options); },
+	_mouseEnter: function(node, options){ this.createAndDispatchEvent(node, 'mouseenter', options); },
+	_mouseOver: function(node, options){ this.createAndDispatchEvent(node, 'mouseover', options); },
+	_mouseOut: function(node, options){ this.createAndDispatchEvent(node, 'mouseout', options); },
+	_mouseLeave: function(node, options){ this.createAndDispatchEvent(node, 'mouseleave', options); },
+	
+
+	/**
+	* Creates and dispatches an event on the node received
+	* @param node
+	* @param eventName
+	*/
+	createAndDispatchEvent: function(point, eventName, options){
+		if (point){
+			var targetElement = elementFromPoint(point, this.focusWindow);
+			syn.trigger(targetElement, eventName, options);
+		}
+	},	
+
+	getDataTransferObject : function(){
+		// For a series of dragOperations, we want the same dataTransfer Object to be carried over
+		if (!this.currentDataTransferItem){
+			return this.currentDataTransferItem = this.createDataTransferObject();
+		}else {
+			return this.currentDataTransferItem;
+		}
+	},
+	
+
+	// Cleanup the currentDataTransferItem object
+	cleanup: function(){
+		this.currentDataTransferItem=null;
+		this.focusWindow = null;
+	},
+			
+			
+	/**
+	* This function defines the dataTransfer Object, which otherwise is immutable. d= DataTrnsfer() is not a valid constructor
+	* @param node
+	*/
+	createDataTransferObject: function(){
+		var dataTransfer = {
+			dropEffect : "none",
+			effectAllowed : "uninitialized",
+			files: [],
+			items:[],
+			types:[],
+			data:[],
+			
+			// setData function assigns the dragValue to an object's property
+			setData: function(dataFlavor, value){
+				var tempdata = {};
+				tempdata.dataFlavor = dataFlavor;
+				tempdata.val = value;
+				this.data.push(tempdata);
+			},
+
+			// getData fetches the dragValue based on the input dataFlavor provided.
+			getData: function(dataFlavor){
+				for (var i = 0; i < this.data.length; i++){
+					var tempdata = this.data[i];
+					if (tempdata.dataFlavor === dataFlavor){
+						return tempdata.val;
+					}
+				}
+			}
+		};
+		return dataTransfer;
+	},
+
+	
+	startMove : function (start, end, duration, callback) {
+		
+		var startTime = new Date();
+		var distX = end.clientX - start.clientX;
+		var distY = end.clientY - start.clientY;
+		var win = this.focusWindow;
+
+		var current = start; //elementFromPoint(start, win);
+		var cursor = win.document.createElement('div');
+		var calls = 0;
+		var move; // TODO: Does this actually do anything?
+			
+		move = function onmove() {
+			//get what fraction we are at
+			var now = new Date();
+			var scrollOffset = syn.helpers.scrollOffset(win);
+			var fraction = (calls === 0 ? 0 : now - startTime) / duration; // TODO: Make this legible
+			var options = {
+				clientX: distX * fraction + start.clientX,
+				clientY: distY * fraction + start.clientY
+			};
+			calls++;
+			
+			if (fraction < 1) {
+				syn.helpers.extend(cursor.style, {
+					left: (options.clientX + scrollOffset.left + 2) + "px",
+					top: (options.clientY + scrollOffset.top + 2) + "px"
+				});
+				current = DragonDrop.mouseMove(options, current);
+				syn.schedule(onmove, 15); // TODO: What's with the 15 here? What does that even mean? Also: Should it be configurable?
+			} else {
+				current = DragonDrop.mouseMove(end, current);
+				win.document.body.removeChild(cursor);
+				callback();
+			}
+		};
+		syn.helpers.extend(cursor.style, {
+			height: "5px",
+			width: "5px",
+			backgroundColor: "red",
+			position: "absolute",
+			zIndex: 19999,
+			fontSize: "1px"
+		});
+		win.document.body.appendChild(cursor);
+		move();		
+	},
+	
+	mouseMove : function (thisPoint, previousPoint) {
+		var thisElement = elementFromPoint(thisPoint, this.focusWindow);
+		var previousElement = elementFromPoint(previousPoint, this.focusWindow);
+		var options = syn.helpers.extend({}, thisPoint);
+		
+		if (thisElement !== previousElement) {		
+		
+			options.relatedTarget = thisElement;
+			this._dragLeave(previousPoint, options);
+			
+			options.relatedTarget = previousElement;
+			this._dragEnter(thisPoint, options);
+		}
+		this._dragOver(thisPoint, options);
+		return thisPoint;
+	}
+
+};
+
+function createDragEvent(eventName, options, element){
+	var dragEvent = syn.create.mouse.event(eventName, options, element);
+
+	dragEvent.dataTransfer = DragonDrop.getDataTransferObject();
+	return syn.dispatch(dragEvent, element, eventName, false);
+}
+
+
+syn.create.dragstart = {
+	event : createDragEvent
+};
+
+syn.create.dragenter = {
+	event : createDragEvent
+};
+
+syn.create.dragover = {
+	event : createDragEvent
+};
+
+syn.create.dragleave = {
+	event : createDragEvent
+};
+
+syn.create.drag = {
+	event : createDragEvent
+};
+
+syn.create.drop = {
+	event : createDragEvent
+};
+
+syn.create.dragend = {
+	event : createDragEvent
+};
+
+//======================================================================================================
+//  Drag 2.0 prototype ENDS
+//======================================================================================================
+
+
+
+
+
+
+
+
+
 // check if elementFromPageExists
 (function dragSupport() {
 
@@ -33,34 +305,15 @@ var syn = require('./synthetic');
 	document.body.scrollTop = 0;
 })();
 
-//gets an element from a point
-var elementFromPoint = function (point, element) {
-	var clientX = point.clientX,
-		clientY = point.clientY,
-		win = syn.helpers.getWindow(element),
-		el;
 
-	if (syn.support.elementFromPage) {
-		var off = syn.helpers.scrollOffset(win);
-		clientX = clientX + off.left; //convert to pageX
-		clientY = clientY + off.top; //convert to pageY
-	}
-	el = win.document.elementFromPoint ? win.document.elementFromPoint(clientX, clientY) : element;
-	if (el === win.document.documentElement && (point.clientY < 0 || point.clientX < 0)) {
-		return element;
-	} else {
-		return el;
-	}
-},
-	//creates an event at a certain point
-	createEventAtPoint = function (event, point, element) {
-		var el = elementFromPoint(point, element);
-		syn.trigger(el || element, event, point);
-		return el;
-	},
+	
+	
+	
+	
 	// creates a mousemove event, but first triggering mouseout / mouseover if appropriate
-	mouseMove = function (point, element, last) {
-		var el = elementFromPoint(point, element);
+	var mouseMove = function (point, win, last) {
+		var el = elementFromPoint(point, win);
+		
 		if (last !== el && el && last) {
 			var options = syn.helpers.extend({}, point);
 
@@ -75,18 +328,24 @@ var elementFromPoint = function (point, element) {
 			syn.trigger(el, "mouseover", options);
 		}
 
-		if(syn.support.pointerEvents){syn.trigger(el || element, "pointermove", point);}
-		if(syn.support.touchEvents){syn.trigger(el || element, "touchmove", point);}
-		syn.trigger(el || element, "mousemove", point);
+		if(syn.support.pointerEvents){syn.trigger(el || win, "pointermove", point);}
+		if(syn.support.touchEvents){syn.trigger(el || win, "touchmove", point);}
+		syn.trigger(el || win, "mousemove", point);
 		return el;
 	},
+	
+	
+	
+	
+	
 	// start and end are in clientX, clientY
-	startMove = function (start, end, duration, element, callback) {
+	// TODO: Moves should go to a move script, not be part of the drag script
+	startMove = function (win, start, end, duration, callback) {
+			
 		var startTime = new Date(),
 			distX = end.clientX - start.clientX,
 			distY = end.clientY - start.clientY,
-			win = syn.helpers.getWindow(element),
-			current = elementFromPoint(start, element),
+			current = elementFromPoint(start, win),
 			cursor = win.document.createElement('div'),
 			calls = 0,
 			move;
@@ -105,10 +364,10 @@ var elementFromPoint = function (point, element) {
 					left: (options.clientX + scrollOffset.left + 2) + "px",
 					top: (options.clientY + scrollOffset.top + 2) + "px"
 				});
-				current = mouseMove(options, element, current);
+				current = mouseMove(options, win, current);
 				syn.schedule(onmove, 15);
 			} else {
-				current = mouseMove(end, element, current);
+				current = mouseMove(end, win, current);
 				win.document.body.removeChild(cursor);
 				callback();
 			}
@@ -124,17 +383,9 @@ var elementFromPoint = function (point, element) {
 		win.document.body.appendChild(cursor);
 		move();
 	},
-	startDrag = function (start, end, duration, element, callback) {
-		if(syn.support.pointerEvents){createEventAtPoint("pointerdown", start, element);}
-		if(syn.support.touchEvents){createEventAtPoint("touchstart", start, element);}
-		createEventAtPoint("mousedown", start, element);
-		startMove(start, end, duration, element, function () {
-			if(syn.support.pointerEvents){createEventAtPoint("pointerup", end, element);}
-			if(syn.support.touchEvents){createEventAtPoint("touchend", end, element);}
-			createEventAtPoint("mouseup", end, element);
-			callback();
-		});
-	},
+	
+	
+	
 	center = function (el) {
 		var j = syn.jquery()(el),
 			o = j.offset();
@@ -186,6 +437,13 @@ var elementFromPoint = function (point, element) {
 		}
 		return option;
 	},
+
+	
+	
+	
+	
+	
+	
 	// if the client chords are not going to be visible ... scroll the page so they will be ...
 	adjust = function (from, to, win) {
 		if (from.clientY < 0) {
@@ -208,6 +466,19 @@ var elementFromPoint = function (point, element) {
 			});
 		}
 	};
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 /**
  * @add syn prototype
  */
@@ -300,17 +571,27 @@ syn.helpers.extend(syn.init.prototype, {
 		 * @param {Function} callback a callback that happens after the drag motion has completed
 		 */
 	_move: function (from, options, callback) {
-		//need to convert if elements
-		var win = syn.helpers.getWindow(from),
-			fro = convertOption(options.from || from, win, from),
-			to = convertOption(options.to || options, win, from);
+
+		var win = syn.helpers.getWindow(from);
+		var sourceCoordinates = convertOption(options.from || from, win, from);
+		var destinationCoordinates = convertOption(options.to || options, win, from);
 
 		if (options.adjust !== false) {
-			adjust(fro, to, win);
+			adjust(sourceCoordinates, destinationCoordinates, win);
 		}
-		startMove(fro, to, options.duration || 500, from, callback);
+		startMove(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
 
 	},
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * @function syn.drag drag()
 	 * @parent mouse
@@ -323,16 +604,19 @@ syn.helpers.extend(syn.init.prototype, {
 	 * @param {Object} callback
 	 */
 	_drag: function (from, options, callback) {
-		//need to convert if elements
-		var win = syn.helpers.getWindow(from),
-			fro = convertOption(options.from || from, win, from),
-			to = convertOption(options.to || options, win, from);
+
+		var win = syn.helpers.getWindow(from);
+		var sourceCoordinates = convertOption(options.from || from, win, from);
+		var destinationCoordinates = convertOption(options.to || options, win, from);
 
 		if (options.adjust !== false) {
-			adjust(fro, to, win);
+			adjust(sourceCoordinates, destinationCoordinates, win);
 		}
-		startDrag(fro, to, options.duration || 500, from, callback);
+
+		DragonDrop.dragAndDrop(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
+		//ragonDrop.dragAndDrop(fro, to, options.duration || 500, from, callback);
 
 	}
 });
+
 
