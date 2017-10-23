@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>Tests for Syn regressions in QUnit</title>
+		
+		<style>
+			span{
+				display:inline-block;
+			}
+		
+			#Box1 {
+				height: 60px;
+				width: 60px;
+				border:1px solid black;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			
+			span.hasfocus{
+				background-color: lime;
+			}
+		</style>
+		
+		<script>
+			function focused(element, bool){
+				var classname = "hasfocus";
+				if(bool){
+					element.classList.add(classname);
+				}else{
+					element.classList.remove(classname);
+				}
+			}
+			
+			function keypress(event){
+				document.getElementById('keycodeOutput').innerHTML=event.which || event.keyCode;
+				document.getElementById('charcodeOutput').innerHTML=event.which || event.charOrCode;
+				console.log(event);
+			}
+		</script>
+
+	</head>
+	
+	<body>
+		<div>
+			<!-- To cause Syn breakages, change "onkeypress" to "onkeydown" -->
+			<span id="Box1" tabindex="1" onfocus="focused(this, true)" onblur="focused(this, false)" onkeypress="keypress(event)"></span>
+			<span>
+				<div>
+					<span>Keycode: </span><span id="keycodeOutput"></span>
+				</div><div>
+					<span>charOrCode: </span><span id="charcodeOutput"></span>
+				</div>
+			</span>
+		</div>
+		
+		<script>
+		window.onload = function() {
+			document.getElementById("Box1").focus();
+		};
+	</script>
+		
+	</body>
+
+
+
+</html>
