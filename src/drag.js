@@ -614,8 +614,6 @@ syn.helpers.extend(syn.init.prototype, {
 		}
 
 		DragonDrop.dragAndDrop(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
-		//ragonDrop.dragAndDrop(fro, to, options.duration || 500, from, callback);
-
 	}
 });
 
