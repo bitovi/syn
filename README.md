@@ -1,9 +1,12 @@
-[![Build Status](https://travis-ci.org/bitovi/syn.png?branch=master)](https://travis-ci.org/bitovi/syn.png?branch=master)
-[![Greenkeeper badge](https://badges.greenkeeper.io/bitovi/syn.svg)](https://greenkeeper.io/)
+# Syn
 
 [![Join the chat at https://gitter.im/bitovi/syn](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bitovi/syn?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bitovi/syn/blob/master/LICENSE.md)
+[![npm version](https://badge.fury.io/js/syn.svg)](https://www.npmjs.com/package/syn)
+[![Travis build status](https://travis-ci.org/bitovi/syn.svg?branch=master)](https://travis-ci.org/bitovi/syn)
+[![Greenkeeper badge](https://badges.greenkeeper.io/bitovi/syn.svg)](https://greenkeeper.io/)
 
-For questions or discussion checkout our [forums](http://forums.donejs.com/c/testing).
+For questions or discussion, check out our [forums](https://forums.donejs.com/c/testing).
 
 > If you are looking for the Synergy project, you can find it [here](https://www.npmjs.com/~postquagga). Thanks
 > [postquagga](https://www.npmjs.com/~postquagga) for letting us use the name!
