@@ -89,3 +89,30 @@ Please add a test within the _tests_ folder and make your changes to _syn.js_ so
 folder. For a quick check that everything is working, open _test/test.html_.
 
 After updating the tests, make sure you [run the tests](#running-the-tests).
+
+## Publishing & Releasing
+
+This project follows the [Semantic Versioning](http://semver.org/) guidelines in the form of `MAJOR.MINOR.PATCH` for:
+
+- `MAJOR` version when you make incompatible API changes,
+- `MINOR` version when you add functionality in a backwards-compatible manner, and
+- `PATCH` version when you make backwards-compatible bug fixes.
+
+Before making any release please make sure that:
+
+- You have write access to this GitHub repository.
+- Have an [npm](https://www.npmjs.com) account and are logged in on the CLI tool (`npm whoami`).
+- Your user is a collaborator on npm. You can ask an existing collaborator to add you. Existing collaborators can be listed via `npm owner ls <packagename>` or on the [collaborators page on npm](https://www.npmjs.com/package/syn/access).
+
+To make a release:
+
+1. Switch to the `master` branch: `git checkout master`
+2. Fetch all latest changes from the repository: `git fetch --all && git rebase`
+3. Reinstall the Node modules: `npm cache clean && npm install`
+4. Run `npm run release:<versiontype>`. For example, to make a `PATCH` release:
+
+```
+npm run release:patch
+```
+
+This will run the tests, build, bump the version number accordingly, and publish [the module to npm](https://www.npmjs.com/package/syn/).
