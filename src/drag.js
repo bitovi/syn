@@ -345,35 +345,6 @@ syn.create.dragend = {
 		syn.trigger(el || win, event, point);
 		return el;
 	},
-
-
-
-
-
-	startDrag = function (win, fromPoint, toPoint, duration, callback) {
-		if(syn.support.pointerEvents){
-			createEventAtPoint("pointerover", fromPoint, win);
-			createEventAtPoint("pointerenter", fromPoint, win);
-		}
-		createEventAtPoint("mouseover", fromPoint, win);
-		createEventAtPoint("mouseenter", fromPoint, win);
-
-		if(syn.support.pointerEvents){ createEventAtPoint("pointermove", fromPoint, win); }
-		createEventAtPoint("mousemove", fromPoint, win);
-		
-		
-		if(syn.support.pointerEvents){createEventAtPoint("pointerdown", fromPoint, win);}
-		if(syn.support.touchEvents){createEventAtPoint("touchstart", fromPoint, win);}
-		createEventAtPoint("mousedown", fromPoint, win);
-		startMove(win, fromPoint, toPoint, duration, function () {
-			if(syn.support.pointerEvents){createEventAtPoint("pointerup", toPoint, win);}
-			if(syn.support.touchEvents){createEventAtPoint("touchend", toPoint, win);}
-			createEventAtPoint("mouseup", toPoint, win);
-			if(syn.support.pointerEvents){createEventAtPoint("pointerleave", toPoint, win);}
-			createEventAtPoint("mouseleave", toPoint, win);
-			callback();
-		});
-	},	
 	
 	
 	
@@ -423,6 +394,35 @@ syn.create.dragend = {
 		win.document.body.appendChild(cursor);
 		move();
 	},
+
+
+
+
+	startDrag = function (win, fromPoint, toPoint, duration, callback) {
+		if(syn.support.pointerEvents){
+			createEventAtPoint("pointerover", fromPoint, win);
+			createEventAtPoint("pointerenter", fromPoint, win);
+		}
+		createEventAtPoint("mouseover", fromPoint, win);
+		createEventAtPoint("mouseenter", fromPoint, win);
+
+		if(syn.support.pointerEvents){ createEventAtPoint("pointermove", fromPoint, win); }
+		createEventAtPoint("mousemove", fromPoint, win);
+		
+		
+		if(syn.support.pointerEvents){createEventAtPoint("pointerdown", fromPoint, win);}
+		if(syn.support.touchEvents){createEventAtPoint("touchstart", fromPoint, win);}
+		createEventAtPoint("mousedown", fromPoint, win);
+		startMove(win, fromPoint, toPoint, duration, function () {
+			if(syn.support.pointerEvents){createEventAtPoint("pointerup", toPoint, win);}
+			if(syn.support.touchEvents){createEventAtPoint("touchend", toPoint, win);}
+			createEventAtPoint("mouseup", toPoint, win);
+			if(syn.support.pointerEvents){createEventAtPoint("pointerleave", toPoint, win);}
+			createEventAtPoint("mouseleave", toPoint, win);
+			callback();
+		});
+	},	
+
 	
 	
 	
