@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>jQuery UI Draggable - Default functionality</title>
+	<script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="../resources/libraries/jquery-ui.js"></script>
+	<script>
+		$(function(){ 
+			$("#draggable").draggable();
+			$("#draggable").on("mouseup", function(event) {
+				checkDropCoordinates();
+			});
+		});
+		
+		function checkDropCoordinates(){
+			if($("#draggable").position().top > 64){
+				$("#draggable").addClass("leftOfMark");
+			}else{
+				$("#draggable").removeClass("leftOfMark");			
+			}
+		}
+		
+	</script>
+	<style>
+		#draggable { 
+			width: 64px; 
+			height: 64px; 
+			padding: 0.5em;
+			border-style: solid;
+			border-width: 5px;
+		}
+		.leftOfMark{
+			background-color: lime;
+		}
+		#dropTarget{
+			width: 300px; 
+			height: 64px; 
+			background-color: grey;
+		}
+	</style>
+	
+	<link rel="stylesheet" href="../../utils/Xenophon.css">
+	<script type="text/javascript" src="../../utils/Xenophon.js"></script>
+	
+</head>
+<body>
+	<div id="draggable" class="ui-widget-content">
+		<p>Drag me around</p>
+	</div>
+	<div id="dropTarget"></div>
+</body>
+</html>
