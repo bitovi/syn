@@ -306,10 +306,10 @@ syn.create.dragend = {
 })();
 
 
-	
-	
-	
-	
+
+
+
+
 	// creates a mousemove event, but first triggering mouseout / mouseover if appropriate
 	var mouseMove = function (point, win, last) {
 		var el = elementFromPoint(point, win);
@@ -333,7 +333,18 @@ syn.create.dragend = {
 		syn.trigger(el || win, "mousemove", point);
 		return el;
 	},
-	
+
+
+
+
+
+	//creates an event at a certain point. Note: Redundant to DragonDrop.createAndDispatchEvent
+	// TODO: Consolidate this with DragonDrop.createAndDispatchEvent !!!
+	createEventAtPoint = function (event, point, win) {
+		var el = elementFromPoint(point, win);
+		syn.trigger(el || win, event, point);
+		return el;
+	},
 	
 	
 	
@@ -383,6 +394,35 @@ syn.create.dragend = {
 		win.document.body.appendChild(cursor);
 		move();
 	},
+
+
+
+
+	startDrag = function (win, fromPoint, toPoint, duration, callback) {
+		if(syn.support.pointerEvents){
+			createEventAtPoint("pointerover", fromPoint, win);
+			createEventAtPoint("pointerenter", fromPoint, win);
+		}
+		createEventAtPoint("mouseover", fromPoint, win);
+		createEventAtPoint("mouseenter", fromPoint, win);
+
+		if(syn.support.pointerEvents){ createEventAtPoint("pointermove", fromPoint, win); }
+		createEventAtPoint("mousemove", fromPoint, win);
+		
+		
+		if(syn.support.pointerEvents){createEventAtPoint("pointerdown", fromPoint, win);}
+		if(syn.support.touchEvents){createEventAtPoint("touchstart", fromPoint, win);}
+		createEventAtPoint("mousedown", fromPoint, win);
+		startMove(win, fromPoint, toPoint, duration, function () {
+			if(syn.support.pointerEvents){createEventAtPoint("pointerup", toPoint, win);}
+			if(syn.support.touchEvents){createEventAtPoint("touchend", toPoint, win);}
+			createEventAtPoint("mouseup", toPoint, win);
+			if(syn.support.pointerEvents){createEventAtPoint("pointerleave", toPoint, win);}
+			createEventAtPoint("mouseleave", toPoint, win);
+			callback();
+		});
+	},	
+
 	
 	
 	
@@ -612,8 +652,14 @@ syn.helpers.extend(syn.init.prototype, {
 		if (options.adjust !== false) {
 			adjust(sourceCoordinates, destinationCoordinates, win);
 		}
+		
+		var html5draggable = from.draggable;
 
-		DragonDrop.dragAndDrop(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
+		if(html5draggable){
+			DragonDrop.dragAndDrop(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
+		}else{
+			startDrag(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
+		}
 	}
 });
 

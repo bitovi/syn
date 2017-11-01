@@ -121,14 +121,11 @@ var Xenophon = {
 		// TODO: Should I switch this for a standard for-loop?
 		Xenophon.events.forEach(function(recorded){
 			if((recorded.targetElement == record.targetElement) && (recorded.event.type == record.event.type)){
-				console.log('Match!');
 				stored = recorded;
 			}
 		});
 		return stored;
 	},
-	
-	
 	
 	// ====================================
 
