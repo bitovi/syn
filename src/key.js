@@ -566,7 +566,7 @@ h.extend(syn.key, {
 				syn.trigger(this, "click", {});
 			}
 		},
-		//
+		
 		// Gets all focusable elements.  If the element (this)
 		// doesn't have a tabindex, finds the next element after.
 		// If the element (this) has a tabindex finds the element
@@ -858,7 +858,10 @@ h.extend(syn.init.prototype, {
 
 		if (defaultResult !== null) {
 			syn.schedule(function () {
-				if (syn.support.oninput) {
+				
+				if((key === '\r') && (element.nodeName.toLowerCase() === 'input')){
+					// do nothing. In the case of textInputs, RETURN key does not create an input event
+				}else if (syn.support.oninput) {
 					syn.trigger(element, 'input', syn.key.options(key, 'input'));
 				}
 				syn.trigger(element, 'keyup', syn.key.options(key, 'keyup'));
