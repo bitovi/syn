@@ -9,16 +9,16 @@ var extend = function (d, s) {
 	}
 	return d;
 },
-	// only uses browser detection for key events
+	// only uses browser detection for dispatching proper events
 	browser = {
-		//msie: !! (window.attachEvent && !window.opera),
 		msie: (!!(window.attachEvent && !window.opera) || (navigator.userAgent.indexOf('Trident/') > -1)),
 		opera: !! window.opera,
 		webkit: navigator.userAgent.indexOf('AppleWebKit/') > -1,
 		safari: navigator.userAgent.indexOf('AppleWebKit/') > -1 && navigator.userAgent.indexOf('Chrome/') === -1,
 		gecko: navigator.userAgent.indexOf('Gecko') > -1,
 		mobilesafari: !! navigator.userAgent.match(/Apple.*Mobile.*Safari/),
-		rhino: navigator.userAgent.match(/Rhino/) && true
+		rhino: navigator.userAgent.match(/Rhino/) && true,
+		chrome: !!window.chrome && !!window.chrome.webstore
 	},
 	createEventObject = function (type, options, element) {
 		var event = element.ownerDocument.createEventObject();

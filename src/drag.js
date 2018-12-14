@@ -1,5 +1,11 @@
 var syn = require('./synthetic');
 
+/*
+TODO: This is getting very complicated. We should probably separate the DRAG and MOVE abilities 
+	into two separate actions
+TODO: It might also be worth giving html5drag and jQuery drag two different code paths, 
+	rather than constantly checking and switching behaviors accordingly mid function
+*/
 
 
 
@@ -27,6 +33,7 @@ var elementFromPoint = function (point, win) {
 //======================================================================================================
 var DragonDrop = {
 	
+	htm5drag : false,
 	focusWindow : null,
 	
 	/**
@@ -173,7 +180,7 @@ var DragonDrop = {
 			//get what fraction we are at
 			var now = new Date();
 			var scrollOffset = syn.helpers.scrollOffset(win);
-			var fraction = (calls === 0 ? 0 : now - startTime) / duration; // TODO: Make this legible
+			var fraction = (calls === 0 ? 0 : now - startTime) / duration;
 			var options = {
 				clientX: distX * fraction + start.clientX,
 				clientY: distY * fraction + start.clientY
@@ -319,18 +326,40 @@ syn.create.dragend = {
 
 			// QUESTION: Should we also be sending a pointerleave event?
 			options.relatedTarget = el;
-			if(syn.support.pointerEvents){syn.trigger(last, 'pointerout', options);}
+			if(syn.support.pointerEvents){
+				syn.trigger(last, 'pointerout', options);
+				syn.trigger(last, 'pointerleave', options);
+			}
 			syn.trigger(last, "mouseout", options);
+			syn.trigger(last, "mouseleave", options);
 
-			// QUESTION: Should we also be sending a pointerenter event?
 			options.relatedTarget = last;
-			if(syn.support.pointerEvents){syn.trigger(el, 'pointerover', options);}
+			if(syn.support.pointerEvents){
+				syn.trigger(el, 'pointerover', options);
+				syn.trigger(el, 'pointerenter', options);
+			}
 			syn.trigger(el, "mouseover", options);
+			syn.trigger(el, "mouseenter", options);
 		}
 
 		if(syn.support.pointerEvents){syn.trigger(el || win, "pointermove", point);}
 		if(syn.support.touchEvents){syn.trigger(el || win, "touchmove", point);}
-		syn.trigger(el || win, "mousemove", point);
+		
+		//console.log("DRAGGED: " + DragonDrop.html5drag);
+		
+		/* 
+			The following code needs some explanation. Firefox and Chrome DO NOT issue mousemove events during HTML5-dragdrops
+			However, they do issue mousemoves during jQuery-dragdrops. I am making the assumption here (which may or may not 
+			be valid - let me know if it is wrong and I'll adjust,) that all PointerEvent-type browsers DO NOT issue
+			mousemoves during HTML5-dragdrop, but DO issue during jQuery.
+		*/
+		if(DragonDrop.html5drag){
+			if(!syn.support.pointerEvents){ syn.trigger(el || win, "mousemove", point); }	
+		}else{
+			syn.trigger(el || win, "mousemove", point);
+		}
+		
+		
 		return el;
 	},
 
@@ -616,6 +645,8 @@ syn.helpers.extend(syn.init.prototype, {
 		var sourceCoordinates = convertOption(options.from || from, win, from);
 		var destinationCoordinates = convertOption(options.to || options, win, from);
 
+		DragonDrop.html5drag = syn.support.pointerEvents;
+
 		if (options.adjust !== false) {
 			adjust(sourceCoordinates, destinationCoordinates, win);
 		}
@@ -653,9 +684,9 @@ syn.helpers.extend(syn.init.prototype, {
 			adjust(sourceCoordinates, destinationCoordinates, win);
 		}
 		
-		var html5draggable = from.draggable;
+		DragonDrop.html5drag = from.draggable;
 
-		if(html5draggable){
+		if(DragonDrop.html5drag){
 			DragonDrop.dragAndDrop(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
 		}else{
 			startDrag(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
