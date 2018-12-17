@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+
+<div style="width: 100%;">
+	<span style="display: inline-block; margin: 5px 10px; width:30%; ">
+		<input type="text" name="synthetic" id="synthetic" value="a">
+		<textarea rows="1" cols="20" id="area" >a</textarea>		
+	</span>
+	<span style="display: inline-block; margin: 5px 10px; width:30%; "> 
+		<b>Key Events:</b>
+		<div id="synthetic_events"></div>
+	</span>
+	<span style="display: inline-block; margin: 5px 10px; width:30%; ">
+		This test is intended to ensure that superfluous events aren't sent when using return in particular textboxes
+	</span>
+
+</div>
+
+<script>
+    var synthetic_events = document.getElementById('synthetic_events');
+	
+    document.getElementById("synthetic").addEventListener("input", function(){synthetic_events.innerHTML += "input, "; });
+    document.getElementById("synthetic").addEventListener("change", function(){synthetic_events.innerHTML +=  "change, ";});
+    document.getElementById("synthetic").addEventListener("keydown", function(){synthetic_events.innerHTML +=  "keydown, ";});
+    document.getElementById("synthetic").addEventListener("keypress", function(){synthetic_events.innerHTML +=  "keypress, ";});
+    document.getElementById("synthetic").addEventListener("keyup", function(){synthetic_events.innerHTML +=  "keyup, ";});
+
+    document.getElementById("area").addEventListener("input", function(){synthetic_events.innerHTML += "input, "; });
+    document.getElementById("area").addEventListener("change", function(){synthetic_events.innerHTML +=  "change, ";});
+    document.getElementById("area").addEventListener("keydown", function(){synthetic_events.innerHTML +=  "keydown, ";});
+    document.getElementById("area").addEventListener("keypress", function(){synthetic_events.innerHTML +=  "keypress, ";});
+    document.getElementById("area").addEventListener("keyup", function(){synthetic_events.innerHTML +=  "keyup, ";});
+	
+	
+</script>
+
+</body>
+</html>

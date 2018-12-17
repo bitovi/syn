@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+	<head>
+		<title>The Inspector Gadget: Demonstration Page</title>
+		<style>
+		iframe{
+			width: 100%;
+			height: 600px;
+		}
+		</style>
+		<link rel="stylesheet" href="./InspectorGadget.css">
+		<script type="text/javascript" src="./InspectorGadget.js"></script>
+	</head>
+
+	<body>
+		<div id="leftClick">Left Click Me</div>
+		<div id="eventWriter"></div>
+		
+		<iframe src="./innerTestPage.html"> </iframe>
+		
+		<script>
+			//InspectorGadget.headless = true;
+			InspectorGadget.register(document.getElementById("leftClick"));
+			document.getElementById("leftClick").addEventListener('click', function(eventtext){
+				document.getElementById("eventWriter").innerHTML="Hi";
+			});
+		</script>
+	</body>
+</html>
