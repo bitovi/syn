@@ -1,13 +1,27 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 	<head>
 		<link rel="shortcut icon" href="../resources/images/favicon.ico" type="image/x-icon">
-		<title>Dragon Drop testing</title>
+		<title>Mouse Move testing</title>
 		<script>
-			function mousedOver(ev, targetElement) {
-				ev.preventDefault();
-				//if(targetElement.classList.contains('mouseOver')){ return; }
-				targetElement.classList.add('mouseOver');
+		
+			function mousedOver(event, targetElement) {
+				event.preventDefault();
+				
+				var eventName = event.type.toLowerCase();
+				
+				switch(eventName){
+					case "pointerover" : targetElement.classList.add("mouseOver"); break;
+					case "mouseover" : targetElement.classList.add("mouseOver"); break;
+					case "pointerdown" : targetElement.classList.add("mouseDown"); break;
+					case "mousedown" : targetElement.classList.add("mouseDown"); break;
+					case "pointerup" : targetElement.classList.add("mouseUp"); break;
+					case "mouseup" : targetElement.classList.add("mouseUp"); break;
+				}
+				
+				if(! targetElement.eventRecorder.includes(eventName)){
+					targetElement.eventRecorder.push(eventName);
+				}
 				
 			}
 
@@ -22,9 +36,17 @@
 				margin-right: auto;
 			}
 
-			span.mouseOver {
+			span.mouseOver:not(.mouseDown):not(.mouseUp) {
 				background-color: lightblue;
 			}
+
+			span.mouseDown {
+				background-color: green;
+			}
+
+			span.mouseUp {
+				background-color: blue;
+			}	
 
 			span.dragOrigin {
 				display:inline-block;
@@ -36,7 +58,7 @@
 				margin-right: auto;
 			}
 
-			img {
+			img.detectsMouseOver {
 				height: 60px;
 			}
 
@@ -46,7 +68,6 @@
 
 		<link rel="stylesheet" href="../../utils/Xenophon.css">
 		<script type="text/javascript" src="../../utils/Xenophon.js"></script>
-
 
 	</head>
 	<body>
@@ -89,9 +110,26 @@
 		
 		<script>
 
-			mouseListeners = document.querySelectorAll('span.detectsMouseOver');
+			mouseListeners = document.querySelectorAll('span.detectsMouseOver');	
 			mouseListeners.forEach(function(elem){
+			
+				elem.eventRecorder = [];	
+				elem.addEventListener("pointerover", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("pointerenter", function(event){ mousedOver(event, elem); });
 				elem.addEventListener("mouseover", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("mouseenter", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("pointermove", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("mousemove", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("pointerdown", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("mousedown", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("pointerup", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("mouseup", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("click", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("pointerout", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("pointerleave", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("mouseout", function(event){ mousedOver(event, elem); });
+				elem.addEventListener("mouseleave", function(event){ mousedOver(event, elem); });
+				
 			});
 
 		</script>

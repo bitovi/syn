@@ -1,8 +1,19 @@
+/* 
+	XENOPHON
+	v 0.1
+	
+	Tracks most standard event types dispatched to a specified element and stores them 
+	in a convenient array, which can be traversed by an optional helpful GUI for quick 
+	traversal and debugging of events to ensure accuracy and consistency.
+	
+	Upcoming Planned Enhacements:
+	TODO: Private scoped functions should be rescoped
+	
+*/
+
 var Xenophon = {
 	version: "version 0.1",
 	
-	// TODOS: Private scoped functions should be rescoped
-
 	// ====================================
 
 

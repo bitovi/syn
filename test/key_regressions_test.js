@@ -43,7 +43,7 @@ QUnit.test("Special keycodes for enter on TextBox", 1, function () {
 		var pageUnderTest = document.getElementById('pageUnderTest').contentDocument.querySelector('body');
 		var keyTarget = pageUnderTest.querySelector('#synthetic');
 		var output = pageUnderTest.querySelector('#synthetic_events');
-		var browser = browserDetective();
+		var browser = BrowserDetective.getBrowserName();
 		
 		console.log(browser);
 		
@@ -77,7 +77,7 @@ QUnit.test("Special keycodes for enter on TextArea", 1, function () {
 		var pageUnderTest = document.getElementById('pageUnderTest').contentDocument.querySelector('body');
 		var keyTarget = pageUnderTest.querySelector('#area');
 		var output = pageUnderTest.querySelector('#synthetic_events');
-		var browser = browserDetective();
+		var browser = BrowserDetective.getBrowserName();
 		
 		syn.type(keyTarget, "\b\r", function(){
 
@@ -99,36 +99,5 @@ QUnit.test("Special keycodes for enter on TextArea", 1, function () {
 	testFrame.src = 'testpages/regressions_keyboard2.html';
 });
 
-
-// Note: This is required because different browsers send different key events
-// Note also: I am currently only checking this against DESKTOP browsers. Events may be different on mobile
-//      if-so, we will have to make this smarter.
-function browserDetective(){
-	
-	var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-	if(isOpera){ return "opera"; }
-
-	// Firefox 1.0+
-	var isFirefox = typeof InstallTrigger !== 'undefined';
-	if(isFirefox){ return "firefox"; }
-
-	// Safari 3.0+ "[object HTMLElementConstructor]" 
-	var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
-	if(isSafari){ return "safari"; }
-
-	// Internet Explorer 6-11
-	var isIE = /*@cc_on!@*/false || !!document.documentMode;
-	if(isIE){ return "ie"; }
-
-	// Edge 20+
-	var isEdge = !isIE && !!window.StyleMedia;
-	if(isEdge){ return "edge"; }
-	
-	// Chrome 1+
-	var isChrome = !!window.chrome && !!window.chrome.webstore;	
-	if(isChrome){ return "chrome"; }
-	
-	return "unknown";
-}
 
 
