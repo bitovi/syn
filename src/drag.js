@@ -33,7 +33,7 @@ var elementFromPoint = function (point, win) {
 //======================================================================================================
 var DragonDrop = {
 	
-	htm5drag : false,
+	html5drag : false,
 	focusWindow : null,
 	
 	/**
