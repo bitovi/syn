@@ -1,6 +1,6 @@
 {
   "name": "syn",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "main": "dist/cjs/syn.js",
   "scripts": {
     "preversion": "npm test && npm run build",
