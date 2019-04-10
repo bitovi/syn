@@ -113,8 +113,7 @@ var DragonDrop = {
 	},
 	
 	_drop: function(node){
-		var options = { bubbles:false, cancelable:true, buttons:2 };
-		debugger;
+		var options = { bubbles:true, cancelable:true, buttons:1 };
 		this.createAndDispatchEvent(node, 'drop', options);
 	},
 	

@@ -122,15 +122,22 @@ h.extend(syn.create, {
 			if (doc.createEvent) {
 				try {
 					defaults.view = doc.defaultView;
-					//event = doc.createEvent('MouseEvents');
-					event = new MouseEvent(type, defaults);
-					//event.initMouseEvent(type, defaults.bubbles, defaults.cancelable,
-					//	defaults.view, defaults.detail,
-					//	defaults.screenX, defaults.screenY,
-					//	defaults.clientX, defaults.clientY,
-					//	defaults.ctrlKey, defaults.altKey,
-					//	defaults.shiftKey, defaults.metaKey,
-					//	defaults.button, defaults.relatedTarget);
+					
+					/* TODO: Eventually replace doc.createEvent / initMouseEvent down below (its deprecated )
+						https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/initMouseEvent
+						
+						Replace it with this:
+						event = new MouseEvent(type, defaults);
+					*/
+
+					event = doc.createEvent('MouseEvents');
+					event.initMouseEvent(type, defaults.bubbles, defaults.cancelable,
+						defaults.view, defaults.detail,
+						defaults.screenX, defaults.screenY,
+						defaults.clientX, defaults.clientY,
+						defaults.ctrlKey, defaults.altKey,
+						defaults.shiftKey, defaults.metaKey,
+						defaults.button, defaults.relatedTarget);
 				} catch (e) {
 					event = h.createBasicStandardEvent(type, defaults, doc);
 				}
