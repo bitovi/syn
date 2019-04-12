@@ -63,6 +63,13 @@ QUnit.test("Drag Item Downward jQuery", 1, function () {
 });
 
 
+/*
+	TODO: This test is incomplete. If you run it, you should see the "inner" element dragged into the receptive
+	box above. However, the word "inner" should become "outer" since that is the drag element.
+	
+	My theory is that we are sending the final drag events by page offset rather than dragdrop target, and that
+	it is "hitting" the element being dragged because we are over the dragdrop target at the time of the drop.
+*/
 QUnit.test("Drag Regressions 1 - cancel and bubble", 1, function () {
 	stop();
 
