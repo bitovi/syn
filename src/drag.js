@@ -5,6 +5,9 @@ TODO: This is getting very complicated. We should probably separate the DRAG and
 	into two separate actions
 TODO: It might also be worth giving html5drag and jQuery drag two different code paths, 
 	rather than constantly checking and switching behaviors accordingly mid function
+TODO: Very few of our events actually fill the bubbles and cancelable fields. Any products that 
+	rely on these will not react properly. Is there a way to look up default behaviors for these and 
+	set to those unless somehow overridden?
 */
 
 
@@ -45,7 +48,7 @@ var DragonDrop = {
 		this.currentDataTransferItem = null;
 		this.focusWindow = focusWindow;
 	
-		// This would be a series of events to syntesize a drag operation
+		// A series of events to simulate a drag operation
 		this._mouseOver(fromPoint);
 		this._mouseEnter(fromPoint);
 		this._mouseMove(fromPoint);
@@ -84,13 +87,40 @@ var DragonDrop = {
 	
 	
 
-	_dragStart: function(node, options){ this.createAndDispatchEvent(node, 'dragstart', options); },
-	_drag: function(node, options){ this.createAndDispatchEvent(node, 'drag', options); },
-	_dragEnter: function(node, options){ this.createAndDispatchEvent(node, 'dragenter', options); },
-	_dragOver: function(node, options){ this.createAndDispatchEvent(node, 'dragover', options); },
-	_dragLeave: function(node, options){ this.createAndDispatchEvent(node, 'dragleave', options); },
-	_drop: function(node, options){ this.createAndDispatchEvent(node, 'drop', options); },
-	_dragEnd: function(node, options){ this.createAndDispatchEvent(node, 'dragend', options); },
+	_dragStart: function(node){
+		var options = { bubbles:false, cancelable:false };
+		this.createAndDispatchEvent(node, 'dragstart', options);
+	},
+		
+	_drag: function(node){
+		var options = { bubbles:true, cancelable:true };
+		this.createAndDispatchEvent(node, 'drag', options);
+	},
+	
+	_dragEnter: function(node){ 
+		var options = { bubbles:true, cancelable:true };
+		this.createAndDispatchEvent(node, 'dragenter', options);
+	},
+	
+	_dragOver: function(node){
+		var options = { bubbles:true, cancelable:true };
+		this.createAndDispatchEvent(node, 'dragover', options);
+	},
+	
+	_dragLeave: function(node){
+		var options = { bubbles:true, cancelable:false };
+		this.createAndDispatchEvent(node, 'dragleave', options);
+	},
+	
+	_drop: function(node){
+		var options = { bubbles:true, cancelable:true, buttons:1 };
+		this.createAndDispatchEvent(node, 'drop', options);
+	},
+	
+	_dragEnd: function(node){
+		var options = { bubbles:true, cancelable:false };
+		this.createAndDispatchEvent(node, 'dragend', options);
+	},
 
 	_mouseDown: function(node, options){ this.createAndDispatchEvent(node, 'mousedown', options); },
 	_mouseMove: function(node, options){ this.createAndDispatchEvent(node, 'mousemove', options); },
