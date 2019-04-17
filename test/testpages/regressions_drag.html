@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Test to ensure there are no regressions in DragDrop</title>
+	<script>
+
+	var data;
+	
+	
+		function dragover_handler(ev) {
+            ev.preventDefault();
+            // Set the dropEffect to move
+            ev.dataTransfer.dropEffect = "move"
+		}
+
+		function dragstart_handler(ev) {	
+			ev.dataTransfer.setData("text/plain", ev.target.id);
+			ev.dropEffect = "move";
+		}
+
+		function drop_handler(ev) {
+			ev.preventDefault();
+
+			console.log(ev);
+			
+			data = ev.dataTransfer.getData("text/plain");
+			let divElement = document.createElement("div");
+			divElement.textContent = data;
+			ev.target.appendChild(divElement);
+		}
+		
+    </script>
+</head>
+
+<body>
+
+<div id="div1" ondrop="drop_handler(event)" ondragover="dragover_handler(event)" style="
+height: 100px;
+width: 100px;
+border-style: solid;
+border-width: 1px;
+"></div>
+
+<div id="div2" style="
+height: 50px;
+width: 100px;
+border-style: solid;
+border-width: 1px;
+margin-top: 20px;
+">
+
+
+<span id="outer" draggable="true" ondragstart="dragstart_handler(event)"> 
+	<span id="inner">inner</span>
+</span>
+
+
+</div>
+</body>
+
+
+</html>

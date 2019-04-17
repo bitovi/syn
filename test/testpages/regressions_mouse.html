@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>Tests for Syn mouse regressions in QUnit</title>
+		
+		<script>
+			function objectToString (obj) {
+				var str = '';
+				for (var prop in obj) {	str += prop + '::' + obj[prop] + '\n'; }
+				return str;
+			}
+		</script>
+		
+	</head>
+	
+	<body>
+		<div style='width: 100%;'>
+			<span id='clickable' style="padding: 10px; background-color: #9c6;">Click me</span>
+			<span><textarea rows="10" cols="50" readonly id='output1'></textarea></span>
+			<span><textarea rows="10" cols="50" readonly id='output2'></textarea></span>
+		</div>
+		
+		<script>
+			
+			var clickable = document.getElementById('clickable');
+			var output1 = document.getElementById('output1');
+			var output2 = document.getElementById('output2');
+			
+			clickable.addEventListener("mousedown", function(event){
+				console.log(event);
+				output1.value = objectToString(event);
+			});
+			
+			clickable.addEventListener("click", function(event){
+				console.log(event);
+				output2.value = objectToString(event);
+			});
+			
+		</script>
+		</body>
+
+</html>
