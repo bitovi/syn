@@ -18,7 +18,7 @@
     "jquery-ui-dist": "^1.12.1",
     "jshint": "^2.8.0",
     "requirejs": "^2.3.3",
-    "steal": "^2.0.0",
+    "steal": "2.2.1",
     "steal-qunit": "^1.0.1",
     "steal-tools": "^2.0.0",
     "testee": "^0.9.0",
