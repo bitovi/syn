@@ -16,7 +16,7 @@
   "devDependencies": {
     "jquery": ">=2.0.0",
     "jquery-ui-dist": "^1.12.1",
-    "jshint": "^2.8.0",
+    "jshint": "2.10.2",
     "requirejs": "^2.3.3",
     "steal": "^2.0.0",
     "steal-qunit": "^1.0.1",
