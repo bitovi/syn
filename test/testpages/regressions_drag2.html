@@ -17,8 +17,6 @@
 		function dragstart_handler(ev) {	
 			ev.dataTransfer.setData("text/plain", ev.target.id);
 			ev.dropEffect = "move";
-			document.getElementById("start_buttonField").innerHTML += " " + ev.button;
-			document.getElementById("start_buttonsField").innerHTML += " " + ev.buttons;
 		}
 
 		function drop_handler(ev) {
@@ -37,7 +35,6 @@
 
 <body>
 
-<span>
 <div id="div1" ondrop="drop_handler(event)" ondragover="dragover_handler(event)" style="
 height: 100px;
 width: 100px;
@@ -53,14 +50,25 @@ border-width: 1px;
 margin-top: 20px;
 ">
 
-	<span id="outer" draggable="true" ondragstart="dragstart_handler(event)"> 
-		<span id="inner">inner</span>
-	</span>
+
+
+
+<span id="outer" draggable="true" ondragstart="dragstart_handler(event)"> 
+	<span id="inner">inner</span>
+</span>
+
 
 </div>
-</span>
-<span id='start_buttonField'>Start Button:</span><br>
-<span id='start_buttonsField'>Start Buttons:</span>
+
+<div style="width:500px; height:300px; overflow:auto; ">
+	<div style='width: 700px; height: 200px; background-color: rgb(240, 240, 240);'>Hello world
+		<span id="outer" draggable="true" ondragstart="dragstart_handler(event)"> 
+			<span id="inner" style='background-color: rgb(0, 240, 0);'>inner</span>
+		</span>
+	</div>
+</div>
+
+
 </body>
 
 

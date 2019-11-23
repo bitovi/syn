@@ -21,6 +21,10 @@
 				$("#draggable").removeClass("leftOfMark");			
 			}
 		}
+
+		function recordButtonNumber(ev){
+			console.log(ev);
+		}
 		
 	</script>
 	<style>
@@ -50,5 +54,13 @@
 		<p>Drag me around</p>
 	</div>
 	<div id="dropTarget"></div>
+	
+	<script>
+		draggable.addEventListener("mouseup", function(event){ recordButtonNumber(event); });
+		//draggable.addEventListener("mousemove", function(event){ recordButtonNumber(event); });
+		//draggable.addEventListener("click", function(event){ recordButtonNumber(event); });
+		//draggable.addEventListener("mousedown", function(event){ recordButtonNumber(event); });
+	</script>	
+	
 </body>
 </html>

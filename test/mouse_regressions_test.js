@@ -72,6 +72,37 @@ QUnit.test("Testing Button codes: right click", 1, function () {
 
 
 
+QUnit.test("Testing ButtonS codes: left click", 2, function () {
+	stop();
+	
+	var testFrame = document.getElementById('pageUnderTest');
+	
+	testFrame.addEventListener('load', function loadListener(){
+		testFrame.removeEventListener('load', loadListener);
+		
+		var pageUnderTest = document.getElementById('pageUnderTest').contentDocument.querySelector('body');
+		var clickable = pageUnderTest.querySelector('#clickable');
+		var output1 = pageUnderTest.querySelector('#output1');
+		var output2 = pageUnderTest.querySelector('#output2');
+
+		syn.click(clickable, {}, function () {
+
+			var buttonCode = getValue('button', output1.value);
+			ok( buttonCode == '0', "Mouse 'button' code expected: '0', received: '" + buttonCode + "'.");
+			var clickCode = getValue('button', output2.value);
+			ok( clickCode == '0', "Mouse 'button' code expected: '0', received: '" + clickCode + "'.");
+
+			start();
+		});
+	});
+
+	// TODO: Boilerplate. Can we move this to a setup function?
+	testFrame.height = frameHeight;
+	testFrame.src = frameUrl;
+});
+
+
+
 
 
 function getValue(needle, haystack){

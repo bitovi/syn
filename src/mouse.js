@@ -98,6 +98,9 @@ h.extend(syn.create, {
 				//browser might not be loaded yet (doing support code)
 				left = syn.mouse.browser && syn.mouse.browser.left[type],
 				right = syn.mouse.browser && syn.mouse.browser.right[type];
+				
+				//console.log(options);
+				
 			return h.extend({
 				bubbles: true,
 				cancelable: true,
@@ -112,6 +115,10 @@ h.extend(syn.create, {
 				shiftKey: !! syn.key.shiftKey,
 				metaKey: !! syn.key.metaKey,
 				button: left && left.button !== null ? left.button : right && right.button || (type === 'contextmenu' ? 2 : 0),
+				// NOTE: This doesn't work because we need to identify the button that is currently held-down vs no-button.
+				// For example: "button" is 0 regardless of whether left button is down or not. For events like click(), this doesn't matter (since
+				// we can infer that a button was clicked, and that button was 0.) However, for buttonS, left is 1 and nothing is 0. 
+				//buttons: left && left.button !== null ? left.button : right && right.button || (type === 'contextmenu' ? 2 : 1),
 				relatedTarget: document.documentElement
 			}, options);
 		},
@@ -137,7 +144,8 @@ h.extend(syn.create, {
 						defaults.clientX, defaults.clientY,
 						defaults.ctrlKey, defaults.altKey,
 						defaults.shiftKey, defaults.metaKey,
-						defaults.button, defaults.relatedTarget);
+						defaults.button, defaults.buttons,
+						defaults.relatedTarget);
 				} catch (e) {
 					event = h.createBasicStandardEvent(type, defaults, doc);
 				}
