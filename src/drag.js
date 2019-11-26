@@ -90,7 +90,7 @@ var DragonDrop = {
 	
 
 	_dragStart: function(node){
-		var options = { bubbles:false, cancelable:false, button: 0, buttons: 1 };
+		var options = { bubbles:true, cancelable:true, button: 0, buttons: 1 };
 		this.createAndDispatchEvent(node, 'dragstart', options);
 	},
 		
@@ -117,12 +117,12 @@ var DragonDrop = {
 	},
 	
 	_drop: function(node){
-		var options = { bubbles:true, cancelable:false, button: 0, buttons: 0 };
+		var options = { bubbles:true, cancelable:true, button: 0, buttons: 0 };
 		this.createAndDispatchEvent(node, 'drop', options);
 	},
 	
 	_dragEnd: function(node){
-		var options = { bubbles:true, cancelable:true, button: -1, buttons: 0 };
+		var options = { bubbles:true, cancelable:false, button: 0, buttons: 0 };
 		this.createAndDispatchEvent(node, 'dragend', options);
 		DragonDrop.dragging = false;
 	},
