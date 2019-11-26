@@ -105,9 +105,7 @@ var DragonDrop = {
 	},
 	
 	_dragOver: function(node){
-		var options = { bubbles:true, cancelable:true, button: 0, 
-		buttons: 0
-		};
+		var options = { bubbles:true, cancelable:true, button: 0, buttons: 0 };
 		this.createAndDispatchEvent(node, 'dragover', options);
 	},
 	
