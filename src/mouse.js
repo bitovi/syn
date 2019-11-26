@@ -98,8 +98,20 @@ h.extend(syn.create, {
 				//browser might not be loaded yet (doing support code)
 				left = syn.mouse.browser && syn.mouse.browser.left[type],
 				right = syn.mouse.browser && syn.mouse.browser.right[type];
-				
-				//console.log(options);
+
+			
+
+			var leftClick = (type === 'click');
+			var doubleLeftClick = (type === 'dblclick');
+			var contextMenuClick = (type === 'contextmenu');
+
+			// NOTE: I don't know if this undefined is correct, but if this is set to anything (including 0), jQuery will fail to dragdrop 
+			// The rules about when buttons = 0 vs buttons = undef, seem very squishy. (Kevin.D)
+			var buttonsCode = undefined; 
+			if(options.buttons){ buttonsCode = options.buttons; }
+			else if(leftClick){ buttonsCode = 1; }
+			else if(doubleLeftClick){ buttonsCode = 1; }
+			else if(contextMenuClick){ buttonsCode = 2; }		
 				
 			return h.extend({
 				bubbles: true,
@@ -114,11 +126,13 @@ h.extend(syn.create, {
 				altKey: !! syn.key.altKey,
 				shiftKey: !! syn.key.shiftKey,
 				metaKey: !! syn.key.metaKey,
-				button: left && left.button !== null ? left.button : right && right.button || (type === 'contextmenu' ? 2 : 0),
-				// NOTE: This doesn't work because we need to identify the button that is currently held-down vs no-button.
+				button: left && left.button !== null ? left.button : right && right.button || (contextMenuClick ? 2 : 0),
+				// NOTE: 'buttons' doesn't work because we need to identify the button that is currently held-down vs no-button.
 				// For example: "button" is 0 regardless of whether left button is down or not. For events like click(), this doesn't matter (since
-				// we can infer that a button was clicked, and that button was 0.) However, for buttonS, left is 1 and nothing is 0. 
-				//buttons: left && left.button !== null ? left.button : right && right.button || (type === 'contextmenu' ? 2 : 1),
+				// we can infer that a button was clicked, and that button was 0.) However, for buttonS, left is 1 and nothing is 0.
+				// Because FuncUnit doesn't keep track of button state, if you want to set buttonS, you need to set it in options when passing
+				// the event request to syn.trigger . (Kevin.D)
+				buttons: buttonsCode,
 				relatedTarget: document.documentElement
 			}, options);
 		},
