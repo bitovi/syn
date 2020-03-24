@@ -721,3 +721,107 @@ QUnit.test("typing in an input type=number works", function() {
 		start();
 	});
 });
+
+QUnit.test("ctrl keycodes with key option", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.ctrlKey;
+		ok(ev.ctrlKey, "Ctrl key functioning. Expected: " + ev.key + ", Actual: "+ev.keyCode);
+		ok(ev.key === ev.keyCode, "key is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.ctrlKey;
+		ok(ev.key === ev.keyCode, "key is normalized");
+	});
+	
+	syn.type('key', "[ctrl]", function () {
+		ok(keyIsDown, "ctrl modifier key pressed successfully");
+
+		syn.type('key', "[ctrl-up]", function () {
+			ok(!keyIsUp, "ctrl modifier key released successfully");
+			start();
+		});
+	});
+});
+
+QUnit.test("shift keycodes with key option", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.shiftKey;
+		ok(ev.shiftKey, "Shift key functioning. Expected: " + ev.key + ", Actual: "+ev.keyCode);
+		ok(ev.key === ev.keyCode, "key is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.shiftKey;
+		ok(ev.key === ev.keyCode, "key is normalized");
+	});
+	
+	syn.type('key', "[shift]", function () {
+		ok(keyIsDown, "shift modifier key pressed successfully");
+
+		syn.type('key', "[shift-up]", function () {
+			ok(!keyIsUp, "shift modifier key released successfully");
+			start();
+		});
+	});
+});
+
+QUnit.test("alt keycodes with key option", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.altKey;
+		ok(ev.altKey, "Alt key functioning. Expected: " + ev.key + ", Actual: "+ev.keyCode);
+		ok(ev.key === ev.keyCode, "key is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.altKey;
+		ok(ev.key === ev.keyCode, "key is normalized");
+	});
+	
+	syn.type('key', "[alt]", function () {
+		ok(keyIsDown, "alt modifier key pressed successfully");
+
+		syn.type('key', "[alt-up]", function () {
+			ok(!keyIsUp, "alt modifier key released successfully");
+			start();
+		});
+	});
+});
+
+QUnit.test("meta keycodes with key option", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.metaKey;
+		ok(ev.metaKey, "Meta key functioning. Expected: " + ev.key + ", Actual: "+ev.keyCode);
+		ok(ev.key === ev.keyCode, "key is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.metaKey;
+		ok(ev.key === ev.keyCode, "key is normalized");
+	});
+	
+	syn.type('key', "[meta]", function () {
+		ok(keyIsDown, "meta modifier key pressed successfully");
+
+		syn.type('key', "[meta-up]", function () {
+			ok(!keyIsUp, "meta modifier key released successfully");
+			start();
+		});
+	});
+});
