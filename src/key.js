@@ -403,11 +403,11 @@ h.extend(syn.key, {
 
 		// all current browsers have which property to normalize keyCode/charCode
 		if (result.keyCode) {
-			result.key = result.keyCode;
 			result.which = result.keyCode;
+			result.key = result.which;
 		} else {
-			result.key = result.charCode;
 			result.which = result.charCode;
+			result.key = result.which;
 		}
 
 		return result;

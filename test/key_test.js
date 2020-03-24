@@ -722,6 +722,18 @@ QUnit.test("typing in an input type=number works", function() {
 	});
 });
 
+QUnit.test("Key property", function () {
+	stop();
+
+	st.binder("key", "keydown", function(ev) {
+		equal(ev.which, ev.key, "Which property equals key property");
+	});
+	
+	syn.key("key", "a", function () {
+		start();
+	});
+});
+
 // QUnit.test("ctrl keycodes with key option", function () {
 // 	stop();
 
