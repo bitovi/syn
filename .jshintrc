@@ -24,7 +24,9 @@
 		"start": true,
 		"stop": true,
 
-		"formElExp": true
+		"formElExp": true,
+		"KeyboardEvent": true
+
 	},
 
 

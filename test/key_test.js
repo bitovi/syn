@@ -722,14 +722,42 @@ QUnit.test("typing in an input type=number works", function() {
 	});
 });
 
-QUnit.test("Key property", function () {
+
+QUnit.test("Key property, a typed", function () {
 	stop();
 
-	st.binder("key", "keydown", function(ev) {
-		equal(ev.which, ev.key, "Which property equals key property");
+	var a = false;
+	st.binder('key', 'keypress', function (ev) {
+		a = ev.key;
+		equal('a', ev.key);
+	});
+	syn.type('key', "a", function () {
+		ok(a, "a key typed");
+		start();
+	});
+});
+
+QUnit.test("ctrl key", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.ctrlKey;
+		ok(ev.key === 'ctrl', "key is normalized");
 	});
 	
-	syn.key("key", "a", function () {
-		start();
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.ctrlKey;
+		ok(ev.key === 'ctrl', "key is normalized");
+	});
+	
+	syn.type('key', "[ctrl]", function () {
+		ok(keyIsDown, "ctrl modifier key pressed successfully");
+
+		syn.type('key', "[ctrl-up]", function () {
+			ok(!keyIsUp, "ctrl modifier key released successfully");
+			start();
+		});
 	});
 });

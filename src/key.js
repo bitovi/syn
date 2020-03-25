@@ -404,10 +404,10 @@ h.extend(syn.key, {
 		// all current browsers have which property to normalize keyCode/charCode
 		if (result.keyCode) {
 			result.which = result.keyCode;
-			result.key = result.which;
+			result.key = key;
 		} else {
 			result.which = result.charCode;
-			result.key = result.which;
+			result.key = key;
 		}
 
 		return result;
@@ -740,8 +740,12 @@ h.extend(syn.create, {
 			var doc = h.getWindow(element)
 				.document || document,
 				event;
-			if (doc.createEvent) {
-				try {
+			if (typeof KeyboardEvent !== 'undefined') {
+				event = new KeyboardEvent(type, options);
+				event.synthetic = true;
+				return event;
+			} else if (doc.createEvent) {
+				try {					
 					event = doc.createEvent("KeyEvents");
 					event.initKeyEvent(type, true, true, window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.keyCode, options.charCode);
 				} catch (e) {
