@@ -741,6 +741,12 @@ h.extend(syn.create, {
 				.document || document,
 				event;
 			if (typeof KeyboardEvent !== 'undefined') {
+				var keyboardEventKeys = syn.key.keyboardEventKeys;
+
+				if (options.key && keyboardEventKeys[options.key]) {
+					options.key = keyboardEventKeys[options.key];
+				}
+				
 				event = new KeyboardEvent(type, options);
 				event.synthetic = true;
 				return event;
