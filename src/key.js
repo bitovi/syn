@@ -385,7 +385,9 @@ h.extend(syn.key, {
 
 		var charCode = keyData[event][0],
 			keyCode = keyData[event][1],
-			result = {};
+			result = {
+				key: key
+			};
 
 		if (keyCode === 'key') {
 			result.keyCode = syn.keycodes[key];
@@ -404,12 +406,10 @@ h.extend(syn.key, {
 		// all current browsers have which property to normalize keyCode/charCode
 		if (result.keyCode) {
 			result.which = result.keyCode;
-			result.key = key;
 		} else {
 			result.which = result.charCode;
-			result.key = key;
 		}
-
+		
 		return result;
 	},
 	//types of event keys
