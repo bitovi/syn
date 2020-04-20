@@ -721,3 +721,95 @@ QUnit.test("typing in an input type=number works", function() {
 		start();
 	});
 });
+
+
+QUnit.test("Key property, a typed", function () {
+	stop();
+
+	var a = false;
+	st.binder('key', 'keypress', function (ev) {
+		a = ev.key;
+		equal('a', ev.key);
+	});
+	syn.type('key', "a", function () {
+		ok(a, "a key typed");
+		start();
+	});
+});
+
+QUnit.test("Control key", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.ctrlKey;
+		ok(ev.key === 'Control', "key is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.ctrlKey;
+		ok(ev.key === 'Control', "key is normalized");
+	});
+	
+	syn.type('key', "[ctrl]", function () {
+		ok(keyIsDown, "Control modifier key pressed successfully");
+
+		syn.type('key', "[ctrl-up]", function () {
+			ok(!keyIsUp, "Control modifier key released successfully");
+			start();
+		});
+	});
+});
+
+
+QUnit.test("alt keycodes", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.altKey;
+		ok(ev.key === 'Alt', "key is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.altKey;
+		ok(ev.key === 'Alt', "key is normalized");
+	});
+	
+	syn.type('key', "[alt]", function () {
+		ok(keyIsDown, "Alt modifier key pressed successfully");
+
+		syn.type('key', "[alt-up]", function () {
+			ok(!keyIsUp, "Alt modifier key released successfully");
+			start();
+		});
+	});
+});
+
+QUnit.test("meta keycodes", function () {
+	stop();
+
+	var keyIsDown = false;
+	st.binder("key", "keydown", function (ev) {
+		keyIsDown = ev.metaKey;
+		ok(ev.key === 'Meta', "key is normalized");
+	});
+	
+	var keyIsUp = true;
+	st.binder("key", "keyup", function (ev) {
+		keyIsUp = ev.metaKey;
+		ok(ev.key === 'Meta', "key is normalized");
+	});
+	
+	syn.type('key', "[meta]", function () {
+		ok(keyIsDown, "meta modifier key pressed successfully");
+
+		syn.type('key', "[meta-up]", function () {
+			ok(!keyIsUp, "meta modifier key released successfully");
+			start();
+		});
+	});
+});
+

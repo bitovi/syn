@@ -385,7 +385,9 @@ h.extend(syn.key, {
 
 		var charCode = keyData[event][0],
 			keyCode = keyData[event][1],
-			result = {};
+			result = {
+				key: key
+			};
 
 		if (keyCode === 'key') {
 			result.keyCode = syn.keycodes[key];
@@ -407,7 +409,7 @@ h.extend(syn.key, {
 		} else {
 			result.which = result.charCode;
 		}
-
+		
 		return result;
 	},
 	//types of event keys
@@ -738,8 +740,18 @@ h.extend(syn.create, {
 			var doc = h.getWindow(element)
 				.document || document,
 				event;
-			if (doc.createEvent) {
-				try {
+			if (typeof KeyboardEvent !== 'undefined') {
+				var keyboardEventKeys = syn.key.keyboardEventKeys;
+
+				if (options.key && keyboardEventKeys[options.key]) {
+					options.key = keyboardEventKeys[options.key];
+				}
+				
+				event = new KeyboardEvent(type, options);
+				event.synthetic = true;
+				return event;
+			} else if (doc.createEvent) {
+				try {					
 					event = doc.createEvent("KeyEvents");
 					event.initKeyEvent(type, true, true, window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.keyCode, options.charCode);
 				} catch (e) {

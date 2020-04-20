@@ -486,7 +486,6 @@ extend(syn, {
 	 * @param {Object} autoPrevent
 	 */
 	dispatch: function (event, element, type, autoPrevent) {
-
 		// dispatchEvent doesn't always work in IE (mostly in a popup)
 		if (element.dispatchEvent && event) {
 			var preventDefault = event.preventDefault,
