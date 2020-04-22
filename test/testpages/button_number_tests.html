@@ -4,6 +4,16 @@
 		<link rel="shortcut icon" href="../resources/images/favicon.ico" type="image/x-icon">
 		<title>Dragon Drop testing</title>
 		<script>
+	
+			function _click(ev) {
+				ev.preventDefault();
+				var buttonNumber = document.querySelector('#buttonNumber');
+				var buttonsNumber = document.querySelector('#buttonsNumber');
+				buttonNumber.innerHTML = buttonNumber.innerHTML + " " + ev.button;
+				buttonsNumber.innerHTML = buttonsNumber.innerHTML + " " + ev.buttons;
+				console.log(ev);
+			}	
+		
 			function allowDrop(ev, targetElement) {
 				ev.preventDefault();
 				if(targetElement){ targetElement.classList.add('dragOver'); }
@@ -11,13 +21,13 @@
 
 			function drag(ev) {	
 				ev.dataTransfer.setData("text", ev.target.id);
-				console.log(ev);
 			}
 
 			function drop(ev) {
 				ev.preventDefault();
 				var data = ev.dataTransfer.getData("text");
 				ev.target.appendChild(document.getElementById(data));
+				recordButtonNumber(ev);
 			}
 			
 			function badDrop(ev, targetElement) {
@@ -26,6 +36,23 @@
 				ev.target.appendChild(document.getElementById(data));
 				targetElement.classList.add('badDrop');
 			}
+			
+			function recordButtonNumber(ev){
+				var buttonNumber = document.querySelector('#buttonNumber');
+				var buttonsNumber = document.querySelector('#buttonsNumber');
+				buttonNumber.innerHTML = buttonNumber.innerHTML + " " + ev.button;
+				buttonsNumber.innerHTML = buttonsNumber.innerHTML + " " + ev.buttons;
+				console.log(ev);
+			}
+			
+			function clearText(){
+				console.log("Gets here");
+				var buttonNumber = document.querySelector('#buttonNumber');
+				var buttonsNumber = document.querySelector('#buttonsNumber');
+				buttonNumber.innerHTML = "Button Number:";
+				buttonsNumber.innerHTML = "ButtonS Number:";			
+			}
+			
 		</script>
 		<style>
 			span.dragTarget {
@@ -102,20 +129,11 @@
 			<span id="cell_c3" class="dragListener"></span>
 			<span id="cell_c4" class="dragTarget"></span>
 		</div>
-		<div id="row4">
-			<span id="cell_d0" class="dragListener"></span>
-			<span id="cell_d1" class="dragListener"></span>
-			<span id="cell_d2" class="dragListener"></span>
-			<span id="cell_d3" class="dragListener"></span>
-			<span id="cell_d4" class="dragListener"></span>
-		</div>
-		<div id="row5">
-			<span id="cell_e0" class="dragTarget"></span>
-			<span id="cell_e1" class="dragListener"></span>
-			<span id="cell_e2" class="dragTarget"></span>
-			<span id="cell_e3" class="dragListener"></span>
-			<span id="cell_e4" class="dragTarget"></span>
-		</div>
+		<button type="button" id="clickbutton" onclick="_click(event)" oncontextmenu="_click(event)">Click me</button>
+		<div id="buttonNumber">Button Number:</div>
+		<div id="buttonsNumber">ButtonS Number:</div>
+		<button type="button" id="clearbutton" onclick="clearText()">Clear</button>
+		
 		
 		<script>
 
@@ -131,6 +149,9 @@
 				elem.addEventListener("drop", function(event){ badDrop(event, elem); });
 			});
 
+			drag1.addEventListener("mousemove", function(event){ recordButtonNumber(event); });
+			drag1.addEventListener("click", function(event){ recordButtonNumber(event); });
+			drag1.addEventListener("mousedown", function(event){ recordButtonNumber(event); });
 
 		</script>
 

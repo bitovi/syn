@@ -38,6 +38,8 @@ var DragonDrop = {
 	
 	html5drag : false,
 	focusWindow : null,
+	dragging : false,
+	
 	
 	/**
 	* Performs a series of dragStart, dragEnter, dragOver and drop operations to simulate a dragDrop
@@ -88,46 +90,94 @@ var DragonDrop = {
 	
 
 	_dragStart: function(node){
-		var options = { bubbles:false, cancelable:false };
+		var options = { bubbles:true, cancelable:true, button: 0, buttons: 1 };
 		this.createAndDispatchEvent(node, 'dragstart', options);
 	},
 		
 	_drag: function(node){
-		var options = { bubbles:true, cancelable:true };
+		var options = { bubbles:true, cancelable:true, button: 0, buttons: 1 };
 		this.createAndDispatchEvent(node, 'drag', options);
 	},
 	
 	_dragEnter: function(node){ 
-		var options = { bubbles:true, cancelable:true };
+		var options = { bubbles:true, cancelable:true,  button: 0, buttons: 0 };
 		this.createAndDispatchEvent(node, 'dragenter', options);
 	},
 	
 	_dragOver: function(node){
-		var options = { bubbles:true, cancelable:true };
+		var options = { bubbles:true, cancelable:true, button: 0, buttons: 0 };
 		this.createAndDispatchEvent(node, 'dragover', options);
 	},
 	
 	_dragLeave: function(node){
-		var options = { bubbles:true, cancelable:false };
+		var options = { bubbles:true, cancelable:false, button: 0, buttons: 0  };
 		this.createAndDispatchEvent(node, 'dragleave', options);
 	},
 	
 	_drop: function(node){
-		var options = { bubbles:true, cancelable:true, buttons:1 };
+		var options = { bubbles:true, cancelable:true, button: 0, buttons: 0 };
 		this.createAndDispatchEvent(node, 'drop', options);
 	},
 	
 	_dragEnd: function(node){
-		var options = { bubbles:true, cancelable:false };
+		var options = { bubbles:true, cancelable:false, button: 0, buttons: 0 };
 		this.createAndDispatchEvent(node, 'dragend', options);
+		DragonDrop.dragging = false;
 	},
 
-	_mouseDown: function(node, options){ this.createAndDispatchEvent(node, 'mousedown', options); },
-	_mouseMove: function(node, options){ this.createAndDispatchEvent(node, 'mousemove', options); },
-	_mouseEnter: function(node, options){ this.createAndDispatchEvent(node, 'mouseenter', options); },
-	_mouseOver: function(node, options){ this.createAndDispatchEvent(node, 'mouseover', options); },
-	_mouseOut: function(node, options){ this.createAndDispatchEvent(node, 'mouseout', options); },
-	_mouseLeave: function(node, options){ this.createAndDispatchEvent(node, 'mouseleave', options); },
+	_mouseDown: function(node, options){
+		if (!options) { options = {}; }
+		options.bubbles = true;
+		options.cancelable = true;
+		options.button = 0;
+		options.buttons = 1;
+		this.createAndDispatchEvent(node, 'mousedown', options);
+	},
+	
+	_mouseMove: function(node, options){ 
+		if (!options) { options = {}; }
+		options.bubbles = true;
+		options.cancelable = true;
+		options.button = 0;
+		options.buttons = DragonDrop.dragging ? 1: 0;
+		this.createAndDispatchEvent(node, 'mousemove', options);
+	},
+	
+	_mouseEnter: function(node, options){
+		if (!options) { options = {}; }
+		options.bubbles = false;
+		options.cancelable = false;
+		options.button = 0;
+		options.buttons = DragonDrop.dragging ? 1: 0;
+		this.createAndDispatchEvent(node, 'mouseenter', options);
+	},
+	
+	_mouseOver: function(node, options){
+		if (!options) { options = {}; }
+		options.bubbles = true;
+		options.cancelable = true;
+		options.button = 0;
+		options.buttons = DragonDrop.dragging ? 1: 0;
+		this.createAndDispatchEvent(node, 'mouseover', options);
+	},
+	
+	_mouseOut: function(node, options){
+		if (!options) { options = {}; }
+		options.bubbles = true;
+		options.cancelable = true;	
+		options.button = 0;
+		options.buttons = DragonDrop.dragging ? 1: 0;
+		this.createAndDispatchEvent(node, 'mouseout', options);
+	},
+	
+	_mouseLeave: function(node, options){
+		if (!options) { options = {}; }
+		options.bubbles = false;
+		options.cancelable = false;	
+		options.button = 0;
+		options.buttons = DragonDrop.dragging ? 1: 0;
+		this.createAndDispatchEvent(node, 'mouseleave', options);
+	},
 	
 
 	/**
@@ -374,9 +424,7 @@ syn.create.dragend = {
 
 		if(syn.support.pointerEvents){syn.trigger(el || win, "pointermove", point);}
 		if(syn.support.touchEvents){syn.trigger(el || win, "touchmove", point);}
-		
-		//console.log("DRAGGED: " + DragonDrop.html5drag);
-		
+			
 		/* 
 			The following code needs some explanation. Firefox and Chrome DO NOT issue mousemove events during HTML5-dragdrops
 			However, they do issue mousemoves during jQuery-dragdrops. I am making the assumption here (which may or may not 
@@ -389,7 +437,6 @@ syn.create.dragend = {
 			syn.trigger(el || win, "mousemove", point);
 		}
 		
-		
 		return el;
 	},
 
@@ -399,9 +446,10 @@ syn.create.dragend = {
 
 	//creates an event at a certain point. Note: Redundant to DragonDrop.createAndDispatchEvent
 	// TODO: Consolidate this with DragonDrop.createAndDispatchEvent !!!
-	createEventAtPoint = function (event, point, win) {
+	createEventAtPoint = function (eventName, point, win) {
 		var el = elementFromPoint(point, win);
-		syn.trigger(el || win, event, point);
+		var options = { clientX:point.clientX, clientY:point.clientY };	
+		syn.trigger(el || win, eventName, options);
 		return el;
 	},
 	
@@ -476,6 +524,7 @@ syn.create.dragend = {
 			if(syn.support.pointerEvents){createEventAtPoint("pointerup", toPoint, win);}
 			if(syn.support.touchEvents){createEventAtPoint("touchend", toPoint, win);}
 			createEventAtPoint("mouseup", toPoint, win);
+			DragonDrop.dragging = false;
 			if(syn.support.pointerEvents){createEventAtPoint("pointerleave", toPoint, win);}
 			createEventAtPoint("mouseleave", toPoint, win);
 			callback();
@@ -715,6 +764,7 @@ syn.helpers.extend(syn.init.prototype, {
 		}
 		
 		DragonDrop.html5drag = from.draggable;
+		DragonDrop.dragging = true;
 
 		if(DragonDrop.html5drag){
 			DragonDrop.dragAndDrop(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
