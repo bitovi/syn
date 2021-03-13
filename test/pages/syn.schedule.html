@@ -11,10 +11,11 @@
 				parent.synSchedule.apply(parent, arguments);
 			}
 		};
-		
-		steal('syn', function(syn){
+
+		steal('syn', async function(syn){
 			var body = document.body;
-			syn.click(body, {}).delay(function(){}, 0);
+			await syn.click(body, {})
+			syn.delay(function(){}, 0);
 		});
 	</script>
 </body>

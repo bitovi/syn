@@ -28,7 +28,7 @@ var extend = function (d, s) {
 	id = 1,
 	expando = "_synthetic" + new Date()
 		.getTime(),
-	bind, unbind, schedule, key = /keypress|keyup|keydown/,
+	bind, unbind, schedule, schedulePromise, key = /keypress|keyup|keydown/,
 	page = /load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll/,
 	//this is maintained so we can click on html and blur the active element
 	activeElement,
@@ -175,6 +175,12 @@ unbind = function (el, ev, f) {
 schedule = syn.config.schedule || function (fn, ms) {
 	setTimeout(fn, ms);
 };
+schedulePromise = function(time) {
+	return new Promise(function(resolve){
+		setTimeout(resolve, time)
+	});
+}
+
 /**
  * @Static
  */
@@ -420,6 +426,7 @@ extend(syn, {
 			return -1;
 		},
 		getWindow: function (element) {
+			if(!element) {debugger;}
 			if (element.ownerDocument) {
 				return element.ownerDocument.defaultView || element.ownerDocument.parentWindow;
 			}
@@ -854,26 +861,29 @@ extend(syn.init.prototype, {
 	 * @param {Object} options
 	 * @param {Object} callback
 	 */
-	"_rightClick": function (element, options, callback) {
-		syn.helpers.addOffset(options, element);
-		var mouseopts = extend(extend({}, syn.mouse.browser.right.mouseup), options);
-		if(syn.support.pointerEvents){
-			syn.trigger(element, 'pointerdown', mouseopts);
-		}
-
-		syn.trigger(element, "mousedown", mouseopts);
-
-		//timeout is b/c IE is stupid and won't call focus handlers
-		schedule(function () {
+	"_rightClick": function (element, options) {
+		return new Promise((resolve)=>{
+			syn.helpers.addOffset(options, element);
+			var mouseopts = extend(extend({}, syn.mouse.browser.right.mouseup), options);
 			if(syn.support.pointerEvents){
-				syn.trigger(element, 'pointerup', mouseopts);
+				syn.trigger(element, 'pointerdown', mouseopts);
 			}
-			syn.trigger(element, "mouseup", mouseopts);
-			if (syn.mouse.browser.right.contextmenu) {
-				syn.trigger(element, "contextmenu", extend(extend({}, syn.mouse.browser.right.contextmenu), options));
-			}
-			callback(true);
-		}, 1);
+
+			syn.trigger(element, "mousedown", mouseopts);
+
+			//timeout is b/c IE is stupid and won't call focus handlers
+			schedule(function () {
+				if(syn.support.pointerEvents){
+					syn.trigger(element, 'pointerup', mouseopts);
+				}
+				syn.trigger(element, "mouseup", mouseopts);
+				if (syn.mouse.browser.right.contextmenu) {
+					syn.trigger(element, "contextmenu", extend(extend({}, syn.mouse.browser.right.contextmenu), options));
+				}
+				resolve();
+			}, 1);
+		})
+
 	},
 	/**
 	 * @function syn.dblclick dblclick()
@@ -889,18 +899,14 @@ extend(syn.init.prototype, {
 	 * @param {HTMLElement} element
 	 * @param {Function} callback
 	 */
-	"_dblclick": function (element, options, callback) {
+	"_dblclick": async function (element, options) {
 		syn.helpers.addOffset(options, element);
 		var self = this;
-		this._click(element, options, function () {
-			schedule(function () {
-				self._click(element, options, function () {
-					syn.trigger(element, "dblclick", options);
-					callback(true);
-				}, true);
-			}, 2);
-
-		});
+		await this._click(element, options);
+		await schedulePromise(2);
+		await this._click(element, options);
+		syn.trigger(element, "dblclick", options);
+		return true;
 	}
 });
 

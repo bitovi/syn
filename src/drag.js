@@ -1,12 +1,12 @@
 var syn = require('./synthetic');
 
 /*
-TODO: This is getting very complicated. We should probably separate the DRAG and MOVE abilities 
+TODO: This is getting very complicated. We should probably separate the DRAG and MOVE abilities
 	into two separate actions
-TODO: It might also be worth giving html5drag and jQuery drag two different code paths, 
+TODO: It might also be worth giving html5drag and jQuery drag two different code paths,
 	rather than constantly checking and switching behaviors accordingly mid function
-TODO: Very few of our events actually fill the bubbles and cancelable fields. Any products that 
-	rely on these will not react properly. Is there a way to look up default behaviors for these and 
+TODO: Very few of our events actually fill the bubbles and cancelable fields. Any products that
+	rely on these will not react properly. Is there a way to look up default behaviors for these and
 	set to those unless somehow overridden?
 */
 
@@ -19,13 +19,13 @@ var elementFromPoint = function (point, win) {
 	var clientY = point.clientY;
 
 	if(point == null){return null;}
-	
+
 	if (syn.support.elementFromPage) {
 		var off = syn.helpers.scrollOffset(win);
 		clientX = clientX + off.left; //convert to pageX
 		clientY = clientY + off.top; //convert to pageY
 	}
-	
+
 	return win.document.elementFromPoint(Math.round(clientX), Math.round(clientY));
 };
 
@@ -35,19 +35,19 @@ var elementFromPoint = function (point, win) {
 //  DragonDrop prototype STARTS
 //======================================================================================================
 var DragonDrop = {
-	
+
 	html5drag : false,
 	focusWindow : null,
-	
+
 	/**
 	* Performs a series of dragStart, dragEnter, dragOver and drop operations to simulate a dragDrop
 	* @param fromElement: element from where drag is started
 	* @param channel: destination element for drop
 	*/
-	dragAndDrop: function(focusWindow, fromPoint, toPoint, duration, callback){
+	dragAndDrop: async function(focusWindow, fromPoint, toPoint, duration, callback){
 		this.currentDataTransferItem = null;
 		this.focusWindow = focusWindow;
-	
+
 		// A series of events to simulate a drag operation
 		this._mouseOver(fromPoint);
 		this._mouseEnter(fromPoint);
@@ -57,66 +57,63 @@ var DragonDrop = {
 		this._drag(fromPoint);
 		this._dragEnter(fromPoint);
 		this._dragOver(fromPoint);
-		
-		
-		
-		
-		DragonDrop.startMove(fromPoint, toPoint, duration, function () {
-			
-			// this happens later
-			DragonDrop._dragLeave(fromPoint);
-			DragonDrop._dragEnd(fromPoint);
-			DragonDrop._mouseOut(fromPoint);
-			DragonDrop._mouseLeave(fromPoint);
-			
-			DragonDrop._drop(toPoint);
-			DragonDrop._dragEnd(toPoint);
-			DragonDrop._mouseOver(toPoint);
-			DragonDrop._mouseEnter(toPoint);
-			
-			// these are the "user" moving the mouse away after the drop
-			DragonDrop._mouseMove(toPoint);
-			DragonDrop._mouseOut(toPoint);
-			DragonDrop._mouseLeave(toPoint);
 
-			
-			callback();
-			DragonDrop.cleanup();
-		});
+
+
+
+		await DragonDrop.startMove(fromPoint, toPoint, duration);
+
+		// this happens later
+		DragonDrop._dragLeave(fromPoint);
+		DragonDrop._dragEnd(fromPoint);
+		DragonDrop._mouseOut(fromPoint);
+		DragonDrop._mouseLeave(fromPoint);
+
+		DragonDrop._drop(toPoint);
+		DragonDrop._dragEnd(toPoint);
+		DragonDrop._mouseOver(toPoint);
+		DragonDrop._mouseEnter(toPoint);
+
+		// these are the "user" moving the mouse away after the drop
+		DragonDrop._mouseMove(toPoint);
+		DragonDrop._mouseOut(toPoint);
+		DragonDrop._mouseLeave(toPoint);
+
+		DragonDrop.cleanup();
 	},
-	
-	
+
+
 
 	_dragStart: function(node){
 		var options = { bubbles:false, cancelable:false };
 		this.createAndDispatchEvent(node, 'dragstart', options);
 	},
-		
+
 	_drag: function(node){
 		var options = { bubbles:true, cancelable:true };
 		this.createAndDispatchEvent(node, 'drag', options);
 	},
-	
-	_dragEnter: function(node){ 
+
+	_dragEnter: function(node){
 		var options = { bubbles:true, cancelable:true };
 		this.createAndDispatchEvent(node, 'dragenter', options);
 	},
-	
+
 	_dragOver: function(node){
 		var options = { bubbles:true, cancelable:true };
 		this.createAndDispatchEvent(node, 'dragover', options);
 	},
-	
+
 	_dragLeave: function(node){
 		var options = { bubbles:true, cancelable:false };
 		this.createAndDispatchEvent(node, 'dragleave', options);
 	},
-	
+
 	_drop: function(node){
 		var options = { bubbles:true, cancelable:true, buttons:1 };
 		this.createAndDispatchEvent(node, 'drop', options);
 	},
-	
+
 	_dragEnd: function(node){
 		var options = { bubbles:true, cancelable:false };
 		this.createAndDispatchEvent(node, 'dragend', options);
@@ -128,7 +125,7 @@ var DragonDrop = {
 	_mouseOver: function(node, options){ this.createAndDispatchEvent(node, 'mouseover', options); },
 	_mouseOut: function(node, options){ this.createAndDispatchEvent(node, 'mouseout', options); },
 	_mouseLeave: function(node, options){ this.createAndDispatchEvent(node, 'mouseleave', options); },
-	
+
 
 	/**
 	* Creates and dispatches an event on the node received
@@ -140,7 +137,7 @@ var DragonDrop = {
 			var targetElement = elementFromPoint(point, this.focusWindow);
 			syn.trigger(targetElement, eventName, options);
 		}
-	},	
+	},
 
 	getDataTransferObject : function(){
 		// For a series of dragOperations, we want the same dataTransfer Object to be carried over
@@ -150,15 +147,15 @@ var DragonDrop = {
 			return this.currentDataTransferItem;
 		}
 	},
-	
+
 
 	// Cleanup the currentDataTransferItem object
 	cleanup: function(){
 		this.currentDataTransferItem=null;
 		this.focusWindow = null;
 	},
-			
-			
+
+
 	/**
 	* This function defines the dataTransfer Object, which otherwise is immutable. d= DataTrnsfer() is not a valid constructor
 	* @param node
@@ -171,7 +168,7 @@ var DragonDrop = {
 			items:[],
 			types:[],
 			data:[],
-			
+
 			// setData function assigns the dragValue to an object's property
 			setData: function(dataFlavor, value){
 				var tempdata = {};
@@ -193,65 +190,67 @@ var DragonDrop = {
 		return dataTransfer;
 	},
 
-	
-	startMove : function (start, end, duration, callback) {
-		
-		var startTime = new Date();
-		var distX = end.clientX - start.clientX;
-		var distY = end.clientY - start.clientY;
-		var win = this.focusWindow;
 
-		var current = start; //elementFromPoint(start, win);
-		var cursor = win.document.createElement('div');
-		var calls = 0;
-		var move; // TODO: Does this actually do anything?
-			
-		move = function onmove() {
-			//get what fraction we are at
-			var now = new Date();
-			var scrollOffset = syn.helpers.scrollOffset(win);
-			var fraction = (calls === 0 ? 0 : now - startTime) / duration;
-			var options = {
-				clientX: distX * fraction + start.clientX,
-				clientY: distY * fraction + start.clientY
+	startMove : function (start, end, duration) {
+		return new Promise( (resolve)=> {
+			var startTime = new Date();
+			var distX = end.clientX - start.clientX;
+			var distY = end.clientY - start.clientY;
+			var win = this.focusWindow;
+
+			var current = start; //elementFromPoint(start, win);
+			var cursor = win.document.createElement('div');
+			var calls = 0;
+			var move; // TODO: Does this actually do anything?
+
+			move = function onmove() {
+				//get what fraction we are at
+				var now = new Date();
+				var scrollOffset = syn.helpers.scrollOffset(win);
+				var fraction = (calls === 0 ? 0 : now - startTime) / duration;
+				var options = {
+					clientX: distX * fraction + start.clientX,
+					clientY: distY * fraction + start.clientY
+				};
+				calls++;
+
+				if (fraction < 1) {
+					syn.helpers.extend(cursor.style, {
+						left: (options.clientX + scrollOffset.left + 2) + "px",
+						top: (options.clientY + scrollOffset.top + 2) + "px"
+					});
+					current = DragonDrop.mouseMove(options, current);
+					syn.schedule(onmove, 15); // TODO: What's with the 15 here? What does that even mean? Also: Should it be configurable?
+				} else {
+					current = DragonDrop.mouseMove(end, current);
+					win.document.body.removeChild(cursor);
+					resolve();
+				}
 			};
-			calls++;
-			
-			if (fraction < 1) {
-				syn.helpers.extend(cursor.style, {
-					left: (options.clientX + scrollOffset.left + 2) + "px",
-					top: (options.clientY + scrollOffset.top + 2) + "px"
-				});
-				current = DragonDrop.mouseMove(options, current);
-				syn.schedule(onmove, 15); // TODO: What's with the 15 here? What does that even mean? Also: Should it be configurable?
-			} else {
-				current = DragonDrop.mouseMove(end, current);
-				win.document.body.removeChild(cursor);
-				callback();
-			}
-		};
-		syn.helpers.extend(cursor.style, {
-			height: "5px",
-			width: "5px",
-			backgroundColor: "red",
-			position: "absolute",
-			zIndex: 19999,
-			fontSize: "1px"
+			syn.helpers.extend(cursor.style, {
+				height: "5px",
+				width: "5px",
+				backgroundColor: "red",
+				position: "absolute",
+				zIndex: 19999,
+				fontSize: "1px"
+			});
+			win.document.body.appendChild(cursor);
+			move();
+
 		});
-		win.document.body.appendChild(cursor);
-		move();		
 	},
-	
+
 	mouseMove : function (thisPoint, previousPoint) {
 		var thisElement = elementFromPoint(thisPoint, this.focusWindow);
 		var previousElement = elementFromPoint(previousPoint, this.focusWindow);
 		var options = syn.helpers.extend({}, thisPoint);
-		
-		if (thisElement !== previousElement) {		
-		
+
+		if (thisElement !== previousElement) {
+
 			options.relatedTarget = thisElement;
 			this._dragLeave(previousPoint, options);
-			
+
 			options.relatedTarget = previousElement;
 			this._dragEnter(thisPoint, options);
 		}
@@ -350,7 +349,7 @@ syn.create.dragend = {
 	// creates a mousemove event, but first triggering mouseout / mouseover if appropriate
 	var mouseMove = function (point, win, last) {
 		var el = elementFromPoint(point, win);
-		
+
 		if (last !== el && el && last) {
 			var options = syn.helpers.extend({}, point);
 
@@ -374,22 +373,22 @@ syn.create.dragend = {
 
 		if(syn.support.pointerEvents){syn.trigger(el || win, "pointermove", point);}
 		if(syn.support.touchEvents){syn.trigger(el || win, "touchmove", point);}
-		
+
 		//console.log("DRAGGED: " + DragonDrop.html5drag);
-		
-		/* 
+
+		/*
 			The following code needs some explanation. Firefox and Chrome DO NOT issue mousemove events during HTML5-dragdrops
-			However, they do issue mousemoves during jQuery-dragdrops. I am making the assumption here (which may or may not 
+			However, they do issue mousemoves during jQuery-dragdrops. I am making the assumption here (which may or may not
 			be valid - let me know if it is wrong and I'll adjust,) that all PointerEvent-type browsers DO NOT issue
 			mousemoves during HTML5-dragdrop, but DO issue during jQuery.
 		*/
 		if(DragonDrop.html5drag){
-			if(!syn.support.pointerEvents){ syn.trigger(el || win, "mousemove", point); }	
+			if(!syn.support.pointerEvents){ syn.trigger(el || win, "mousemove", point); }
 		}else{
 			syn.trigger(el || win, "mousemove", point);
 		}
-		
-		
+
+
 		return el;
 	},
 
@@ -404,60 +403,61 @@ syn.create.dragend = {
 		syn.trigger(el || win, event, point);
 		return el;
 	},
-	
-	
-	
-	
+
+
+
+
 	// start and end are in clientX, clientY
 	// TODO: Moves should go to a move script, not be part of the drag script
 	startMove = function (win, start, end, duration, callback) {
-			
-		var startTime = new Date(),
-			distX = end.clientX - start.clientX,
-			distY = end.clientY - start.clientY,
-			current = elementFromPoint(start, win),
-			cursor = win.document.createElement('div'),
-			calls = 0,
-			move;
-		move = function onmove() {
-			//get what fraction we are at
-			var now = new Date(),
-				scrollOffset = syn.helpers.scrollOffset(win),
-				fraction = (calls === 0 ? 0 : now - startTime) / duration,
-				options = {
-					clientX: distX * fraction + start.clientX,
-					clientY: distY * fraction + start.clientY
-				};
-			calls++;
-			if (fraction < 1) {
-				syn.helpers.extend(cursor.style, {
-					left: (options.clientX + scrollOffset.left + 2) + "px",
-					top: (options.clientY + scrollOffset.top + 2) + "px"
-				});
-				current = mouseMove(options, win, current);
-				syn.schedule(onmove, 15);
-			} else {
-				current = mouseMove(end, win, current);
-				win.document.body.removeChild(cursor);
-				callback();
-			}
-		};
-		syn.helpers.extend(cursor.style, {
-			height: "5px",
-			width: "5px",
-			backgroundColor: "red",
-			position: "absolute",
-			zIndex: 19999,
-			fontSize: "1px"
+		return new Promise((resolve) => {
+			var startTime = new Date(),
+				distX = end.clientX - start.clientX,
+				distY = end.clientY - start.clientY,
+				current = elementFromPoint(start, win),
+				cursor = win.document.createElement('div'),
+				calls = 0,
+				move;
+			move = function onmove() {
+				//get what fraction we are at
+				var now = new Date(),
+					scrollOffset = syn.helpers.scrollOffset(win),
+					fraction = (calls === 0 ? 0 : now - startTime) / duration,
+					options = {
+						clientX: distX * fraction + start.clientX,
+						clientY: distY * fraction + start.clientY
+					};
+				calls++;
+				if (fraction < 1) {
+					syn.helpers.extend(cursor.style, {
+						left: (options.clientX + scrollOffset.left + 2) + "px",
+						top: (options.clientY + scrollOffset.top + 2) + "px"
+					});
+					current = mouseMove(options, win, current);
+					syn.schedule(onmove, 15);
+				} else {
+					current = mouseMove(end, win, current);
+					win.document.body.removeChild(cursor);
+					resolve();
+				}
+			};
+			syn.helpers.extend(cursor.style, {
+				height: "5px",
+				width: "5px",
+				backgroundColor: "red",
+				position: "absolute",
+				zIndex: 19999,
+				fontSize: "1px"
+			});
+			win.document.body.appendChild(cursor);
+			move();
 		});
-		win.document.body.appendChild(cursor);
-		move();
 	},
 
 
 
 
-	startDrag = function (win, fromPoint, toPoint, duration, callback) {
+	startDrag = async function (win, fromPoint, toPoint, duration) {
 		if(syn.support.pointerEvents){
 			createEventAtPoint("pointerover", fromPoint, win);
 			createEventAtPoint("pointerenter", fromPoint, win);
@@ -467,24 +467,23 @@ syn.create.dragend = {
 
 		if(syn.support.pointerEvents){ createEventAtPoint("pointermove", fromPoint, win); }
 		createEventAtPoint("mousemove", fromPoint, win);
-		
-		
+
+
 		if(syn.support.pointerEvents){createEventAtPoint("pointerdown", fromPoint, win);}
 		if(syn.support.touchEvents){createEventAtPoint("touchstart", fromPoint, win);}
 		createEventAtPoint("mousedown", fromPoint, win);
-		startMove(win, fromPoint, toPoint, duration, function () {
-			if(syn.support.pointerEvents){createEventAtPoint("pointerup", toPoint, win);}
-			if(syn.support.touchEvents){createEventAtPoint("touchend", toPoint, win);}
-			createEventAtPoint("mouseup", toPoint, win);
-			if(syn.support.pointerEvents){createEventAtPoint("pointerleave", toPoint, win);}
-			createEventAtPoint("mouseleave", toPoint, win);
-			callback();
-		});
-	},	
+		await startMove(win, fromPoint, toPoint, duration);
 
-	
-	
-	
+		if(syn.support.pointerEvents){createEventAtPoint("pointerup", toPoint, win);}
+		if(syn.support.touchEvents){createEventAtPoint("touchend", toPoint, win);}
+		createEventAtPoint("mouseup", toPoint, win);
+		if(syn.support.pointerEvents){createEventAtPoint("pointerleave", toPoint, win);}
+		createEventAtPoint("mouseleave", toPoint, win);
+	},
+
+
+
+
 	center = function (el) {
 		var j = syn.jquery()(el),
 			o = j.offset();
@@ -537,12 +536,12 @@ syn.create.dragend = {
 		return option;
 	},
 
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	// if the client chords are not going to be visible ... scroll the page so they will be ...
 	adjust = function (from, to, win) {
 		if (from.clientY < 0) {
@@ -566,18 +565,18 @@ syn.create.dragend = {
 		}
 	};
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * @add syn prototype
  */
@@ -586,13 +585,13 @@ syn.helpers.extend(syn.init.prototype, {
 		 * @function syn.move move()
 	   * @parent mouse
 		 * @signature `syn.move(from, options, callback)`
-		 * Moves the cursor from one point to another.  
-		 * 
+		 * Moves the cursor from one point to another.
+		 *
 		 * ### Quick Example
-		 * 
+		 *
 		 * The following moves the cursor from (0,0) in
 		 * the window to (100,100) in 1 second.
-		 * 
+		 *
 		 *     syn.move(
 		 *          document.document,
 		 *          {
@@ -600,76 +599,76 @@ syn.helpers.extend(syn.init.prototype, {
 		 *            to: {clientX: 100, clientY: 100},
 		 *            duration: 1000
 		 *          })
-		 * 
+		 *
 		 * ## Options
-		 * 
+		 *
 		 * There are many ways to configure the endpoints of the move.
-		 * 
+		 *
 		 * ### PageX and PageY
-		 * 
+		 *
 		 * If you pass pageX or pageY, these will get converted
 		 * to client coordinates.
-		 * 
+		 *
 		 *     syn.move(
 		 *          document.document,
 		 *          {
 		 *            from: {pageX: 0, pageY: 0},
 		 *            to: {pageX: 100, pageY: 100}
 		 *          })
-		 * 
+		 *
 		 * ### String Coordinates
-		 * 
+		 *
 		 * You can set the pageX and pageY as strings like:
-		 * 
+		 *
 		 *     syn.move(
 		 *          document.document,
 		 *          {
 		 *            from: "0x0",
 		 *            to: "100x100"
 		 *          })
-		 * 
+		 *
 		 * ### Element Coordinates
-		 * 
+		 *
 		 * If jQuery is present, you can pass an element as the from or to option
 		 * and the coordinate will be set as the center of the element.
-		 
+
 		 *     syn.move(
 		 *          document.document,
 		 *          {
 		 *            from: $(".recipe")[0],
 		 *            to: $("#trash")[0]
 		 *          })
-		 * 
+		 *
 		 * ### Query Strings
-		 * 
+		 *
 		 * If jQuery is present, you can pass a query string as the from or to option.
-		 * 
+		 *
 		 * syn.move(
 		 *      document.document,
 		 *      {
 		 *        from: ".recipe",
 		 *        to: "#trash"
 		 *      })
-		 *    
+		 *
 		 * ### No From
-		 * 
+		 *
 		 * If you don't provide a from, the element argument passed to syn is used.
-		 * 
+		 *
 		 *     syn.move(
 		 *          'myrecipe',
 		 *          { to: "#trash" })
-		 * 
+		 *
 		 * ### Relative
-		 * 
+		 *
 		 * You can move the drag relative to the center of the from element.
-		 * 
+		 *
 		 *     syn.move("myrecipe", "+20 +30");
 		 *
 		 * @param {HTMLElement} from the element to move
 		 * @param {Object} options options to configure the drag
 		 * @param {Function} callback a callback that happens after the drag motion has completed
 		 */
-	_move: function (from, options, callback) {
+	_move: function (from, options) {
 
 		var win = syn.helpers.getWindow(from);
 		var sourceCoordinates = convertOption(options.from || from, win, from);
@@ -680,19 +679,20 @@ syn.helpers.extend(syn.init.prototype, {
 		if (options.adjust !== false) {
 			adjust(sourceCoordinates, destinationCoordinates, win);
 		}
-		startMove(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
+
+		return startMove(win, sourceCoordinates, destinationCoordinates, options.duration || 500);
 
 	},
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * @function syn.drag drag()
 	 * @parent mouse
@@ -713,15 +713,13 @@ syn.helpers.extend(syn.init.prototype, {
 		if (options.adjust !== false) {
 			adjust(sourceCoordinates, destinationCoordinates, win);
 		}
-		
+
 		DragonDrop.html5drag = from.draggable;
 
 		if(DragonDrop.html5drag){
-			DragonDrop.dragAndDrop(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
+			return DragonDrop.dragAndDrop(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
 		}else{
-			startDrag(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
+			return startDrag(win, sourceCoordinates, destinationCoordinates, options.duration || 500, callback);
 		}
 	}
 });
-
-
