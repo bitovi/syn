@@ -18,7 +18,7 @@ setTimeout(function supportLog() {
 	}
 }, 1);
 
-QUnit.test("Selecting a select element", function () {
+QUnit.test("Selecting a select element", async function() {
 	st.g("qunit-fixture")
 		.innerHTML =
 		"<form id='outer'><select name='select'><option value='1' id='one'>one</option><option value='2' id='two'>two</option></select></form>";
@@ -35,18 +35,18 @@ QUnit.test("Selecting a select element", function () {
 		.select, "change", changef);
 
 	stop();
-	syn.click(st.g("two"), function () {
-		equal(change, 1, "change called once");
-		equal(st.g("outer")
-			.select.selectedIndex, 1, "Change Selected Index");
+	await syn.click(st.g("two"));
 
-		start();
-		st.g("qunit-fixture")
-			.innerHTML = "";
-	});
+	equal(change, 1, "change called once");
+	equal(st.g("outer")
+		.select.selectedIndex, 1, "Change Selected Index");
+
+	start();
+	st.g("qunit-fixture")
+		.innerHTML = "";
 });
 
-QUnit.test("scrollTop triggers scroll events", function () {
+QUnit.test("scrollTop triggers scroll events", async function () {
 	st.g("qunit-fixture")
 		.innerHTML = "<div id='scroller' style='height:100px;width: 100px;overflow:auto'>" +
 		"<div style='height: 200px; width: 100%'>text" +
@@ -97,7 +97,7 @@ QUnit.test("syn.support effect on scroll position, #30", function () {
 	// test/qunit/page1.html
 	locate("test/pages/scroll_30.html",function(scroll30){
 		scroll30 = scroll30.replace(".js","");
-		
+
 		var iframe = document.createElement("iframe");
 		iframe.setAttribute("height", "100");
 		iframe.src = scroll30;
@@ -117,7 +117,7 @@ QUnit.test("syn.support effect on scroll position, #30", function () {
 		st.g("qunit-fixture")
 			.appendChild(iframe);
 	});
-	
+
 });
 
 QUnit.test("syn.schedule gets called when syn.delay is used", function () {
@@ -136,8 +136,7 @@ QUnit.test("syn.schedule gets called when syn.delay is used", function () {
 
 		st.g("qunit-fixture")
 			.appendChild(iframe);
-		
-	});
-	
-});
 
+	});
+
+});

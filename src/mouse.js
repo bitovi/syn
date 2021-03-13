@@ -122,10 +122,10 @@ h.extend(syn.create, {
 			if (doc.createEvent) {
 				try {
 					defaults.view = doc.defaultView;
-					
+
 					/* TODO: Eventually replace doc.createEvent / initMouseEvent down below (its deprecated )
 						https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/initMouseEvent
-						
+
 						Replace it with this:
 						event = new MouseEvent(type, defaults);
 					*/
@@ -165,7 +165,7 @@ h.extend(syn.create, {
 					element.checked = !element.checked;
 				}
 				if (type === "radio") {
-					//do the checks manually 
+					//do the checks manually
 					if (!element.checked) { //do nothing, no change
 						try {
 							syn.data(element, "radioChanged", true);
@@ -220,4 +220,3 @@ h.extend(syn.create, {
 		}
 	}
 });
-

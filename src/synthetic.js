@@ -39,11 +39,11 @@ var extend = function (d, s) {
 	 * @test funcunit/synthetic/qunit.html
 	 * syn is used to simulate user actions.  It creates synthetic events and
 	 * performs their default behaviors.
-	 * 
+	 *
 	 * <h2>Basic Use</h2>
 	 * The following clicks an input element with <code>id='description'</code>
 	 * and then types <code>'Hello World'</code>.
-	 * 
+	 *
 	 @codestart
 	 syn.click('description', {})
 	 .type("Hello World")
@@ -51,10 +51,10 @@ var extend = function (d, s) {
 	 * <h2>User Actions and Events</h2>
 	 * <p>syn is typically used to simulate user actions as opposed to triggering events. Typing characters
 	 * is an example of a user action.  The keypress that represents an <code>'a'</code>
-	 * character being typed is an example of an event. 
+	 * character being typed is an example of an event.
 	 * </p>
 	 * <p>
-	 *   While triggering events is supported, it's much more useful to simulate actual user behavior.  The 
+	 *   While triggering events is supported, it's much more useful to simulate actual user behavior.  The
 	 *   following actions are supported by syn:
 	 * </p>
 	 * <ul>
@@ -65,21 +65,21 @@ var extend = function (d, s) {
 	 *   <li><code>[syn.prototype.move move]</code> - moves the mouse from one position to another (triggering mouseover / mouseouts).</li>
 	 *   <li><code>[syn.prototype.drag drag]</code> - a mousedown, followed by mousemoves, and a mouseup.</li>
 	 * </ul>
-	 * All actions run asynchronously.  
-	 * Click on the links above for more 
+	 * All actions run asynchronously.
+	 * Click on the links above for more
 	 * information on how to use the specific action.
 	 * <h2>Asynchronous Callbacks</h2>
-	 * Actions don't complete immediately. This is almost 
-	 * entirely because <code>focus()</code> 
+	 * Actions don't complete immediately. This is almost
+	 * entirely because <code>focus()</code>
 	 * doesn't run immediately in IE.
-	 * If you provide a callback function to syn, it will 
+	 * If you provide a callback function to syn, it will
 	 * be called after the action is completed.
-	 * <br/>The following checks that "Hello World" was entered correctly: 
+	 * <br/>The following checks that "Hello World" was entered correctly:
 	 @codestart
 	 syn.click('description', {})
 	 .type("Hello World", function(){
-	 
-	 ok("Hello World" == document.getElementById('description').value)  
+
+	 ok("Hello World" == document.getElementById('description').value)
 	 })
 	 @codeend
 	 <h2>Asynchronous Chaining</h2>
@@ -98,14 +98,14 @@ var extend = function (d, s) {
 	 ok($('#newRecipe').parents('#favorites').length);
 	 })
 	 @codeend
-	 
+
 	 <h2>jQuery Helper</h2>
 	 If jQuery is present, syn adds a triggersyn helper you can use like:
 	 @codestart
 	 $("#description").triggersyn("type","Hello World");
 	 @codeend
 	 * <h2>Key Event Recording</h2>
-	 * <p>Every browser has very different rules for dispatching key events.  
+	 * <p>Every browser has very different rules for dispatching key events.
 	 * As there is no way to feature detect how a browser handles key events,
 	 * synthetic uses a description of how the browser behaves generated
 	 * by a recording application.  </p>
@@ -126,10 +126,10 @@ var extend = function (d, s) {
 	 * syn fully supports IE 6+, FF 3+, Chrome, Safari, Opera 10+.
 	 * With FF 1+, drag / move events are only partially supported. They will
 	 * not trigger mouseover / mouseout events.<br/>
-	 * Safari crashes when a mousedown is triggered on a select.  syn will not 
+	 * Safari crashes when a mousedown is triggered on a select.  syn will not
 	 * create this event.
 	 * <h2>Contributing to syn</h2>
-	 * Have we missed something? We happily accept patches.  The following are 
+	 * Have we missed something? We happily accept patches.  The following are
 	 * important objects and properties of syn:
 	 * <ul>
 	 * <li><code>syn.create</code> - contains methods to setup, convert options, and create an event of a specific type.</li>
@@ -139,7 +139,7 @@ var extend = function (d, s) {
 	 * </ul>
 	 * <h2>Roll Your Own Functional Test Framework</h2>
 	 * <p>syn is really the foundation of JavaScriptMVC's functional testing framework - [FuncUnit].
-	 *   But, we've purposely made syn work without any dependencies in the hopes that other frameworks or 
+	 *   But, we've purposely made syn work without any dependencies in the hopes that other frameworks or
 	 *   testing solutions can use it as well.
 	 * </p>
 	 * @constructor
@@ -195,12 +195,7 @@ extend(syn, {
 
 		//run event
 		if (typeof this[type] === "function") {
-			this[type](args.element, args.options, function (defaults, el) {
-				if (args.callback) {
-					args.callback.apply(self, arguments);
-				}
-				self.done.apply(self, arguments);
-			});
+			return this[type](args.element, args.options);
 		} else {
 			this.result = syn.trigger(args.element, type, args.options);
 			if (args.callback) {
@@ -614,7 +609,7 @@ extend(syn, {
 		keypressOnAnchorClicks: false,
 		optionClickBubbles: false,
 		pointerEvents: false,
-		touchEvents: false,		
+		touchEvents: false,
 		ready: 0
 	},
 	/**
@@ -672,10 +667,10 @@ extend(syn, {
 		}
 		return ret;
 	},
-	
-	
-	
-	
+
+
+
+
 	eventSupported: function (eventName) {
 		var el = document.createElement("div");
 		eventName = "on" + eventName;
@@ -716,7 +711,7 @@ extend(syn.init.prototype, {
 	 * @param {String} type The type of event or action to create: "_click", "_dblclick", "_drag", "_type".
 	 * @param {String|HTMLElement} [element] A element's id or an element.  If undefined, defaults to the previous element.
 	 * @param {Object} options Optiosn to pass to the event.
-	 
+
 	 * @param {Function} [callback] A function to callback after the action has run, but before any future chained actions are run.
 	 */
 	then: function (type, element, options, callback) {
@@ -811,41 +806,44 @@ extend(syn.init.prototype, {
 	 * @param {Object} options
 	 * @param {Function} callback
 	 */
-	"_click": function (element, options, callback, force) {
-		syn.helpers.addOffset(options, element);
-		if(syn.support.pointerEvents){
-			syn.trigger(element, 'pointerdown', options);
-		}
-		if(syn.support.touchEvents){
-			syn.trigger(element, 'touchstart', options);				
-		}
-		
-		syn.trigger(element, "mousedown", options);
-
-		//timeout is b/c IE is stupid and won't call focus handlers
-		schedule(function () {
+	"_click": function (element, options, force) {
+		return new Promise((resolve) => {
+			syn.helpers.addOffset(options, element);
 			if(syn.support.pointerEvents){
-				syn.trigger(element, 'pointerup', options);
+				syn.trigger(element, 'pointerdown', options);
 			}
 			if(syn.support.touchEvents){
-				syn.trigger(element, 'touchend', options);				
-			}	
-			
-			syn.trigger(element, "mouseup", options);
-			if (!syn.support.mouseDownUpClicks || force) {
-				syn.trigger(element, "click", options);
-				callback(true);
-			} else {
-				//we still have to run the default (presumably)
-				syn.create.click.setup('click', options, element);
-				syn.defaults.click.call(element);
-				//must give time for callback
-				schedule(function () {
-					callback(true);
-				}, 1);
+				syn.trigger(element, 'touchstart', options);
 			}
 
-		}, 1);
+			syn.trigger(element, "mousedown", options);
+
+			//timeout is b/c IE is stupid and won't call focus handlers
+			schedule(function () {
+				if(syn.support.pointerEvents){
+					syn.trigger(element, 'pointerup', options);
+				}
+				if(syn.support.touchEvents){
+					syn.trigger(element, 'touchend', options);
+				}
+
+				syn.trigger(element, "mouseup", options);
+				if (!syn.support.mouseDownUpClicks || force) {
+					syn.trigger(element, "click", options);
+					resolve(true);
+				} else {
+					//we still have to run the default (presumably)
+					syn.create.click.setup('click', options, element);
+					syn.defaults.click.call(element);
+					//must give time for callback
+					schedule(function () {
+						resolve(true);
+					}, 1);
+				}
+
+			}, 1);
+		})
+
 	},
 	/**
 	 * @function syn.rightClick rightClick()
@@ -862,7 +860,7 @@ extend(syn.init.prototype, {
 		if(syn.support.pointerEvents){
 			syn.trigger(element, 'pointerdown', mouseopts);
 		}
-			
+
 		syn.trigger(element, "mousedown", mouseopts);
 
 		//timeout is b/c IE is stupid and won't call focus handlers

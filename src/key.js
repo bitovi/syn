@@ -409,7 +409,7 @@ h.extend(syn.key, {
 		} else {
 			result.which = result.charCode;
 		}
-		
+
 		return result;
 	},
 	//types of event keys
@@ -568,7 +568,7 @@ h.extend(syn.key, {
 				syn.trigger(this, "click", {});
 			}
 		},
-		
+
 		// Gets all focusable elements.  If the element (this)
 		// doesn't have a tabindex, finds the next element after.
 		// If the element (this) has a tabindex finds the element
@@ -618,11 +618,11 @@ h.extend(syn.key, {
 					if (syn.key.shiftKey) {
 						nextIndex--;
 						// Select the previous item or loop down to the last
-						current = nextIndex >= 0  && orders[nextIndex][0] || orders[ordersLength-1][0];						
+						current = nextIndex >= 0  && orders[nextIndex][0] || orders[ordersLength-1][0];
 					} else {
 						nextIndex++;
 						// Select the next item or loop back to the first
-						current = nextIndex < ordersLength && orders[nextIndex][0] || orders[0][0];						
+						current = nextIndex < ordersLength && orders[nextIndex][0] || orders[0][0];
 					}
 				}
 			}
@@ -746,12 +746,12 @@ h.extend(syn.create, {
 				if (options.key && keyboardEventKeys[options.key]) {
 					options.key = keyboardEventKeys[options.key];
 				}
-				
+
 				event = new KeyboardEvent(type, options);
 				event.synthetic = true;
 				return event;
 			} else if (doc.createEvent) {
-				try {					
+				try {
 					event = doc.createEvent("KeyEvents");
 					event.initKeyEvent(type, true, true, window, options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.keyCode, options.charCode);
 				} catch (e) {
@@ -802,91 +802,89 @@ h.extend(syn.init.prototype, {
 	 * @param {Function} [callback]
 	 * @return {HTMLElement} the element currently focused.
 	 */
-	_key: function (element, options, callback) {
-		//first check if it is a special up
-		if (/-up$/.test(options) && h.inArray(options.replace("-up", ""),
-			syn.key.kinds.special) !== -1) {
-			syn.trigger(element, 'keyup', options.replace("-up", ""));
-			return callback(true, element);
-		}
+	_key: function (element, options) {
+		return new Promise((resolve) => {
+			//first check if it is a special up
+			if (/-up$/.test(options) && h.inArray(options.replace("-up", ""),
+				syn.key.kinds.special) !== -1) {
+				syn.trigger(element, 'keyup', options.replace("-up", ""));
+				return resolve({runDefaults: true, element});
+			}
 
-		// keep reference to current activeElement
-		var activeElement = h.getWindow(element)
-			.document.activeElement,
-			caret = syn.typeable.test(element) && getSelection(element),
-			key = convert[options] || options,
-			// should we run default events
-			runDefaults = syn.trigger(element, 'keydown', key),
+			// keep reference to current activeElement
+			var activeElement = h.getWindow(element)
+				.document.activeElement,
+				caret = syn.typeable.test(element) && getSelection(element),
+				key = convert[options] || options,
+				// should we run default events
+				runDefaults = syn.trigger(element, 'keydown', key),
 
-			// a function that gets the default behavior for a key
-			getDefault = syn.key.getDefault,
+				// a function that gets the default behavior for a key
+				getDefault = syn.key.getDefault,
 
-			// how this browser handles preventing default events
-			prevent = syn.key.browser.prevent,
+				// how this browser handles preventing default events
+				prevent = syn.key.browser.prevent,
 
-			// the result of the default event
-			defaultResult,
+				// the result of the default event
+				defaultResult,
 
-			keypressOptions = syn.key.options(key, 'keypress');
+				keypressOptions = syn.key.options(key, 'keypress');
 
-		if (runDefaults) {
-			//if the browser doesn't create keypresses for this key, run default
-			if (!keypressOptions) {
-				defaultResult = getDefault(key)
-					.call(element, keypressOptions, h.getWindow(element),
-						key, undefined, caret);
-			} else {
-				//do keypress
-				// check if activeElement changed b/c someone called focus in keydown
-				if (activeElement !== h.getWindow(element)
-					.document.activeElement) {
-					element = h.getWindow(element)
-						.document.activeElement;
-				}
-
-				runDefaults = syn.trigger(element, 'keypress', keypressOptions);
-				if (runDefaults) {
+			if (runDefaults) {
+				//if the browser doesn't create keypresses for this key, run default
+				if (!keypressOptions) {
 					defaultResult = getDefault(key)
 						.call(element, keypressOptions, h.getWindow(element),
 							key, undefined, caret);
+				} else {
+					//do keypress
+					// check if activeElement changed b/c someone called focus in keydown
+					if (activeElement !== h.getWindow(element)
+						.document.activeElement) {
+						element = h.getWindow(element)
+							.document.activeElement;
+					}
+
+					runDefaults = syn.trigger(element, 'keypress', keypressOptions);
+					if (runDefaults) {
+						defaultResult = getDefault(key)
+							.call(element, keypressOptions, h.getWindow(element),
+								key, undefined, caret);
+					}
+				}
+			} else {
+				//canceled ... possibly don't run keypress
+				if (keypressOptions && h.inArray('keypress', prevent.keydown) === -1) {
+					// check if activeElement changed b/c someone called focus in keydown
+					if (activeElement !== h.getWindow(element)
+						.document.activeElement) {
+						element = h.getWindow(element)
+							.document.activeElement;
+					}
+
+					syn.trigger(element, 'keypress', keypressOptions);
 				}
 			}
-		} else {
-			//canceled ... possibly don't run keypress
-			if (keypressOptions && h.inArray('keypress', prevent.keydown) === -1) {
-				// check if activeElement changed b/c someone called focus in keydown
-				if (activeElement !== h.getWindow(element)
-					.document.activeElement) {
-					element = h.getWindow(element)
-						.document.activeElement;
-				}
-
-				syn.trigger(element, 'keypress', keypressOptions);
+			if (defaultResult && defaultResult.nodeName) {
+				element = defaultResult;
 			}
-		}
-		if (defaultResult && defaultResult.nodeName) {
-			element = defaultResult;
-		}
 
-		if (defaultResult !== null) {
-			syn.schedule(function () {
-				
-				if((key === '\r') && (element.nodeName.toLowerCase() === 'input')){
-					// do nothing. In the case of textInputs, RETURN key does not create an input event
-				}else if (syn.support.oninput) {
-					syn.trigger(element, 'input', syn.key.options(key, 'input'));
-				}
-				syn.trigger(element, 'keyup', syn.key.options(key, 'keyup'));
-				callback(runDefaults, element);
-			}, 1);
-		} else {
-			callback(runDefaults, element);
-		}
+			if (defaultResult !== null) {
+				syn.schedule(function () {
 
-		//do mouseup
-		return element;
-		// is there a keypress? .. if not , run default
-		// yes -> did we prevent it?, if not run ...
+					if((key === '\r') && (element.nodeName.toLowerCase() === 'input')){
+						// do nothing. In the case of textInputs, RETURN key does not create an input event
+					}else if (syn.support.oninput) {
+						syn.trigger(element, 'input', syn.key.options(key, 'input'));
+					}
+					syn.trigger(element, 'keyup', syn.key.options(key, 'keyup'));
+					resolve({runDefaults: true, element});
+				}, 1);
+			} else {
+				resolve({runDefaults: true, element});
+			}
+
+		});
 	},
 	/**
 	 * @function syn.type type()
@@ -912,27 +910,23 @@ h.extend(syn.init.prototype, {
 	 * @param {String} options the text to type
 	 * @param {Function} [callback] a function to callback
 	 */
-	_type: function (element, options, callback) {
+	_type: async function (element, options) {
 		//break it up into parts ...
 		//go through each type and run
 		var parts = (options + "")
 			.match(/(\[[^\]]+\])|([^\[])/g),
-			self = this,
-			runNextPart = function (runDefaults, el) {
-				var part = parts.shift();
-				if (!part) {
-					callback(runDefaults, el);
-					return;
-				}
-				el = el || element;
-				if (part.length > 1) {
-					part = part.substr(1, part.length - 2);
-				}
-				self._key(el, part, runNextPart);
-			};
+				el = element,
+				part;
+		while( part = parts.shift() ) {
+			if (part.length > 1) {
+				part = part.substr(1, part.length - 2);
+			}
+			var result = await this._key(el, part);
+			
+			el = result.element || el;
 
-		runNextPart();
+		}
+		return {element:el};
 
 	}
 });
-
