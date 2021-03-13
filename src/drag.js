@@ -485,12 +485,7 @@ syn.create.dragend = {
 
 
 	center = function (el) {
-		var j = syn.jquery()(el),
-			o = j.offset();
-		return {
-			pageX: o.left + (j.outerWidth() / 2),
-			pageY: o.top + (j.outerHeight() / 2)
-		};
+		return syn.helpers.addOffset({}, el);
 	},
 	convertOption = function (option, win, from) {
 		var page = /(\d+)[x ](\d+)/,
@@ -521,7 +516,7 @@ syn.create.dragend = {
 			};
 		}
 		if (typeof option === 'string') {
-			option = syn.jquery()(option, win.document)[0];
+			option = win.document.querySelector( option );
 		}
 		if (option.nodeName) {
 			option = center(option);

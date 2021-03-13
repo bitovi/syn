@@ -196,28 +196,14 @@ extend(syn, {
 	init: function (type, element, options, callback) {
 		var args = syn.args(options, element, callback),
 			self = this;
-		this.queue = [];
-		this.element = args.element;
+		//this.queue = [];
+		//this.element = args.element;
 
 		//run event
 		if (typeof this[type] === "function") {
 			return this[type](args.element, args.options);
 		} else {
-			this.result = syn.trigger(args.element, type, args.options);
-			if (args.callback) {
-				args.callback.call(this, args.element, this.result);
-			}
-		}
-	},
-	jquery: function (el, fast) {
-		if (window.FuncUnit && window.FuncUnit.jQuery) {
-			return window.FuncUnit.jQuery;
-		}
-		if (el) {
-			return syn.helpers.getWindow(el)
-				.jQuery || window.jQuery;
-		} else {
-			return window.jQuery;
+			return syn.trigger(args.element, type, args.options);
 		}
 	},
 	/**
@@ -461,14 +447,13 @@ extend(syn, {
 			};
 		},
 		addOffset: function (options, el) {
-			var jq = syn.jquery(el),
-				off;
-			if (typeof options === 'object' && options.clientX === undefined && options.clientY === undefined && options.pageX === undefined && options.pageY === undefined && jq) {
-				el = jq(el);
-				off = el.offset();
-				options.pageX = off.left + el.width() / 2;
-				options.pageY = off.top + el.height() / 2;
+			var rect;
+			if (typeof options === 'object' && options.clientX === undefined && options.clientY === undefined && options.pageX === undefined && options.pageY === undefined) {
+				rect = el.getBoundingClientRect();
+				options.pageX = syn.helpers.getWindow(el).scrollX + rect.left + rect.width / 2;
+				options.pageY = syn.helpers.getWindow(el).scrollY + rect.top + rect.height / 2;
 			}
+			return options;
 		}
 	},
 	// place for key data
@@ -757,7 +742,7 @@ extend(syn.init.prototype, {
 	 * @param {Number} [timeout]
 	 * @param {Function} [callback]
 	 */
-	delay: function (timeout, callback) {
+	/*delay: function (timeout, callback) {
 		if (typeof timeout === 'function') {
 			callback = timeout;
 			timeout = null;
@@ -774,6 +759,8 @@ extend(syn.init.prototype, {
 		});
 		return this;
 	},
+	*/
+	/*
 	done: function (defaults, el) {
 		if (el) {
 			this.element = el;
@@ -784,6 +771,7 @@ extend(syn.init.prototype, {
 		}
 
 	},
+	*/
 	/**
 	 * @function syn.click click()
 	 * @parent mouse
