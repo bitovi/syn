@@ -123,14 +123,14 @@ syn.helpers.extend(syn,{
 	 *
 	 * The following types 'JavaScript MVC' then deletes the space.
 	 * @codestart
-	 * syn.type('name', 'JavaScript MVC[left][left][left]\b')
+	 * syn.type('#name', 'JavaScript MVC[left][left][left]\b')
 	 * @codeend
 	 *
 	 * Type is able to handle (and move with) tabs (\t).
 	 * The following simulates tabing and entering values in a form and
 	 * eventually submitting the form.
 	 * @codestart
-	 * syn.type("Justin\tMeyer\t27\tjustinbmeyer@gmail.com\r")
+	 * syn.type("#Justin\tMeyer\t27\tjustinbmeyer@gmail.com\r")
 	 * @codeend
 	 * @param {HTMLElement} [element] an element or an id of an element
 	 * @param {String} options the text to type

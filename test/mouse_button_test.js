@@ -265,7 +265,7 @@ QUnit.test("Click! Event Order", 1, async function () {
 	st.binder("focusme", "click", pushType);
 
 	stop();
-	await syn.click("focusme", {});
+	await syn.click("#focusme", {});
 
 	QUnit.deepEqual(actualOrder, expectedOrder);
 	QUnit.start();
@@ -296,7 +296,7 @@ QUnit.test("Click! Pointer Event Order", syn.support.pointerEvents ? 3 : 0, asyn
 	}
 
 	stop();
-	await syn.click("pointerTarget", {});
+	await syn.click("#pointerTarget", {});
 
 	QUnit.start();
 });
@@ -325,7 +325,7 @@ QUnit.test("Click! Touch Event Order", syn.support.touchEvents ? 3 : 0, async fu
 	}
 
 	stop();
-	syn.click("touchTarget", {});
+	syn.click("#touchTarget", {});
 
 	QUnit.start();
 });
@@ -348,7 +348,7 @@ QUnit.test("Click! Anchor has href", async function () {
 		QUnit.ok(target.href.indexOf("#aHash") > -1, "got href");
 	});
 
-	await syn.click("jsHrefHash", {});
+	await syn.click("#jsHrefHash", {});
 
 	QUnit.equal(window.location.hash, "#aHash", "hash set ...");
 	QUnit.start();
@@ -378,7 +378,7 @@ QUnit.test("Click! Anchor Focuses", syn.skipFocusTests ? 1 : 2, async function (
 	stop();
 	//need to give browsers a second to show element
 
-	await syn.click("focusme", {});
+	await syn.click("#focusme", {});
 
 	QUnit.start();
 
@@ -400,9 +400,9 @@ if (!syn.skipFocusTests) {
 		});
 
 		stop();
-		await syn.click("one", {});
-		await syn.key("one","a");
-		await syn.click("two", {});
+		await syn.click("#one", {});
+		await syn.key("#one","a");
+		await syn.click("#two", {});
 
 		QUnit.start();
 		QUnit.equal(change, 1, "Change called once");
@@ -420,8 +420,8 @@ if (!syn.skipFocusTests) {
 		});
 
 		stop();
-		await syn.click("one", {});
-		await syn.key("one","a");
+		await syn.click("#one", {});
+		await syn.key("#one","a");
 		await syn.click(document.documentElement, {});
 		QUnit.start();
 		QUnit.equal(change, 1, "Change called once");
@@ -435,7 +435,7 @@ QUnit.test("Right Click", async function () {
 		context++;
 	});
 
-	await syn.rightClick("one", {});
+	await syn.rightClick("#one", {});
 
 	if (syn.mouse.browser.contextmenu) {
 		QUnit.equal(1, context, "context was called");
@@ -462,7 +462,7 @@ QUnit.test("Right Click Issues PointerEvents", syn.support.pointerEvents ? 2 : 0
 		});
 	}
 	stop();
-	await syn.rightClick("pointerTarget", {});
+	await syn.rightClick("#pointerTarget", {});
 	QUnit.start();
 });
 
@@ -479,7 +479,7 @@ QUnit.test("Double Click", async function () {
 		eventSequence.push('click');
 	});
 
-	await syn.dblclick("dblclickme", {});
+	await syn.dblclick("#dblclickme", {});
 
 	QUnit.equal(eventSequence.join(', '), 'click, click, dblclick', 'expected event sequence for doubleclick');
 	QUnit.start();

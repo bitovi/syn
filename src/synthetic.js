@@ -123,7 +123,10 @@ var syn = {
 			} else if (arguments[i] && arguments[i].nodeName) {
 				res.element = arguments[i];
 			} else if (res.options && typeof arguments[i] === 'string') { //we can get by id
-				res.element = document.getElementById(arguments[i]);
+				if(arguments[i].match(/^\w+$/)) {
+					throw new Error(arguments[i]);
+				}
+				res.element = document.querySelector(arguments[i]);
 			} else if (arguments[i]) {
 				res.options = arguments[i];
 			}
