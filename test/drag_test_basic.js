@@ -1,12 +1,11 @@
-var syn = require('syn');
-var locate = require('test/locate_test');
-var QUnit = require("steal-qunit");
-var $ = require("jquery");
-require("syn/drag");
+import syn from '../syn.js';
+import locate from './locate_test.js';
+import "../node_modules/jquery/dist/jquery.js";
+
 
 QUnit.module("syn/drag");
 
-QUnit.test("Drag Item Upward HTML5", 2, function () {
+QUnit.test("Drag Item Upward HTML5", function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -34,7 +33,7 @@ QUnit.test("Drag Item Upward HTML5", 2, function () {
 
 
 
-QUnit.test("Drag Item Downward jQuery", 1, function () {
+QUnit.test("Drag Item Downward jQuery", function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -47,7 +46,7 @@ QUnit.test("Drag Item Downward jQuery", 1, function () {
 
 		// Timeout is required because jQuery isn't ready yet on the target page
 		setTimeout(async function () {
-			
+
 			await syn.drag(draggable, {to: target});
 
 			var check = pageUnderTest.querySelector('#draggable')
@@ -70,7 +69,7 @@ QUnit.test("Drag Item Downward jQuery", 1, function () {
 	My theory is that we are sending the final drag events by page offset rather than dragdrop target, and that
 	it is "hitting" the element being dragged because we are over the dragdrop target at the time of the drop.
 */
-QUnit.test("Drag Regressions 1 - cancel and bubble", 1, function () {
+QUnit.test("Drag Regressions 1 - cancel and bubble",  function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');

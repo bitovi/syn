@@ -1,8 +1,8 @@
 /* global st:true */
-var syn = require('syn');
-var locate = require('test/locate_test');
-var st = require("test/helpers_test");
-var QUnit = require("steal-qunit");
+import syn from '../syn.js';
+import locate from './locate_test.js';
+import st from "./helpers_test.js";
+import "../node_modules/qunit/qunit/qunit.js";
 
 QUnit.module("syn");
 

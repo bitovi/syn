@@ -1,6 +1,6 @@
-var syn = require('syn');
-var locate = require('test/locate_test');
-var QUnit = require("steal-qunit");
+import syn from '../syn.js'
+import locate from './locate_test.js'
+
 
 QUnit.module("synthetic/mouse/regressions");
 
@@ -10,7 +10,7 @@ var frameUrl = 'testpages/regressions_mouse.html';
 
 
 
-QUnit.test("Testing Button codes: left click", 2, function () {
+QUnit.test("Testing Button codes: left click", function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -41,7 +41,7 @@ QUnit.test("Testing Button codes: left click", 2, function () {
 
 
 
-QUnit.test("Testing Button codes: right click", 1, function () {
+QUnit.test("Testing Button codes: right click",  function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');

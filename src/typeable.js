@@ -1,4 +1,4 @@
-var syn = require('./synthetic');
+import syn from "./synthetic.js";
 
 // TODO: rename to focusable to be more accurate.
 

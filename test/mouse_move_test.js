@@ -9,11 +9,10 @@
 
 */
 
-var syn = require('syn');
-var locate = require('test/locate_test');
-var QUnit = require("steal-qunit");
-var $ = require("jquery");
-require("syn/drag");
+import syn from '../syn.js'
+import locate from './locate_test.js'
+import "../node_modules/jquery/dist/jquery.js"
+import "../src/drag.js"
 
 QUnit.module("syn/mouse_move");
 
@@ -24,7 +23,7 @@ var frameUrl = 'testpages/mousemove.html';
 var mouseMoveOver = 'pointerover, pointerenter, mouseover, mouseenter, pointermove, mousemove, pointerout, pointerleave, mouseout, mouseleave, ';
 var mouseMoveEnd = 'pointerover, pointerenter, mouseover, mouseenter, pointermove, mousemove, ';
 
-QUnit.test("Move Cursor Upward", 8, function () {
+QUnit.test("Move Cursor Upward",  function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -62,7 +61,7 @@ QUnit.test("Move Cursor Upward", 8, function () {
 
 
 
-QUnit.test("Move Cursor Downward", 8, function () {
+QUnit.test("Move Cursor Downward", function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -99,7 +98,7 @@ QUnit.test("Move Cursor Downward", 8, function () {
 
 
 
-QUnit.test("Move Cursor Leftward", 8, function () {
+QUnit.test("Move Cursor Leftward", function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -136,7 +135,7 @@ QUnit.test("Move Cursor Leftward", 8, function () {
 
 
 
-QUnit.test("Move Cursor Rightward", 8, function () {
+QUnit.test("Move Cursor Rightward", function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -174,7 +173,7 @@ QUnit.test("Move Cursor Rightward", 8, function () {
 
 
 
-QUnit.test("Move Cursor Diagonal Up+Left", 2, function () {
+QUnit.test("Move Cursor Diagonal Up+Left",  function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -203,7 +202,7 @@ QUnit.test("Move Cursor Diagonal Up+Left", 2, function () {
 
 
 
-QUnit.test("Move Cursor Diagonal Up+Right", 2, function () {
+QUnit.test("Move Cursor Diagonal Up+Right",  function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -232,7 +231,7 @@ QUnit.test("Move Cursor Diagonal Up+Right", 2, function () {
 
 
 
-QUnit.test("Move Cursor Diagonal Down+Left", 2, function () {
+QUnit.test("Move Cursor Diagonal Down+Left",  function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -261,7 +260,7 @@ QUnit.test("Move Cursor Diagonal Down+Left", 2, function () {
 
 
 
-QUnit.test("Move Cursor Diagonal Down+Right", 1, function () {
+QUnit.test("Move Cursor Diagonal Down+Right",  function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');

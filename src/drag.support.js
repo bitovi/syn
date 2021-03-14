@@ -1,4 +1,5 @@
-var syn = require('./synthetic');
+import syn from "./synthetic.js";
+
 // check if elementFromPageExists
 (function dragSupport() {
 

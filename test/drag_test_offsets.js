@@ -2,7 +2,7 @@ var syn = require('syn');
 var locate = require('test/locate_test');
 var QUnit = require("steal-qunit");
 var $ = require("jquery");
-require("syn/drag");
+require("syn/src/drag");
 
 QUnit.module("syn/drag");
 

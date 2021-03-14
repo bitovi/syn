@@ -1,5 +1,5 @@
-var syn = require('./synthetic');
-require('./key');
+import syn from "./synthetic.js";
+import "./key.js";
 
 
 if (!syn.config.support) {

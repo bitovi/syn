@@ -1,8 +1,7 @@
 /* global st */
-var syn = require('syn');
-var locate = require('test/locate_test');
-var QUnit = require("steal-qunit");
-var st = require("test/helpers_test");
+import syn from '../syn.js';
+import locate from './locate_test.js';
+import st from "./helpers_test.js";
 
 QUnit.module("synthetic/key", {
 	setup: function () {
@@ -41,7 +40,7 @@ QUnit.test("Key Characters", function () {
 		.value, "1", "1 written");
 });
 
-QUnit.test("Key \\r Submits Forms", 2, async function () {
+QUnit.test("Key \\r Submits Forms", async function () {
 	var submit = 0,
 		change = 0;
 	st.binder("key", "change", function (ev) {
@@ -70,7 +69,7 @@ QUnit.test("Key \\r Submits Forms", 2, async function () {
 	start();
 });
 
-QUnit.test("Key \\r Clicks Links", 1, async function () {
+QUnit.test("Key \\r Clicks Links", async function () {
 	var clicked = 0;
 	st.binder("focusLink", "click", function (ev) {
 		clicked++;
@@ -87,7 +86,7 @@ QUnit.test("Key \\r Clicks Links", 1, async function () {
 	start();
 });
 
-QUnit.test("Key Event Order", 1, async function () {
+QUnit.test("Key Event Order", async function () {
 	var order = [],
 		recorder = function (ev) {
 			order.push(ev.type);
@@ -630,7 +629,8 @@ QUnit.test("caps keycodes", async function () {
 
 
 
-test("number key codes", 2, async function () {
+QUnit.test("number key codes", async function (assert) {
+	assert.expect(2);
 	stop();
 
 	st.binder("key", "keydown", function (ev) {

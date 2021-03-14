@@ -1,10 +1,10 @@
-require('test/syn_test');
-require('test/key_test');
-require('test/key_regressions_test');
-require('test/mouse_move_test');
-require('test/mouse_button_test');
-require('test/mouse_regressions_test');
-require('test/drag_test_basic');
+import './syn_test.js'
+import './key_test.js'
+import './key_regressions_test.js'
+import './mouse_move_test.js'
+import './mouse_button_test.js'
+import './mouse_regressions_test.js'
+import './drag_test_basic.js'
 //require('test/drag_test_offsets'); //
-require('test/typeable_test');
-require('test/focus_test');
+import './typeable_test.js'
+import './focus_test.js'

@@ -1,9 +1,8 @@
 /* global st */
 
-var syn = require('syn');
-var locate = require('test/locate_test');
-var QUnit = require("steal-qunit");
-var st = require("test/helpers_test");
+import syn from '../syn.js';
+import locate from './locate_test.js';
+import st from "./helpers_test.js";
 
 
 var didSomething = 0;
@@ -242,7 +241,7 @@ QUnit.test("Click Radio Buttons", function () {
 });
 
 // this test can be flaky ... I think we need methods like .click to wait on the page loading
-QUnit.test("Click! Event Order", 1, async function () {
+QUnit.test("Click! Event Order", async function () {
 	var order = 0;
 	st.g("qunit-fixture")
 		.innerHTML = "<input id='focusme'/>";
@@ -272,7 +271,9 @@ QUnit.test("Click! Event Order", 1, async function () {
 
 });
 
-QUnit.test("Click! Pointer Event Order", syn.support.pointerEvents ? 3 : 0, async function () {
+QUnit.test("Click! Pointer Event Order", async function (assert) {
+	assert.expect(syn.support.pointerEvents ? 3 : 0);
+
 	var order = 0;
 	st.g("qunit-fixture").innerHTML = "<input id='pointerTarget'/>";
 
@@ -301,7 +302,8 @@ QUnit.test("Click! Pointer Event Order", syn.support.pointerEvents ? 3 : 0, asyn
 	QUnit.start();
 });
 
-QUnit.test("Click! Touch Event Order", syn.support.touchEvents ? 3 : 0, async function () {
+QUnit.test("Click! Touch Event Order", async function (assert) {
+	assert.expect(syn.support.touchEvents ? 3 : 0);
 	var order = 0;
 	st.g("qunit-fixture").innerHTML = "<input id='touchTarget'/>";
 
@@ -355,7 +357,8 @@ QUnit.test("Click! Anchor has href", async function () {
 	window.location.hash = "";
 });
 
-QUnit.test("Click! Anchor Focuses", syn.skipFocusTests ? 1 : 2, async function () {
+QUnit.test("Click! Anchor Focuses", async function (assert) {
+	assert.expect(syn.skipFocusTests ? 1 : 2);
 	st.g("qunit-fixture")
 		.innerHTML = "<a href='#abc' id='focusme'>I am visible</a>";
 
@@ -446,7 +449,8 @@ QUnit.test("Right Click", async function () {
 });
 
 
-QUnit.test("Right Click Issues PointerEvents", syn.support.pointerEvents ? 2 : 0, async function () {
+QUnit.test("Right Click Issues PointerEvents", async function (assert) {
+	assert.expect(syn.support.pointerEvents ? 2 : 0);
 	var order = 1;
 	st.g("qunit-fixture").innerHTML = "<input id='pointerTarget'/>";
 

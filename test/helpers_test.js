@@ -33,4 +33,4 @@ var st = {
 		return steal.joinURIs(base, path);
 	})
 };
-module.exports = st;
+export default st;

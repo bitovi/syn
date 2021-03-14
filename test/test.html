@@ -11,7 +11,7 @@
 		<link rel="stylesheet" href="../utils/Xenophon.css">
 		<script type="text/javascript" src="../utils/Xenophon.js"></script>
 		<script type="text/javascript" src="resources/helpers/BrowserDetective.js"></script>
-		
+		<link rel="stylesheet" href="../node_modules/qunit/qunit/qunit.css">
 		<style>
 			div.mookDefenseShield{
 				position:absolute;
@@ -25,7 +25,7 @@
 		}
 		</style>
 	</head>
-	
+
 	<body>
 
 		<iframe id="pageUnderTest" width="100%" height="100px" src="./testpages/landing.html"></iframe>
@@ -33,9 +33,11 @@
 		<div id="qunit"></div>
 		<div id="qunit-fixture"></div>
 
+		<script type="module" src="./tests.js"></script>
+
 		<!-- Prototype pane that sits over the SUT so that humans cannot accidentally cause the test to fail-->
 		<!--<div class="mookDefenseShield"></div>-->
-		
-		<script src="../node_modules/steal/steal.js" main="test/tests"></script>
+
+
 	</body>
 </html>

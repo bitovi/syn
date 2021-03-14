@@ -1,5 +1,5 @@
-var syn = require('./synthetic');
-require('./mouse');
+import syn from "./synthetic.js";
+import "./mouse.js";
 
 
 (function checkSupport() {

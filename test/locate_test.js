@@ -1,3 +1,3 @@
-module.exports = function(location, callback){
+export default function(location, callback){
 	callback("../"+location);
 };

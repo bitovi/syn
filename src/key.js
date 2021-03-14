@@ -1,7 +1,6 @@
-var syn = require('./synthetic');
-require('./typeable');
-require('./browsers');
-
+import syn from "./synthetic.js";
+import "./typeable.js";
+import "./browsers.js";
 
 var h = syn.helpers;
 var synKey = syn.key;

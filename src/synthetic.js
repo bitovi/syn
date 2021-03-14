@@ -507,5 +507,4 @@ function toMap(str){
 
 
 
-
-module.exports = syn;
+export default syn;

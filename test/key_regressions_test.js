@@ -1,13 +1,12 @@
-var syn = require('syn');
-var locate = require('test/locate_test');
-var QUnit = require("steal-qunit");
+import syn from '../syn.js'
+import locate from './locate_test.js'
 
 QUnit.module("synthetic/key/regressions");
 
 var frameHeight = 110;
 var frameUrl = 'testpages/regressions_keyboard.html';
 
-QUnit.test("Testing Keycodes for !", 2, async function () {
+QUnit.test("Testing Keycodes for !", async function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -30,7 +29,7 @@ QUnit.test("Testing Keycodes for !", 2, async function () {
 });
 
 
-QUnit.test("Special keycodes for enter on TextBox", 1, async function () {
+QUnit.test("Special keycodes for enter on TextBox", async function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -62,7 +61,7 @@ QUnit.test("Special keycodes for enter on TextBox", 1, async function () {
 });
 
 
-QUnit.test("Special keycodes for enter on TextArea", 1, async function () {
+QUnit.test("Special keycodes for enter on TextArea",  async function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');

@@ -1,6 +1,5 @@
-var syn = require('syn');
-var locate = require('test/locate_test');
-var QUnit = require("steal-qunit");
+import syn from '../syn.js'
+import locate from './locate_test.js'
 
 QUnit.module("syn/focus");
 
@@ -22,7 +21,7 @@ Tests left to add:
 
 */
 
-QUnit.test("Focus from click", 1, function () {
+QUnit.test("Focus from click", function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -48,7 +47,7 @@ QUnit.test("Focus from click", 1, function () {
 
 
 
-QUnit.test("Focus from double-click", 1, function () {
+QUnit.test("Focus from double-click",  function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -74,7 +73,7 @@ QUnit.test("Focus from double-click", 1, function () {
 
 
 
-QUnit.test("Focus from right-click", 1, function () {
+QUnit.test("Focus from right-click",  function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -100,7 +99,7 @@ QUnit.test("Focus from right-click", 1, function () {
 
 
 
-QUnit.test("Focus on next element upon tab", 3, function () {
+QUnit.test("Focus on next element upon tab", function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -130,7 +129,7 @@ QUnit.test("Focus on next element upon tab", 3, function () {
 
 
 
-QUnit.test("Focus wraps when tabbed upon last focusable element", 3, function () {
+QUnit.test("Focus wraps when tabbed upon last focusable element",  function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -160,7 +159,7 @@ QUnit.test("Focus wraps when tabbed upon last focusable element", 3, function ()
 
 
 
-QUnit.test("Focus on prev element upon anti-tab", 3, function () {
+QUnit.test("Focus on prev element upon anti-tab",  function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');
@@ -189,7 +188,7 @@ QUnit.test("Focus on prev element upon anti-tab", 3, function () {
 
 
 
-QUnit.test("Focus wraps when anti-tabbed upon first focusable element", 3, function () {
+QUnit.test("Focus wraps when anti-tabbed upon first focusable element",  function () {
 	stop();
 
 	var testFrame = document.getElementById('pageUnderTest');

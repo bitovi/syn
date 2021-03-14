@@ -1,6 +1,5 @@
-var syn = require('syn');
-var locate = require('test/locate_test');
-var QUnit = require("steal-qunit");
+import syn from '../syn.js'
+import locate from './locate_test.js'
 
 
 QUnit.module("synthetic/typeable");
@@ -44,5 +43,3 @@ QUnit.test("User defined typeable function", function () {
 
 	equal(isTypeable(div), true, "Custom function works.");
 });
-
-

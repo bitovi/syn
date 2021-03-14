@@ -1,5 +1,5 @@
-var syn = require('./synthetic');
-require('./drag.support');
+import syn from "./synthetic.js";
+import "./drag.support.js";
 /*
 TODO: This is getting very complicated. We should probably separate the DRAG and MOVE abilities
 	into two separate actions

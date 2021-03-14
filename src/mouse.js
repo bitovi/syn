@@ -1,4 +1,4 @@
-var syn = require('./synthetic');
+import syn from "./synthetic.js";
 
 // Add high-level functions directly to syn
 syn.helpers.extend(syn, {

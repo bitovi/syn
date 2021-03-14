@@ -1,4 +1,4 @@
-var syn = require('./synthetic');
+import syn from "./synthetic.js";
 
 // For more details please refer to:
 // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
