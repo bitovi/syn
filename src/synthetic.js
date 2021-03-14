@@ -123,9 +123,6 @@ var syn = {
 			} else if (arguments[i] && arguments[i].nodeName) {
 				res.element = arguments[i];
 			} else if (res.options && typeof arguments[i] === 'string') { //we can get by id
-				if(arguments[i].match(/^\w+$/)) {
-					throw new Error(arguments[i]);
-				}
 				res.element = document.querySelector(arguments[i]);
 			} else if (arguments[i]) {
 				res.options = arguments[i];
@@ -339,9 +336,10 @@ var syn = {
 			return -1;
 		},
 		getWindow: function (element) {
-			if(!element) {debugger;}
 			if (element.ownerDocument) {
 				return element.ownerDocument.defaultView || element.ownerDocument.parentWindow;
+			} else if(element.defaultView) {
+				return element.defaultView;
 			}
 		},
 		scrollOffset: function (win, set) {
