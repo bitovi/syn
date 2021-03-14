@@ -21,8 +21,8 @@ var testSpeed = 200;
 var frameHeight = 350;
 var frameUrl = 'testpages/mousemove.html';
 
-var mouseMoveOver = 'pointerover, pointerenter, mouseover, mouseenter, pointermove, pointerout, pointerleave, mouseout, mouseleave, ';
-var mouseMoveEnd = 'pointerover, pointerenter, mouseover, mouseenter, pointermove, ';
+var mouseMoveOver = 'pointerover, pointerenter, mouseover, mouseenter, pointermove, mousemove, pointerout, pointerleave, mouseout, mouseleave, ';
+var mouseMoveEnd = 'pointerover, pointerenter, mouseover, mouseenter, pointermove, mousemove, ';
 
 QUnit.test("Move Cursor Upward", 8, function () {
 	stop();
@@ -35,7 +35,7 @@ QUnit.test("Move Cursor Upward", 8, function () {
 		var pageUnderTest = document.getElementById('pageUnderTest').contentDocument.querySelector('body');
 		var source = pageUnderTest.querySelector('#cell_c2');
 		var destination = pageUnderTest.querySelector('#cell_a2');
-
+		//debugger;
 		await syn.move(source, {to: destination, duration: testSpeed});
 
 		// ensure we get mouse events over the places that we expect

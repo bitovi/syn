@@ -106,7 +106,7 @@ syn.helpers.extend(syn,{
 		var sourceCoordinates = convertOption(options.from || from, win, from);
 		var destinationCoordinates = convertOption(options.to || options, win, from);
 
-		DragonDrop.html5drag = syn.support.pointerEvents;
+		//DragonDrop.html5drag = syn.support.pointerEvents;
 
 		if (options.adjust !== false) {
 			adjust(sourceCoordinates, destinationCoordinates, win);
@@ -151,7 +151,7 @@ syn.helpers.extend(syn,{
 });
 
 syn.helpers.extend(syn.events.types,{
-	dragStart: {
+	dragstart: {
 		options: { bubbles:false, cancelable:false },
 		create: createDragEvent
 	},
@@ -159,15 +159,15 @@ syn.helpers.extend(syn.events.types,{
 		options: { bubbles:true, cancelable:true },
 		create: createDragEvent
 	},
-	dragEnter: {
+	dragenter: {
 		options: { bubbles:true, cancelable:true },
 		create: createDragEvent
 	},
-	dragOver: {
+	dragover: {
 		options: { bubbles:true, cancelable:true },
 		create: createDragEvent
 	},
-	dragLeave: {
+	dragleave: {
 		options: { bubbles:true, cancelable:false },
 		create: createDragEvent
 	},
@@ -175,7 +175,7 @@ syn.helpers.extend(syn.events.types,{
 		options: { bubbles:true, cancelable:true, buttons:1 },
 		create: createDragEvent
 	},
-	dragEnd: {
+	dragend: {
 		options: { bubbles:true, cancelable:false },
 		create: createDragEvent
 	}
@@ -194,7 +194,6 @@ async function pointerDragAndDrop(win, fromPoint, toPoint, duration = 500) {
 	if(syn.support.pointerEvents){ createEventAtPoint("pointermove", fromPoint, win); }
 	createEventAtPoint("mousemove", fromPoint, win);
 
-
 	if(syn.support.pointerEvents){createEventAtPoint("pointerdown", fromPoint, win);}
 	if(syn.support.touchEvents){createEventAtPoint("touchstart", fromPoint, win);}
 	createEventAtPoint("mousedown", fromPoint, win);
@@ -205,7 +204,7 @@ async function pointerDragAndDrop(win, fromPoint, toPoint, duration = 500) {
 		duration,
 		// record the element each go-round ..
 		startingState: elementFromPoint(fromPoint, win),
-		focusWindow,
+		win,
 		triggerPointerMove: triggerBasicPointerMove
 	});
 
@@ -228,6 +227,7 @@ function triggerBasicPointerMove(point, last, win){
 	var el = elementFromPoint(point, win);
 
 	if (last !== el && el && last) {
+		console.log("STATE CHANGE!")
 		var options = syn.helpers.extend({}, point);
 
 		// QUESTION: Should we also be sending a pointerleave event?
@@ -268,8 +268,10 @@ function triggerBasicPointerMove(point, last, win){
 	return el;
 }
 
-async function html5DragAndDrop(focusWindow, fromPoint, toPoint, duration = 500){
+let dragAndDropTransferObject =null;
 
+async function html5DragAndDrop(focusWindow, fromPoint, toPoint, duration = 500){
+	dragAndDropTransferObject = createDataTransferObject();
 	// A series of events to simulate a drag operation
 	createEventAtPoint("mouseover", fromPoint, focusWindow);
 	createEventAtPoint("mouseenter", fromPoint, focusWindow);
@@ -285,10 +287,10 @@ async function html5DragAndDrop(focusWindow, fromPoint, toPoint, duration = 500)
 		end: toPoint,
 		duration,
 		startingState: fromPoint,
-		focusWindow,
+		win: focusWindow,
 		triggerPointerMove: function(newPoint, previousPoint, win){
-			var thisElement = elementFromPoint(newPoint, this.focusWindow);
-			var previousElement = elementFromPoint(previousPoint, this.focusWindow);
+			var thisElement = elementFromPoint(newPoint, focusWindow);
+			var previousElement = elementFromPoint(previousPoint, focusWindow);
 			var options = syn.helpers.extend({}, newPoint);
 
 			if (thisElement !== previousElement) {
@@ -462,22 +464,11 @@ function adjust(from, to, win) {
 };
 
 
-
-
-function getDataTransferObject(){
-	// For a series of dragOperations, we want the same dataTransfer Object to be carried over
-	throw new Error("get from cDragEvent options");
-	if (!this.currentDataTransferItem){
-		return this.currentDataTransferItem = this.createDataTransferObject();
-	}else {
-		return this.currentDataTransferItem;
-	}
-}
-
 function createDragEvent(eventName, options, element){
 	var dragEvent = syn.events.kinds.mouse.create(eventName, options, element);
 
-	dragEvent.dataTransfer = getDataTransferObject();
+	// TODO: find a nicer way of doing this.
+	dragEvent.dataTransfer = dragAndDropTransferObject;
 	return syn.dispatch(dragEvent, element, eventName, false);
 }
 

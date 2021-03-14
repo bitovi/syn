@@ -3,7 +3,10 @@ var syn = require('./synthetic');
 // Add high-level functions directly to syn
 syn.helpers.extend(syn, {
 	click: function (element, options, force) {
+		var args = syn.args(options,element);
+
 		return new Promise((resolve) => {
+			var element = args.element;
 			syn.helpers.addOffset(options, element);
 			if(syn.support.pointerEvents){
 				syn.trigger(element, 'pointerdown', options);
@@ -41,9 +44,11 @@ syn.helpers.extend(syn, {
 		})
 	},
 	rightClick: function (element, options) {
+		var args = syn.args(options,element);
 		return new Promise((resolve)=>{
+			var element = args.element;
 			syn.helpers.addOffset(options, element);
-			var mouseopts = extend(extend({}, syn.mouse.browser.right.mouseup), options);
+			var mouseopts = syn.helpers.extend(syn.helpers.extend({}, syn.mouse.browser.right.mouseup), options);
 			if(syn.support.pointerEvents){
 				syn.trigger(element, 'pointerdown', mouseopts);
 			}
@@ -57,7 +62,10 @@ syn.helpers.extend(syn, {
 				}
 				syn.trigger(element, "mouseup", mouseopts);
 				if (syn.mouse.browser.right.contextmenu) {
-					syn.trigger(element, "contextmenu", extend(extend({}, syn.mouse.browser.right.contextmenu), options));
+					syn.trigger(element, "contextmenu",
+						syn.helpers.extend(
+							syn.helpers.extend({}, syn.mouse.browser.right.contextmenu), options )
+					);
 				}
 				resolve();
 			}, 1);
@@ -65,12 +73,13 @@ syn.helpers.extend(syn, {
 
 	},
 	dblclick: async function (element, options) {
-		syn.helpers.addOffset(options, element);
+		var args = syn.args(options,element);
+		syn.helpers.addOffset(options, args.element);
 		var self = this;
-		await this._click(element, options);
-		await schedulePromise(2);
-		await this._click(element, options);
-		syn.trigger(element, "dblclick", options);
+		await this.click(args.element, options);
+		await syn.helpers.schedulePromise(2);
+		await this.click(args.element, options);
+		syn.trigger(args.element, "dblclick", options);
 		return true;
 	}
 })

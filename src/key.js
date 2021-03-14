@@ -29,7 +29,10 @@ syn.helpers.extend(syn,{
 	 * @return {HTMLElement} the element currently focused.
 	 */
 	key: function (element, options) {
+		var args = syn.args(options, element);
+
 		return new Promise((resolve) => {
+			var element = args.element;
 			//first check if it is a special up
 			if (/-up$/.test(options) && h.inArray(options.replace("-up", ""),
 				syn.key.kinds.special) !== -1) {
@@ -134,17 +137,18 @@ syn.helpers.extend(syn,{
 	 * @param {Function} [callback] a function to callback
 	 */
 	type: async function (element, options) {
+		var args = syn.args(options,element);
 		//break it up into parts ...
 		//go through each type and run
 		var parts = (options + "")
 			.match(/(\[[^\]]+\])|([^\[])/g),
-				el = element,
+				el = args.element,
 				part;
 		while( part = parts.shift() ) {
 			if (part.length > 1) {
 				part = part.substr(1, part.length - 2);
 			}
-			var result = await this._key(el, part);
+			var result = await syn.key(el, part);
 
 			el = result.element || el;
 
@@ -222,7 +226,7 @@ syn.helpers.extend(syn.events.types,{
 	keydown: {
 		setup: function (type, options, element) {
 			if (h.inArray(options, syn.key.kinds.special) !== -1) {
-				syn.key[options + "Key"] = element;
+				syn.keysBeingHeldDown[options + "Key"] = element;
 			}
 		}
 	},
@@ -239,7 +243,7 @@ syn.helpers.extend(syn.events.types,{
 	keyup: {
 		setup: function (type, options, element) {
 			if (h.inArray(options, syn.key.kinds.special) !== -1) {
-				syn.key[options + "Key"] = null;
+				syn.keysBeingHeldDown[options + "Key"] = null;
 			}
 		}
 	},
@@ -405,8 +409,8 @@ syn.helpers.extend(syn.key, {
 			var sort = function (order1, order2) {
 				var el1 = order1[0],
 					el2 = order2[0],
-					tab1 = syn.tabIndex(el1) || 0,
-					tab2 = syn.tabIndex(el2) || 0;
+					tab1 = syn.helpers.tabIndex(el1) || 0,
+					tab2 = syn.helpers.tabIndex(el2) || 0;
 				if (tab1 === tab2) {
 					return order1[1] - order2[1];
 				} else {

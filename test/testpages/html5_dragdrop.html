@@ -9,7 +9,7 @@
 				if(targetElement){ targetElement.classList.add('dragOver'); }
 			}
 
-			function drag(ev) {	
+			function drag(ev) {
 				ev.dataTransfer.setData("text", ev.target.id);
 			}
 
@@ -18,7 +18,7 @@
 				var data = ev.dataTransfer.getData("text");
 				ev.target.appendChild(document.getElementById(data));
 			}
-			
+
 			function badDrop(ev, targetElement) {
 				ev.preventDefault();
 				var data = ev.dataTransfer.getData("text");
@@ -54,11 +54,11 @@
 				margin-left: auto;
 				margin-right: auto;
 			}
-			
+
 			span.dragOver {
 				background-color: DarkGreen;
 			}
-			
+
 			span.badDrop {
 				background-color: Red;
 			}
@@ -68,7 +68,7 @@
 			}
 
 		</style>
-		
+
 
 
 		<link rel="stylesheet" href="../../utils/Xenophon.css">
@@ -115,7 +115,7 @@
 			<span id="cell_e3" class="dragListener"></span>
 			<span id="cell_e4" class="dragTarget"></span>
 		</div>
-		
+
 		<script>
 
 			dragTargets = document.querySelectorAll('span.dragTarget');

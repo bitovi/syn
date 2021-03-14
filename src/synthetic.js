@@ -312,7 +312,7 @@ var syn = {
 		},
 		createEventObject: function (type, options, element) {
 			var event = element.ownerDocument.createEventObject();
-			return extend(event, options);
+			return syn.helpers.extend(event, options);
 		},
 		createBasicStandardEvent: function (type, defaults, doc) {
 			var event;
@@ -322,7 +322,7 @@ var syn = {
 				event = doc.createEvent("UIEvents");
 			} finally {
 				event.initEvent(type, true, true);
-				extend(event, defaults);
+				syn.helpers.extend(event, defaults);
 			}
 			return event;
 		},

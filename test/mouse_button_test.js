@@ -30,7 +30,7 @@ QUnit.module("syn/mouse_button", {
 	}
 });
 
-QUnit.test("syn basics", function () {
+QUnit.test("syn trigger", function () {
 
 	QUnit.ok(syn, "syn exists");
 
@@ -41,11 +41,11 @@ QUnit.test("syn basics", function () {
 			mouseover++;
 		};
 	st.bind(st.g("outer"), "mouseover", mouseoverf);
-	syn("mouseover", st.g("inner"));
+	syn.trigger(st.g("inner"), "mouseover");
 
 	st.unbinder("outer", "mouseover", mouseoverf);
 	QUnit.equal(mouseover, 1, "Mouseover");
-	syn("mouseover", 'inner', {});
+	syn.trigger(st.g("inner"), "mouseover", {});
 
 	QUnit.equal(mouseover, 1, "Mouseover on no event handlers");
 	st.g("qunit-fixture")
@@ -65,7 +65,7 @@ QUnit.test("Click Forms", function () {
 		};
 	st.bind(st.g("outer"), "submit", submitf);
 	syn.trigger(st.g("submit"), "click", {});
-	syn("submit", "outer", {});
+	syn.trigger(st.g("outer"), "submit", {});
 
 	QUnit.equal(submit, 2, "Click on submit");
 
@@ -241,35 +241,33 @@ QUnit.test("Click Radio Buttons", function () {
 
 });
 
-QUnit.test("Click! Event Order", syn.skipFocusTests ? 3 : 4, async function () {
+// this test can be flaky ... I think we need methods like .click to wait on the page loading
+QUnit.test("Click! Event Order", 1, async function () {
 	var order = 0;
 	st.g("qunit-fixture")
 		.innerHTML = "<input id='focusme'/>";
 
-	st.binder("focusme", "mousedown", function () {
-		QUnit.equal(++order, 1, "mousedown");
-	});
+	var actualOrder = [];
+	var expectedOrder = ["mousedown","focus","mouseup","click"];
+	if(syn.skipFocusTests) {
+		expectedOrder = ["mousedown","mouseup","click"];
+	}
+	function pushType(event) {
+		actualOrder.push(event.type);
+	}
+	st.binder("focusme", "mousedown", pushType);
 
 	if (!syn.skipFocusTests) {
-		st.binder("focusme", "focus", function () {
-			QUnit.equal(++order, 2, "focus");
-		});
+		st.binder("focusme", "focus", pushType);
 	}
 
-	st.binder("focusme", "mouseup", function () {
-		QUnit.equal(++order, syn.skipFocusTests ? 2 : 3, "mouseup");
-	});
-	st.binder("focusme", "click", function (ev) {
-		QUnit.equal(++order, syn.skipFocusTests ? 3 : 4, "click");
-		if (ev.preventDefault) {
-			ev.preventDefault();
-		}
-		ev.returnValue = false;
-	});
+	st.binder("focusme", "mouseup", pushType);
+	st.binder("focusme", "click", pushType);
 
 	stop();
 	await syn.click("focusme", {});
 
+	QUnit.deepEqual(actualOrder, expectedOrder);
 	QUnit.start();
 
 });
