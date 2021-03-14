@@ -424,4 +424,3 @@ syn.mouse.browser =
 	}
 	return syn.mouse.browsers.gecko;
 })();
-

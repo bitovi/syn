@@ -95,8 +95,8 @@ steal('jquery', 'can/control', 'src/syn.js', function($, Control, syn) {
 				},
 
 				getKey: function(code) {
-					for(var key in syn.keycodes) {
-						if(syn.keycodes[key] === code) {
+					for(var key in syn.key.keycodes) {
+						if(syn.key.keycodes[key] === code) {
 							return key;
 						}
 					}
@@ -136,7 +136,7 @@ steal('jquery', 'can/control', 'src/syn.js', function($, Control, syn) {
 
 				keyup: function(ev) {
 					var key = h.getKey(ev.keyCode);
-					if(syn.key.isSpecial(ev.keyCode)) {
+					if(syn.key.helpers.isSpecial(ev.keyCode)) {
 						h.showChar(key+'-up', ev.target);
 					}
 
@@ -180,7 +180,7 @@ steal('jquery', 'can/control', 'src/syn.js', function($, Control, syn) {
 				}
 			},
 
-			lastX, 
+			lastX,
 			lastY,
 			justKey = false,
 

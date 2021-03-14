@@ -119,24 +119,3 @@ QUnit.test("syn.support effect on scroll position, #30", function () {
 	});
 
 });
-
-QUnit.test("syn.schedule gets called when syn.delay is used", function () {
-	stop();
-	locate("test/pages/syn.schedule.html",function(synUrl){
-		var iframe = document.createElement("iframe");
-		iframe.src = synUrl.replace(".js","");
-		window.synSchedule = function (fn, ms) {
-			// fn should be a function
-			equal(typeof fn, "function");
-			// ms is a Number
-			equal(typeof ms, "number");
-
-			start();
-		};
-
-		st.g("qunit-fixture")
-			.appendChild(iframe);
-
-	});
-
-});
