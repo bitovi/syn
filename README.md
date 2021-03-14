@@ -34,59 +34,22 @@ Install Syn via the command line with npm:
 npm install syn
 ```
 
-or bower:
-
-```shell
-bower install syn
-```
-
-Or by downloading it [here](https://github.com/bitovi/syn/archive/v0.2.0.zip).
-
-Inside the download, npm package and bower package, there are the following folders:
+Inside the download and npm package there are the following folders:
 
  - `dist/global/syn.js` - A standalone file that can be used with a `<script>` tag.
- - `dist/amd` - An AMD build that can be used with [RequireJS](http://requirejs.org) and other AMD loaders.
- - `dist/cjs` - A CommonJS build that is used by node or browserify.
- - `src` - The source files that can be loaded by [StealJS](http://stealjs.com), SystemJS, and eventually JSPM.
 
 ## Setup
 
 The following walk you through how to load Syn into various environments.
 
-### Node / Browserify
+### Webpack / StealJS
 
 Assuming you installed with `npm`, simply `require("syn")` like the following:
 
-    var syn = require("syn");
-    syn.click(document.getElementById('hello'));
-
-### StealJS
-
-If you installed via NPM or Bower and are using the [npm](http://stealjs.com/docs/npm.html)
-or [bower](http://stealjs.com/docs/bower.html) module for configuration,
-you can use import, require, or define to load the syn module without any configuration.
-
-    import syn from "syn";
-    syn.click(document.getElementById('hello'));
-
-### AMD / RequireJS
-
-Add the following package configuration:
-
-    require.config({
-        packages: [{
-            name: 'syn',
-            location: 'PATH/TO/syn/dist/amd',
-            main: 'syn'
-        }]
-    });
-
-_PATH/TO_ should be the path from your baseUrl to the location of the syn folder.  Once this is
-properly configured, you should be able to write:
-
-    define(['syn'], function(syn){
-      syn.click(document.getElementById('hello'));
-    });
+```js
+const syn = require("syn");
+syn.click('#hello');
+```
 
 ### Script Tag / Standalone
 
