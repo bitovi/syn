@@ -1,0 +1,45 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 12
+    },
+    "globals": {
+
+        "steal": true,
+		"can": true,
+
+		"Zepto": true,
+
+		"QUnit": true,
+		"test": true,
+		"asyncTest": true,
+		"expect": true,
+		"module": true,
+		"ok": true,
+		"equal": true,
+		"notEqual": true,
+		"deepEqual": true,
+		"notDeepEqual": true,
+		"strictEqual": true,
+		"notStrictEqual": true,
+		"raises": true,
+		"start": true,
+		"stop": true,
+
+		"formElExp": true,
+		"KeyboardEvent": false
+    },
+    "rules": {
+        "curly": 2,
+        "eqeqeq": 2,
+        "no-extend-native": 2,
+        "indent": 0,
+
+        "no-undef": 2,
+        "no-loop-func": 2
+    }
+}

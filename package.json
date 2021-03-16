@@ -9,11 +9,13 @@
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
     "jshint": "jshint src/. --config",
+    "eslint": "eslint src/**",
     "testee": "testee test/test.html --browsers firefox",
     "test": "npm run jshint && npm run testee",
     "build": "node build.js"
   },
   "devDependencies": {
+    "eslint": "^7.22.0",
     "jquery": ">=2.0.0",
     "jquery-ui-dist": "^1.12.1",
     "jshint": "^2.8.0",
