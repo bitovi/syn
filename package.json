@@ -11,7 +11,7 @@
     "jshint": "jshint src/. --config",
     "eslint": "eslint src/**",
     "testee": "testee test/test.html --browsers firefox",
-    "test": "npm run jshint && npm run testee",
+    "test": "npm run eslint && npm run testee",
     "build": "node build.js"
   },
   "devDependencies": {
