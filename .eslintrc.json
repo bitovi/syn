@@ -15,7 +15,7 @@
         "no-use-before-define": ["error", "nofunc"],
         "no-caller": 2,
         "no-undef": 2,
-        "no-unused-vars": 2,
+        "no-unused-vars": ["error", { "vars": "all", "args": "none" }],
         "comma-dangle": 2,
         "max-depth": ["error", 4],
         "no-trailing-spaces": 2,
