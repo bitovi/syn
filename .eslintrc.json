@@ -9,7 +9,7 @@
     },
     "rules": {
         "curly": 2,
-        "eqeqeq": 2,
+        "eqeqeq": ["error", "smart"],
         "no-extend-native": 2,
         "indent": 0,
         "no-use-before-define": ["error", "nofunc"],

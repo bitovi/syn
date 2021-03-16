@@ -397,7 +397,7 @@ var syn = {
 		},
 		schedulePromise: function(time) {
 			return new Promise(function(resolve){
-				setTimeout(resolve, time)
+				setTimeout(resolve, time);
 			});
 		},
 		// Fire a change event if the element is blured and there's a new value
@@ -490,7 +490,7 @@ var syn = {
 			return isSupported;
 		}
 	}
-}
+};
 
 syn.config = opts;
 

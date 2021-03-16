@@ -227,7 +227,7 @@ function triggerBasicPointerMove(point, last, win){
 	var el = elementFromPoint(point, win);
 
 	if (last !== el && el && last) {
-		console.log("STATE CHANGE!")
+		console.log("STATE CHANGE!");
 		var options = syn.helpers.extend({}, point);
 
 		// QUESTION: Should we also be sending a pointerleave event?
