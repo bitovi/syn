@@ -19,7 +19,8 @@
         "comma-dangle": 2,
         "max-depth": ["error", 4],
         "no-trailing-spaces": 2,
-        "no-loop-func": 2
+        "no-loop-func": 2,
+        "semi": 2
     },
     "globals": {
         "steal": true,
