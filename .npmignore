@@ -5,7 +5,7 @@ utils/
 Gruntfile.js
 .gitignore
 .jsbeautifyrc
-.jshintrc
+.eslintrc.json
 .travis.yml
 .editorconfig
 !dist/
