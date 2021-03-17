@@ -10,7 +10,7 @@ if (!syn.config.support) {
 		}
 
 		var div = document.createElement("div"),
-			checkbox, submit, form, anchor, textarea, inputter, one, doc;
+			form, anchor, textarea, inputter, one, doc;
 
 		doc = document.documentElement;
 
@@ -27,8 +27,6 @@ if (!syn.config.support) {
 
 		doc.insertBefore(div, doc.firstElementChild || doc.children[0]);
 		form = div.firstChild;
-		checkbox = form.childNodes[0];
-		submit = form.childNodes[2];
 		anchor = form.getElementsByTagName("a")[0];
 		textarea = form.getElementsByTagName("textarea")[0];
 		inputter = form.childNodes[3];
