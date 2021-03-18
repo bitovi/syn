@@ -1,10 +1,11 @@
 {
   "name": "syn",
-  "version": "1.0.0",
+  "version": "1.0.0-pre.0",
   "main": "dist/cjs/syn.js",
   "scripts": {
     "preversion": "npm test && npm run build",
     "postpublish": "git push --tags && git push",
+    "release:pre": "npm version prerelease && npm publish --tag=pre",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
