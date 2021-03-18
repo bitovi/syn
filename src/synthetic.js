@@ -4,13 +4,11 @@ var opts = window.syn ? window.syn : {};
 
 var data = {},
 	id = 1,
-	expando = "_synthetic" + new Date()
-		.getTime(),
-	bind, unbind, schedule, schedulePromise,
-
+	expando = "_synthetic" + new Date().getTime(),
 
 	//this is maintained so we can click on html and blur the active element
 	activeElement;
+
 
 
 var syn = {
@@ -397,7 +395,7 @@ var syn = {
 		},
 		schedulePromise: function(time) {
 			return new Promise(function(resolve){
-				setTimeout(resolve, time)
+				setTimeout(resolve, time);
 			});
 		},
 		// Fire a change event if the element is blured and there's a new value
@@ -420,14 +418,12 @@ var syn = {
 		// adds jQuery like data (adds an expando) and data exists FOREVER :)
 		// This could start using weakmap
 		data: function (el, key, value) {
-			var d;
 			if (!el[expando]) {
 				el[expando] = id++;
 			}
 			if (!data[el[expando]]) {
 				data[el[expando]] = {};
 			}
-			d = data[el[expando]];
 			if (value) {
 				data[el[expando]][key] = value;
 			} else {
@@ -490,7 +486,7 @@ var syn = {
 			return isSupported;
 		}
 	}
-}
+};
 
 syn.config = opts;
 

@@ -41,7 +41,7 @@ syn.helpers.extend(syn, {
 				}
 
 			}, 1);
-		})
+		});
 	},
 	rightClick: function (element, options) {
 		var args = syn.args(options,element);
@@ -69,20 +69,19 @@ syn.helpers.extend(syn, {
 				}
 				resolve();
 			}, 1);
-		})
+		});
 
 	},
 	dblclick: async function (element, options) {
 		var args = syn.args(options,element);
 		syn.helpers.addOffset(options, args.element);
-		var self = this;
 		await this.click(args.element, options);
 		await syn.helpers.schedulePromise(2);
 		await this.click(args.element, options);
 		syn.trigger(args.element, "dblclick", options);
 		return true;
 	}
-})
+});
 
 // Add the mouse kind of events
 syn.helpers.extend(syn.events.kinds, {

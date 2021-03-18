@@ -156,7 +156,7 @@ syn.helpers.extend(syn,{
 		return {element:el};
 
 	}
-})
+});
 
 // Add key type
 syn.helpers.extend(syn.events.kinds, {
@@ -219,7 +219,7 @@ syn.helpers.extend(syn.events.kinds, {
 			}
 		}
 	}
-})
+});
 
 // Add specific behavior to specific events
 syn.helpers.extend(syn.events.types,{
@@ -246,7 +246,7 @@ syn.helpers.extend(syn.events.types,{
 				syn.keysBeingHeldDown[options + "Key"] = null;
 			}
 		}
-	},
+	}
 });
 
 // Key behavior configuration. In theory, someone could make overwrites here.
