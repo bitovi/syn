@@ -6,11 +6,11 @@ if (!syn.config.support) {
 	//do support code
 	(function checkForSupport() {
 		if (!document.body) {
-			return syn.schedule(checkForSupport, 1);
+			return syn.helpers.schedule(checkForSupport, 1);
 		}
 
 		var div = document.createElement("div"),
-			checkbox, submit, form, anchor, textarea, inputter, one, doc;
+			form, anchor, textarea, inputter, one, doc;
 
 		doc = document.documentElement;
 
@@ -27,8 +27,6 @@ if (!syn.config.support) {
 
 		doc.insertBefore(div, doc.firstElementChild || doc.children[0]);
 		form = div.firstChild;
-		checkbox = form.childNodes[0];
-		submit = form.childNodes[2];
 		anchor = form.getElementsByTagName("a")[0];
 		textarea = form.getElementsByTagName("textarea")[0];
 		inputter = form.childNodes[3];
@@ -43,7 +41,7 @@ if (!syn.config.support) {
 			return false;
 		};
 		// Firefox 4 won't write key events if the element isn't focused
-		syn.__tryFocus(inputter);
+		syn.helpers.tryFocus(inputter);
 		syn.trigger(inputter, "keypress", "\r");
 
 		syn.trigger(inputter, "keypress", "a");
@@ -56,14 +54,14 @@ if (!syn.config.support) {
 		inputter.onchange = function () {
 			syn.support.focusChanges = true;
 		};
-		syn.__tryFocus(inputter);
+		syn.helpers.tryFocus(inputter);
 		syn.trigger(inputter, "keypress", "a");
-		syn.__tryFocus(form.childNodes[5]); // this will throw a change event
+		syn.helpers.tryFocus(form.childNodes[5]); // this will throw a change event
 		syn.trigger(inputter, "keypress", "b");
 		syn.support.keysOnNotFocused = inputter.value === "ab";
 
 		//test keypress \r on anchor submits
-		syn.bind(anchor, "click", function (ev) {
+		syn.helpers.bind(anchor, "click", function (ev) {
 			if (ev.preventDefault) {
 				ev.preventDefault();
 			}
@@ -85,5 +83,3 @@ if (!syn.config.support) {
 } else {
 	syn.helpers.extend(syn.support, syn.config.support);
 }
-
-

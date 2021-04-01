@@ -30,7 +30,7 @@ QUnit.module("syn/mouse_button", {
 	}
 });
 
-QUnit.test("syn basics", function () {
+QUnit.test("syn trigger", function () {
 
 	QUnit.ok(syn, "syn exists");
 
@@ -41,11 +41,11 @@ QUnit.test("syn basics", function () {
 			mouseover++;
 		};
 	st.bind(st.g("outer"), "mouseover", mouseoverf);
-	syn("mouseover", st.g("inner"));
+	syn.trigger(st.g("inner"), "mouseover");
 
 	st.unbinder("outer", "mouseover", mouseoverf);
 	QUnit.equal(mouseover, 1, "Mouseover");
-	syn("mouseover", 'inner', {});
+	syn.trigger(st.g("inner"), "mouseover", {});
 
 	QUnit.equal(mouseover, 1, "Mouseover on no event handlers");
 	st.g("qunit-fixture")
@@ -65,7 +65,7 @@ QUnit.test("Click Forms", function () {
 		};
 	st.bind(st.g("outer"), "submit", submitf);
 	syn.trigger(st.g("submit"), "click", {});
-	syn("submit", "outer", {});
+	syn.trigger(st.g("outer"), "submit", {});
 
 	QUnit.equal(submit, 2, "Click on submit");
 
@@ -142,7 +142,7 @@ QUnit.test("Select is changed on click", function () {
 		select2 = 0;
 
 	st.g("qunit-fixture")
-		.innerHTML = 
+		.innerHTML =
 			'<select id="s1">'+
 				'<option id="s1o1">One</option>'+
 				'<option id="s1o2">Two</option>'+
@@ -175,13 +175,13 @@ QUnit.test("Select is changed on click", function () {
 
 QUnit.test("Select is change on click (iframe)", function () {
 	stop();
-	
+
 	locate("test/pages/page3.html",function(page3){
 		page3 = page3.replace(".js","");
-		
+
 		var iframe = document.createElement('iframe');
-	
-		st.bind(iframe, "load", function () {
+
+		st.bind(iframe, "load", async function () {
 			var iget = function (id) {
 				return iframe.contentWindow.document.getElementById(id);
 			};
@@ -191,17 +191,19 @@ QUnit.test("Select is change on click (iframe)", function () {
 			st.bind(iget('select2'), "change", function () {
 				QUnit.ok(true, "select worked");
 			});
-	
-			syn.click(iget('s1o2'), {}, function () {
-				QUnit.start();
-				syn.click(iget('s2o2'));
-				syn.click(iget('s1o1'));
-			});
-	
+
+			await syn.click(iget('s1o2') );
+
+
+			QUnit.start();
+			await syn.click(iget('s2o2'));
+			await syn.click(iget('s1o1'));
+
+
 		});
-	
+
 		iframe.src = page3;
-	
+
 		st.g("qunit-fixture")
 			.appendChild(iframe);
 	});
@@ -239,40 +241,38 @@ QUnit.test("Click Radio Buttons", function () {
 
 });
 
-QUnit.test("Click! Event Order", syn.skipFocusTests ? 3 : 4, function () {
+// this test can be flaky ... I think we need methods like .click to wait on the page loading
+QUnit.test("Click! Event Order", 1, async function () {
 	var order = 0;
 	st.g("qunit-fixture")
 		.innerHTML = "<input id='focusme'/>";
 
-	st.binder("focusme", "mousedown", function () {
-		QUnit.equal(++order, 1, "mousedown");
-	});
+	var actualOrder = [];
+	var expectedOrder = ["mousedown","focus","mouseup","click"];
+	if(syn.skipFocusTests) {
+		expectedOrder = ["mousedown","mouseup","click"];
+	}
+	function pushType(event) {
+		actualOrder.push(event.type);
+	}
+	st.binder("focusme", "mousedown", pushType);
 
 	if (!syn.skipFocusTests) {
-		st.binder("focusme", "focus", function () {
-			QUnit.equal(++order, 2, "focus");
-		});
+		st.binder("focusme", "focus", pushType);
 	}
 
-	st.binder("focusme", "mouseup", function () {
-		QUnit.equal(++order, syn.skipFocusTests ? 2 : 3, "mouseup");
-	});
-	st.binder("focusme", "click", function (ev) {
-		QUnit.equal(++order, syn.skipFocusTests ? 3 : 4, "click");
-		if (ev.preventDefault) {
-			ev.preventDefault();
-		}
-		ev.returnValue = false;
-	});
+	st.binder("focusme", "mouseup", pushType);
+	st.binder("focusme", "click", pushType);
 
 	stop();
-	syn.click("focusme", {}, function () {
-		QUnit.start();
-	});
+	await syn.click("#focusme", {});
+
+	QUnit.deepEqual(actualOrder, expectedOrder);
+	QUnit.start();
 
 });
 
-QUnit.test("Click! Pointer Event Order", syn.support.pointerEvents ? 3 : 0, function () {
+QUnit.test("Click! Pointer Event Order", syn.support.pointerEvents ? 3 : 0, async function () {
 	var order = 0;
 	st.g("qunit-fixture").innerHTML = "<input id='pointerTarget'/>";
 
@@ -294,14 +294,14 @@ QUnit.test("Click! Pointer Event Order", syn.support.pointerEvents ? 3 : 0, func
 			ev.returnValue = false;
 		});
 	}
-		
+
 	stop();
-	syn.click("pointerTarget", {}, function () {
-		QUnit.start();
-	});
+	await syn.click("#pointerTarget", {});
+
+	QUnit.start();
 });
 
-QUnit.test("Click! Touch Event Order", syn.support.touchEvents ? 3 : 0, function () {
+QUnit.test("Click! Touch Event Order", syn.support.touchEvents ? 3 : 0, async function () {
 	var order = 0;
 	st.g("qunit-fixture").innerHTML = "<input id='touchTarget'/>";
 
@@ -323,11 +323,11 @@ QUnit.test("Click! Touch Event Order", syn.support.touchEvents ? 3 : 0, function
 			ev.returnValue = false;
 		});
 	}
-		
+
 	stop();
-	syn.click("touchTarget", {}, function () {
-		QUnit.start();
-	});
+	syn.click("#touchTarget", {});
+
+	QUnit.start();
 });
 
 QUnit.test("Click Anchor Runs HREF JavaScript", function () {
@@ -341,21 +341,21 @@ QUnit.test("Click Anchor Runs HREF JavaScript", function () {
 	}, 50);
 });
 
-QUnit.test("Click! Anchor has href", function () {
+QUnit.test("Click! Anchor has href", async function () {
 	stop();
 	st.binder("jsHrefHash", "click", function (ev) {
 		var target = ev.target || ev.srcElement;
 		QUnit.ok(target.href.indexOf("#aHash") > -1, "got href");
 	});
 
-	syn.click("jsHrefHash", {}, function () {
-		QUnit.equal(window.location.hash, "#aHash", "hash set ...");
-		QUnit.start();
-		window.location.hash = "";
-	});
+	await syn.click("#jsHrefHash", {});
+
+	QUnit.equal(window.location.hash, "#aHash", "hash set ...");
+	QUnit.start();
+	window.location.hash = "";
 });
 
-QUnit.test("Click! Anchor Focuses", syn.skipFocusTests ? 1 : 2, function () {
+QUnit.test("Click! Anchor Focuses", syn.skipFocusTests ? 1 : 2, async function () {
 	st.g("qunit-fixture")
 		.innerHTML = "<a href='#abc' id='focusme'>I am visible</a>";
 
@@ -378,14 +378,14 @@ QUnit.test("Click! Anchor Focuses", syn.skipFocusTests ? 1 : 2, function () {
 	stop();
 	//need to give browsers a second to show element
 
-	syn.click("focusme", {}, function () {
-		QUnit.start();
-	});
+	await syn.click("#focusme", {});
+
+	QUnit.start();
 
 });
 
 if (!syn.skipFocusTests) {
-	QUnit.test("Click away causes Blur Change", function () {
+	QUnit.test("Click away causes Blur Change", async function() {
 		st.g("qunit-fixture")
 			.innerHTML = "<input id='one'/><input id='two'/>";
 
@@ -400,17 +400,17 @@ if (!syn.skipFocusTests) {
 		});
 
 		stop();
-		syn.click("one", {})
-			.key("a")
-			.click("two", {}, function () {
-				QUnit.start();
-				QUnit.equal(change, 1, "Change called once");
-				QUnit.equal(blur, 1, "Blur called once");
-			});
+		await syn.click("#one", {});
+		await syn.key("#one","a");
+		await syn.click("#two", {});
+
+		QUnit.start();
+		QUnit.equal(change, 1, "Change called once");
+		QUnit.equal(blur, 1, "Blur called once");
 
 	});
 
-	QUnit.test("Click HTML causes blur  change", function () {
+	QUnit.test("Click HTML causes blur  change", async function () {
 		st.g("qunit-fixture")
 			.innerHTML = "<input id='one'/><input id='two'/>";
 
@@ -420,15 +420,14 @@ if (!syn.skipFocusTests) {
 		});
 
 		stop();
-		syn.click("one", {})
-			.key("a")
-			.click(document.documentElement, {}, function () {
-				QUnit.start();
-				QUnit.equal(change, 1, "Change called once");
-			});
+		await syn.click("#one", {});
+		await syn.key("#one","a");
+		await syn.click(document.documentElement, {});
+		QUnit.start();
+		QUnit.equal(change, 1, "Change called once");
 	});
 }
-QUnit.test("Right Click", function () {
+QUnit.test("Right Click", async function () {
 	st.g("qunit-fixture").innerHTML = "<div id='one'>right click me</div>";
 	stop();
 	var context = 0;
@@ -436,18 +435,18 @@ QUnit.test("Right Click", function () {
 		context++;
 	});
 
-	syn.rightClick("one", {}, function () {
-		if (syn.mouse.browser.contextmenu) {
-			QUnit.equal(1, context, "context was called");
-		} else {
-			QUnit.ok(true, "context shouldn't be called in this browser");
-		}
-		QUnit.start();
-	});
+	await syn.rightClick("#one", {});
+
+	if (syn.mouse.browser.contextmenu) {
+		QUnit.equal(1, context, "context was called");
+	} else {
+		QUnit.ok(true, "context shouldn't be called in this browser");
+	}
+	QUnit.start();
 });
 
 
-QUnit.test("Right Click Issues PointerEvents", syn.support.pointerEvents ? 2 : 0, function () {
+QUnit.test("Right Click Issues PointerEvents", syn.support.pointerEvents ? 2 : 0, async function () {
 	var order = 1;
 	st.g("qunit-fixture").innerHTML = "<input id='pointerTarget'/>";
 
@@ -456,20 +455,19 @@ QUnit.test("Right Click Issues PointerEvents", syn.support.pointerEvents ? 2 : 0
 			QUnit.equal(ev.button, 2, "pointerdown");
 		});
 	}
-	
+
 	if(syn.support.pointerEvents){ // skips test on browsers that do not support pointer events
 		st.binder("pointerTarget", "pointerup", function (ev) {
 			QUnit.equal(ev.button, 2, "pointerup");
 		});
-	}		
+	}
 	stop();
-	syn.rightClick("pointerTarget", {}, function () {
-		QUnit.start();
-	});
+	await syn.rightClick("#pointerTarget", {});
+	QUnit.start();
 });
 
 
-QUnit.test("Double Click", function () {
+QUnit.test("Double Click", async function () {
 	st.g("qunit-fixture")
 		.innerHTML = "<div id='dblclickme'>double click me</div>";
 	stop();
@@ -481,10 +479,10 @@ QUnit.test("Double Click", function () {
 		eventSequence.push('click');
 	});
 
-	syn.dblclick("dblclickme", {}, function () {
-		QUnit.equal(eventSequence.join(', '), 'click, click, dblclick', 'expected event sequence for doubleclick');
-		QUnit.start();
-	});
+	await syn.dblclick("#dblclickme", {});
+
+	QUnit.equal(eventSequence.join(', '), 'click, click, dblclick', 'expected event sequence for doubleclick');
+	QUnit.start();
 });
 
 
@@ -507,31 +505,31 @@ if(htmlClassName.indexOf('ie9') > -1){
 		var el = iframe.contentWindow.document.getElementById('strange')
 		st.bind(el,"click",function(){
 			QUnit.ok(true, "h3 was clicked");
-			
+
 		});
 		syn.click(el ,{}, function(){
 			QUnit.start();
 		})
 
-			
-			
+
+
 	});
 	iframe.src = page1
 	st.g("qunit-fixture").appendChild(iframe);*/
 
 		locate("test/pages/h3.html",function(path){
 			path = path.replace(".js","");
-		
+
 			var popup = window.open(path, "synthing");
-			
-			var runTest = function(el){
+
+			var runTest = async function(el){
 				st.bind(el, "click", function () {
 					QUnit.ok(true, "h3 was clicked");
 				});
-				syn.click(el, {}, function () {
-					QUnit.start();
-					popup.close();
-				});
+				await syn.click(el, {});
+
+				QUnit.start();
+				popup.close();
 			};
 			var ready = function(){
 				var el = popup.document.getElementById('strange');
@@ -541,7 +539,7 @@ if(htmlClassName.indexOf('ie9') > -1){
 					setTimeout(ready,100);
 				}
 			};
-		
+
 			setTimeout(ready, 100);
 		});
 	});
@@ -550,22 +548,21 @@ if(htmlClassName.indexOf('ie9') > -1){
 QUnit.test("focus on an element then another in another page", function () {
 	stop();
 	locate("test/pages/page1.html", function(page1){
-		
+
 		locate("test/pages/page2.html", function(page2){
 			var iframe = document.createElement('iframe'),
 				calls = 0;
-			
-			st.bind(iframe, "load", function () {
+
+			st.bind(iframe, "load", async function () {
 				if (calls === 0) {
-					syn.click(iframe.contentWindow.document.getElementById("first"), {}, function () {
-						iframe.contentWindow.location = page2;
-					});
+					await syn.click(iframe.contentWindow.document.getElementById("first"), {});
+					iframe.contentWindow.location = page2;
 					calls++;
 				} else {
-					syn.click(iframe.contentWindow.document.getElementById("second"), {}, function () {
-						QUnit.ok(iframe.contentWindow.document.getElementById("second") === iframe.contentWindow.document.activeElement);
-						QUnit.start();
-					});
+					await syn.click(iframe.contentWindow.document.getElementById("second"), {});
+
+					QUnit.ok(iframe.contentWindow.document.getElementById("second") === iframe.contentWindow.document.activeElement);
+					QUnit.start();
 				}
 			});
 			iframe.src = page1;
@@ -573,6 +570,6 @@ QUnit.test("focus on an element then another in another page", function () {
 				.appendChild(iframe);
 		});
 	});
-	
+
 
 });

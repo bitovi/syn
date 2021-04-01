@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Syn.schedule test</title>
+<title>syn.helpers.schedule( test</title>
 </head>
 <body>
 	<script src="../../node_modules/steal/steal.js" main='@empty'></script>
@@ -11,10 +11,11 @@
 				parent.synSchedule.apply(parent, arguments);
 			}
 		};
-		
-		steal('syn', function(syn){
+
+		steal('syn', async function(syn){
 			var body = document.body;
-			syn.click(body, {}).delay(function(){}, 0);
+			await syn.click(body, {})
+			syn.delay(function(){}, 0);
 		});
 	</script>
 </body>

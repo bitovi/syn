@@ -4,12 +4,12 @@
 		<link rel="shortcut icon" href="../resources/images/favicon.ico" type="image/x-icon">
 		<title>Mouse Move testing</title>
 		<script>
-		
+
 			function mousedOver(event, targetElement) {
 				event.preventDefault();
-				
+
 				var eventName = event.type.toLowerCase();
-				
+
 				switch(eventName){
 					case "pointerover" : targetElement.classList.add("mouseOver"); break;
 					case "mouseover" : targetElement.classList.add("mouseOver"); break;
@@ -18,11 +18,11 @@
 					case "pointerup" : targetElement.classList.add("mouseUp"); break;
 					case "mouseup" : targetElement.classList.add("mouseUp"); break;
 				}
-				
+
 				if(! targetElement.eventRecorder.includes(eventName)){
 					targetElement.eventRecorder.push(eventName);
 				}
-				
+
 			}
 
 		</script>
@@ -46,7 +46,7 @@
 
 			span.mouseUp {
 				background-color: blue;
-			}	
+			}
 
 			span.dragOrigin {
 				display:inline-block;
@@ -63,7 +63,7 @@
 			}
 
 		</style>
-		
+
 
 
 		<link rel="stylesheet" href="../../utils/Xenophon.css">
@@ -107,13 +107,13 @@
 			<span id="cell_e3" class="detectsMouseOver"></span>
 			<span id="cell_e4" class="detectsMouseOver"></span>
 		</div>
-		
+
 		<script>
 
-			mouseListeners = document.querySelectorAll('span.detectsMouseOver');	
+			mouseListeners = document.querySelectorAll('span.detectsMouseOver');
 			mouseListeners.forEach(function(elem){
-			
-				elem.eventRecorder = [];	
+
+				elem.eventRecorder = [];
 				elem.addEventListener("pointerover", function(event){ mousedOver(event, elem); });
 				elem.addEventListener("pointerenter", function(event){ mousedOver(event, elem); });
 				elem.addEventListener("mouseover", function(event){ mousedOver(event, elem); });
@@ -129,7 +129,7 @@
 				elem.addEventListener("pointerleave", function(event){ mousedOver(event, elem); });
 				elem.addEventListener("mouseout", function(event){ mousedOver(event, elem); });
 				elem.addEventListener("mouseleave", function(event){ mousedOver(event, elem); });
-				
+
 			});
 
 		</script>
