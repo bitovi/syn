@@ -75,9 +75,9 @@ syn.helpers.extend(syn, {
 	dblclick: async function (element, options) {
 		var args = syn.args(options,element);
 		syn.helpers.addOffset(options, args.element);
-		await this.click(args.element, options);
+		await syn.click(args.element, options);
 		await syn.helpers.schedulePromise(2);
-		await this.click(args.element, options);
+		await syn.click(args.element, options);
 		syn.trigger(args.element, "dblclick", options);
 		return true;
 	}
