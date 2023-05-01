@@ -869,13 +869,13 @@ h.extend(syn.init.prototype, {
 		}
 
 		if (defaultResult !== null) {
+			if((key === '\r') && (element.nodeName.toLowerCase() === 'input')){
+				// do nothing. In the case of textInputs, RETURN key does not create an input event
+			} else if (syn.support.oninput) {
+				syn.trigger(element, 'input', syn.key.options(key, 'input'));
+			}
+
 			syn.schedule(function () {
-				
-				if((key === '\r') && (element.nodeName.toLowerCase() === 'input')){
-					// do nothing. In the case of textInputs, RETURN key does not create an input event
-				}else if (syn.support.oninput) {
-					syn.trigger(element, 'input', syn.key.options(key, 'input'));
-				}
 				syn.trigger(element, 'keyup', syn.key.options(key, 'keyup'));
 				callback(runDefaults, element);
 			}, 1);
