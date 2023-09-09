@@ -568,6 +568,8 @@ h.extend(syn.key, {
 				syn.trigger(this, "click", {});
 			}
 		},
+		'escape': function () {
+		},
 		
 		// Gets all focusable elements.  If the element (this)
 		// doesn't have a tabindex, finds the next element after.
